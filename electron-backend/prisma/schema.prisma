@@ -9,6 +9,78 @@ generator client {
 }
 
 datasource db {
-  provider = "postgresql"
+  provider = "mysql"
   url      = env("DATABASE_URL")
 }
+
+enum Role {
+  USER
+  ADMIN
+  MODERATOR
+}
+
+model User {
+  id    Int     @default(autoincrement()) @id
+  email String  @unique
+  name  String?
+  role  Role    @default(USER)
+}
+
+model Company {
+  id      Int      @default(autoincrement()) @id
+  name    String
+  clients Client[]
+}
+
+model Client {
+  id        Int      @default(autoincrement()) @id
+  name      String
+  email     String   @unique
+  companyId Int
+  company   Company  @relation(fields: [companyId], references: [id])
+}
+
+model Supplier {
+  id      Int     @default(autoincrement()) @id
+  name    String
+  contact String?
+}
+
+model Transporter {
+  id      Int     @default(autoincrement()) @id
+  name    String
+  contact String?
+}
+
+model Seller {
+  id       Int      @default(autoincrement()) @id
+  name     String
+  contact  String?
+  products Product[]  @relation("SellerProducts")  // Relação com Product
+  services Service[]  @relation("SellerServices")  // Relação com Service
+}
+
+model Product {
+  id       Int      @default(autoincrement()) @id
+  name     String
+  price    Float
+  sellerId Int
+  seller   Seller   @relation("SellerProducts", fields: [sellerId], references: [id])
+}
+
+model Service {
+  id       Int      @default(autoincrement()) @id
+  name     String
+  price    Float
+  sellerId Int
+  seller   Seller   @relation("SellerServices", fields: [sellerId], references: [id])
+}
+
+model PaymentMethod {
+  id      Int     @default(autoincrement()) @id
+  method  String
+}
+
+
+
+
