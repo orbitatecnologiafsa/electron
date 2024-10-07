@@ -24,12 +24,10 @@ export default class ClientController {
     return this.clientService.findById(id);
   }
 
-  //TODO: RESOLVER O CREATE
-
-  // @Post()
-  // async create(@Body() data: Omit<Client, 'id'>): Promise<Client> {
-  //   return this.clientService.create(data);
-  // }
+  @Post()
+  async create(@Body() data: Omit<Client, 'id'>): Promise<Client> {
+    return this.clientService.create(data);
+  }
 
   @Put(':id')
   async update(@Param('id') id: number, @Body() data: Client): Promise<Client> {
