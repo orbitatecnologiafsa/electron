@@ -6,11 +6,11 @@ import {
 } from 'react-router-dom';
 
 import './css/style.css';
-
 import './charts/ChartjsConfig';
 
 // Import pages
-import Dashboard from './pages/Dashboard';
+import Dashboard from './pages/Dashboard/Dashboard';
+import Dados from './pages/Dashboard/Dados';
 
 function App() {
 
@@ -25,7 +25,8 @@ function App() {
   return (
     <>
       <Routes>
-        <Route exact path="/" element={<Dashboard />} />
+        <Route exact path="/" element={<Dashboard/>} />
+        <Route exact path="/dados" element={<Dados/>} />
       </Routes>
     </>
   );
