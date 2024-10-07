@@ -14,73 +14,87 @@ datasource db {
 }
 
 enum Role {
-  USER
+  USUARIO
   ADMIN
-  MODERATOR
+  MODERADOR
 }
 
 model User {
   id    Int     @default(autoincrement()) @id
   email String  @unique
-  name  String?
-  role  Role    @default(USER)
+  nome  String?
+  cargo  Role    @default(USUARIO)
 }
 
-model Company {
-  id      Int      @default(autoincrement()) @id
-  name    String
-  clients Client[]
-}
+model Register {
+  id                      Int       @default(autoincrement()) @id
+  cpf_cnpj                String
+  nomeRazao               String
+  fantasia                String?
+  rg_inscEstad            String
+  inscEstad_inscMuni      String
+  contato                 String?
+  cep                     String
+  logradouro              String
+  numero                  String
+  bairro                  String
+  complemento             String?
+  uf                      String
+  municipio               String
+  telefone                String?
+  celular                 String?
+  email                   String    @unique
+  observacao              String?
+  active                  Boolean
+  
+  client Client[]
+  suplliers Suplliers[]
+  transporters Transporters[]
+  sellers       Sellers[]
+} 
 
 model Client {
-  id        Int      @default(autoincrement()) @id
-  name      String
-  email     String   @unique
-  companyId Int
-  company   Company  @relation(fields: [companyId], references: [id])
+  id          Int         @default(autoincrement()) @id
+  revenda     Boolean
+  register    Register    @relation(fields: [id], references: [id])
 }
 
-model Supplier {
-  id      Int     @default(autoincrement()) @id
-  name    String
-  contact String?
+model Suplliers {
+  id          Int         @default(autoincrement()) @id
+  register    Register    @relation(fields: [id], references: [id])
 }
 
-model Transporter {
-  id      Int     @default(autoincrement()) @id
-  name    String
-  contact String?
+model Transporters  {
+  id          Int         @default(autoincrement()) @id
+  veiculos    Vehicles[]
+  register    Register    @relation(fields: [id], references: [id])
 }
 
-model Seller {
-  id       Int      @default(autoincrement()) @id
-  name     String
-  contact  String?
-  products Product[]  @relation("SellerProducts")  // Relação com Product
-  services Service[]  @relation("SellerServices")  // Relação com Service
+model Vehicles {
+  id          Int         @default(autoincrement()) @id
+  placa       String      
+  uf          String
+  antt        String
+  transportadora    Transporters    @relation(fields: [id], references: [id])
 }
 
-model Product {
-  id       Int      @default(autoincrement()) @id
-  name     String
-  price    Float
-  sellerId Int
-  seller   Seller   @relation("SellerProducts", fields: [sellerId], references: [id])
+model Sellers {
+  id              Int         @default(autoincrement()) @id
+  nasicmento      DateTime    @db.Date
+  desconto        Float       @default(0.00)
+  comissao        Float       @default(0.00)
+  tipoComissao    TipoComissao
+  baseCalculo     BaseCalculo
+  register        Register    @relation(fields: [id], references: [id])
 }
 
-model Service {
-  id       Int      @default(autoincrement()) @id
-  name     String
-  price    Float
-  sellerId Int
-  seller   Seller   @relation("SellerServices", fields: [sellerId], references: [id])
+enum TipoComissao {
+  parcelaRecebida
+  totalVenda
 }
 
-model PaymentMethod {
-  id      Int     @default(autoincrement()) @id
-  method  String
+enum BaseCalculo {
+  totalLiquido
+  totalBruto
+  total
 }
-
-
-
-
