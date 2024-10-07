@@ -6,7 +6,7 @@ function Dados() {
 
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
-  {/* Tela principal do administrador */}
+  {/* Tela Dados */}
   return (
     <div className="flex h-screen overflow-hidden">
 

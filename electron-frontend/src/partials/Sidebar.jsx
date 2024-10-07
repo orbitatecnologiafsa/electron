@@ -111,14 +111,17 @@ function Sidebar({
             </h3>
             <ul className="mt-3">
               {/* Dashboard */}
-              <SidebarLinkGroup activecondition={pathname === "/" || pathname.includes("dashboard")}>
+              <SidebarLinkGroup activecondition={
+                pathname === "/" ||
+                pathname === "/dados"
+                }>
                 {(handleClick, open) => {
                   return (
                     <React.Fragment>
                       <a
                         href="#0"
                         className={`block text-gray-800 dark:text-gray-100 truncate transition duration-150 ${
-                          pathname === "/" || pathname.includes("dashboard") ? "" : "hover:text-gray-900 dark:hover:text-white"
+                          pathname === "/" ? "" : "hover:text-gray-900 dark:hover:text-white"
                         }`}
                         onClick={(e) => {
                           e.preventDefault();
@@ -132,6 +135,12 @@ function Sidebar({
                             <span className="text-sm font-medium ml-4 lg:opacity-0 lg:sidebar-expanded:opacity-100 2xl:opacity-100 duration-200">
                               Dashboard
                             </span>
+                          </div>
+                          {/* Ícone */}
+                          <div className="flex shrink-0 ml-2">
+                            <svg className={`w-3 h-3 shrink-0 ml-1 fill-current text-gray-400 dark:text-gray-500 ${open && "rotate-180"}`} viewBox="0 0 12 12">
+                              <path d="M5.9 11.4L.5 6l1.4-1.4 4 4 4-4L11.3 6z" />
+                            </svg>
                           </div>
                         </div>
                       </a>
@@ -172,14 +181,26 @@ function Sidebar({
                 }}
               </SidebarLinkGroup>
               {/* Cadastros */}
-              <SidebarLinkGroup activecondition={pathname.includes("ecommerce")}>
+              <SidebarLinkGroup activecondition={
+                pathname === "/cadastro/clientes" ||
+                pathname === "/cadastro/produtos" || 
+                pathname === "/cadastro/fornecedores" || 
+                pathname === "/cadastro/transportadoras" || 
+                pathname === "/cadastro/vendedores" || 
+                pathname === "/cadastro/serviços" 
+              }>
                 {(handleClick, open) => {
                   return (
                     <React.Fragment>
                       <a
                         href="#0"
                         className={`block text-gray-800 dark:text-gray-100 truncate transition duration-150 ${
-                          pathname.includes("ecommerce") ? "" : "hover:text-gray-900 dark:hover:text-white"
+                          pathname === "/cadastro/clientes" ||
+                          pathname === "/cadastro/produtos" || 
+                          pathname === "/cadastro/fornecedores" || 
+                          pathname === "/cadastro/transportadoras" || 
+                          pathname === "/cadastro/vendedores" || 
+                          pathname === "/cadastro/serviços" ? "" : "hover:text-gray-900 dark:hover:text-white"
                         }`}
                         onClick={(e) => {
                           e.preventDefault();
@@ -207,7 +228,7 @@ function Sidebar({
                           <li className="mb-1 last:mb-0">
                             <NavLink
                               end
-                              to="https://cruip.com/mosaic/"
+                              to="/cadastro/clientes"
                               className={({ isActive }) =>
                                 "block transition duration-150 truncate " + (isActive ? "text-violet-500" : "text-gray-500/90 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200")
                               }
@@ -289,7 +310,12 @@ function Sidebar({
                 }}
               </SidebarLinkGroup>
               {/* Entradas */}
-              <SidebarLinkGroup activecondition={pathname.includes("community")}>
+              <SidebarLinkGroup activecondition={
+                pathname === "/entradas/pedido" ||
+                pathname === "/entradas/notaentrada" || 
+                pathname === "/entradas/montagem" || 
+                pathname === "/entradas/mde"
+              }>
                 {(handleClick, open) => {
                   return (
                     <React.Fragment>
@@ -380,7 +406,15 @@ function Sidebar({
                 }}
               </SidebarLinkGroup>
               {/* Saídas */}
-              <SidebarLinkGroup activecondition={pathname.includes("finance")}>
+              <SidebarLinkGroup activecondition={
+                pathname === "/saidas/orcamento" ||
+                pathname === "/saidas/pedido" || 
+                pathname === "/saidas/prevenda" || 
+                pathname === "/saidas/faturamento" || 
+                pathname === "/saidas/notaservico" || 
+                pathname === "/saidas/mdfe" || 
+                pathname === "/saidas/cupomfiscal"
+              }>
                 {(handleClick, open) => {
                   return (
                     <React.Fragment>
@@ -510,7 +544,12 @@ function Sidebar({
                 }}
               </SidebarLinkGroup>
               {/* Financeiro */}
-              <SidebarLinkGroup activecondition={pathname.includes("job")}>
+              <SidebarLinkGroup activecondition={
+                pathname === "/financeiro/contareceber" ||
+                pathname === "/financeiro/contapagar" || 
+                pathname === "/financeiro/caixa" || 
+                pathname === "/financeiro/movimentacaobancaria"
+              }>
                 {(handleClick, open) => {
                   return (
                     <React.Fragment>
@@ -601,7 +640,16 @@ function Sidebar({
                 }}
               </SidebarLinkGroup>
               {/* Auxiliares */}
-              <SidebarLinkGroup activecondition={pathname.includes("tasks")}>
+              <SidebarLinkGroup activecondition={
+                pathname === "/auxiliares/tributacoes" ||
+                pathname === "/auxiliares/cfop" || 
+                pathname === "/auxiliares/spedfiscal" || 
+                pathname === "/auxiliares/spedcontribuicoes" || 
+                pathname === "/auxiliares/sintegra" || 
+                pathname === "/auxiliares/gerenciadorboletos" || 
+                pathname === "/auxiliares/pix" ||
+                pathname === "/auxiliares/xml"
+              }>
                 {(handleClick, open) => {
                   return (
                     <React.Fragment>
@@ -744,7 +792,13 @@ function Sidebar({
                 }}
                 </SidebarLinkGroup>
               {/* Relatórios */}
-              <SidebarLinkGroup activecondition={pathname.includes("tasks")}>
+              <SidebarLinkGroup activecondition={
+                pathname === "/relatorios/cadastros" ||
+                pathname === "/relatorios/estoque" || 
+                pathname === "/relatorios/entradas" || 
+                pathname === "/relatorios/saidas" || 
+                pathname === "/relatorios/financeiro"
+              }>
                 {(handleClick, open) => {
                   return (
                     <React.Fragment>
@@ -848,7 +902,9 @@ function Sidebar({
                 }}
                 </SidebarLinkGroup>
               {/* Configurações */}
-              <SidebarLinkGroup activecondition={pathname.includes("tasks")}>
+              <SidebarLinkGroup activecondition={
+                pathname === "/configuracoes/empresa"
+              }>
                 {(handleClick, open) => {
                   return (
                     <React.Fragment>
@@ -900,7 +956,10 @@ function Sidebar({
                 }}
                 </SidebarLinkGroup>
               {/* Permissões */}
-              <SidebarLinkGroup activecondition={pathname.includes("tasks")}>
+              <SidebarLinkGroup activecondition={
+                pathname === "/permissoes/usuarios" ||
+                pathname === "/permissoes/grupos"
+              }>
                 {(handleClick, open) => {
                   return (
                     <React.Fragment>
