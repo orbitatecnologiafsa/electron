@@ -1,20 +1,26 @@
 import React, { useState } from 'react';
+
 import Sidebar from '../../partials/Sidebar';
 import Header from '../../partials/Header';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faUser, faSort } from '@fortawesome/free-solid-svg-icons';
 
-function Clientes() {
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faUser } from '@fortawesome/free-solid-svg-icons';
+import { faSort } from '@fortawesome/free-solid-svg-icons';
+
+function Fornecedores() {
+
   const [sidebarOpen, setSidebarOpen] = useState(false);
+
   {/* Tela principal do administrador */}
   return (
     <div className="flex h-screen overflow-hidden">
+
       {/* Sidebar */}
       <Sidebar sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} />
 
       {/* Conteúdo */}
       <div className="relative flex flex-col flex-1 overflow-y-auto overflow-x-hidden">
-        {/* Site header */}
+        {/*  Site header */}
         <Header sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} />
         <form>
           <div className="space-y-12 mt-10 ml-10">
@@ -50,26 +56,25 @@ function Clientes() {
                       </div>
                     </div>
                   </div>
-
                   {/* Tabela */}
-                  <div className="table w-full mt-5">
-                    <div className="table-header-group">
-                      {/* Colunas */}
-                      <div className="table-row">
-                        <div className="table-cell text-left">Documento <span><FontAwesomeIcon icon={faSort} /></span></div>
-                        <div className="table-cell text-left">Nome <span><FontAwesomeIcon icon={faSort} /></span></div>
-                        <div className="table-cell text-left">Fantasia <span><FontAwesomeIcon icon={faSort} /></span></div>
-                        <div className="table-cell text-left">Contato <span><FontAwesomeIcon icon={faSort} /></span></div>
-                        <div className="table-cell text-left">Município <span><FontAwesomeIcon icon={faSort} /></span></div>
-                        <div className="table-cell text-left">UF <span><FontAwesomeIcon icon={faSort} /></span></div>
-                        <div className="table-cell text-left">Telefone <span><FontAwesomeIcon icon={faSort} /></span></div>
-                        <div className="table-cell text-left">Celular <span><FontAwesomeIcon icon={faSort} /></span></div>
-                        <div className="table-cell text-left">Ativo <span><FontAwesomeIcon icon={faSort} /></span></div>
-                        <div className="table-cell text-left">Última compra <span><FontAwesomeIcon icon={faSort} /></span></div>
-                        <div className="table-cell text-left">Data de Nascimento <span><FontAwesomeIcon icon={faSort} /></span></div>
+                    <div class="table w-full mt-5">
+                      <div class="table-header-group">
+                        {/* Colunas */}
+                        <div class="table-row">
+                          <div class="table-cell text-left ...">Documento <span><FontAwesomeIcon icon={faSort}/></span></div>
+                          <div class="table-cell text-left ...">Nome <span><FontAwesomeIcon icon={faSort}/></span></div>
+                          <div class="table-cell text-left ...">Fantasia <span><FontAwesomeIcon icon={faSort}/></span></div>
+                          <div class="table-cell text-left ...">Contato <span><FontAwesomeIcon icon={faSort}/></span></div>
+                          <div class="table-cell text-left ...">Municipio <span><FontAwesomeIcon icon={faSort}/></span></div>
+                          <div class="table-cell text-left ...">UF <span><FontAwesomeIcon icon={faSort}/></span></div>
+                          <div class="table-cell text-left ...">Telefone <span><FontAwesomeIcon icon={faSort}/></span></div>
+                          <div class="table-cell text-left ...">Celular <span><FontAwesomeIcon icon={faSort}/></span></div>
+                          <div class="table-cell text-left ...">Ativo <span><FontAwesomeIcon icon={faSort}/></span></div>
+                          <div class="table-cell text-left ...">Última compra <span><FontAwesomeIcon icon={faSort}/></span></div>
+                          <div class="table-cell text-left ...">Data de Nascimento <span><FontAwesomeIcon icon={faSort}/></span></div>
+                        </div>
                       </div>
                     </div>
-                  </div>
                 </div>
               </div>
             </div>
@@ -80,4 +85,4 @@ function Clientes() {
   );
 }
 
-export default Clientes;
+export default Fornecedores;
