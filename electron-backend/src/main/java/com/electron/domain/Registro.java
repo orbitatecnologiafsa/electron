@@ -1,18 +1,22 @@
 package com.electron.domain;
 
 
-import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.Inheritance;
+import jakarta.persistence.InheritanceType;
+import jakarta.persistence.Table;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
-import java.util.List;
 
 @Entity
 @Table(name = "registros")
 @Data
-@AllArgsConstructor
 @NoArgsConstructor
+@Inheritance(strategy = InheritanceType.JOINED)
 public class Registro {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -39,17 +43,4 @@ public class Registro {
 
     private String observacao;
     private Boolean ativo;
-
-    @OneToMany(mappedBy = "registro")
-    private List<Cliente> clientes;
-
-    @OneToMany(mappedBy = "registro")
-    private List<Fornecedor> fornecedores;
-
-    @OneToMany(mappedBy = "registro")
-    private List<Transportador> transportadoras;
-
-    @OneToMany(mappedBy = "registro")
-    private List<Vendedor> vendedores;
-
 }

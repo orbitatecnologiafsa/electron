@@ -1,11 +1,12 @@
 package com.electron.services;
 
+import java.util.List;
+
+import org.springframework.stereotype.Service;
+
 import com.electron.domain.Fornecedor;
 import com.electron.repositories.FornecedorRepository;
 import com.electron.services.exceptions.NotFoundException;
-import org.springframework.stereotype.Service;
-
-import java.util.List;
 
 @Service
 public class FornecedorService {
@@ -36,7 +37,6 @@ public class FornecedorService {
 
     public void update(Long id, Fornecedor fornecedor) {
         Fornecedor fornecedorVar = fornecedorRepository.findById(id).orElseThrow(() -> new NotFoundException("Fornecedor não encontrado com ID: " + id));
-        ;
         fornecedorVar.setRegistro(fornecedor.getRegistro());
         fornecedorVar.setPfOuPj(fornecedor.getPfOuPj());
     }

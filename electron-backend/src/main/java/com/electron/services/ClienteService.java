@@ -1,11 +1,13 @@
 package com.electron.services;
 
+import java.util.List;
+
+import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.stereotype.Service;
+
 import com.electron.domain.Cliente;
 import com.electron.repositories.ClienteRepository;
 import com.electron.services.exceptions.NotFoundException;
-import org.springframework.stereotype.Service;
-
-import java.util.List;
 
 @Service
 public class ClienteService {
@@ -26,15 +28,32 @@ public class ClienteService {
     }
 
     public void criar(Cliente cliente) {
-        clienteRepository.save(cliente);
+        try {
+
+            cliente.setPfOuPj(cliente.getPfOuPj());
+            cliente.setRevenda(cliente.getRevenda());
+            cliente.setAtivo(cliente.getAtivo() != null ? cliente.getAtivo() : true);
+
+            clienteRepository.save(cliente);
+        } catch (DataIntegrityViolationException e) {
+            if (e.getMessage().contains("UK9ilieyd1wui4hh2uiixixdk7m")) {
+                throw new RuntimeException("Email já está em uso. Por favor, use um email diferente.", e);
+            }
+            throw e;
+        }
     }
 
     public Cliente atualizar(Long id, Cliente cliente) {
-        Cliente clienteVar = clienteRepository.findById(id).orElseThrow(() -> new NotFoundException("Usuário não foi achado!"));
-        clienteVar.setRegistro(cliente.getRegistro());
-        clienteVar.setRevenda(cliente.getRevenda());
-        clienteVar.setPfOuPj(cliente.getPfOuPj());
-        return clienteVar;
+        Cliente clienteExistente = clienteRepository.findById(id)
+                .orElseThrow(() -> new NotFoundException("Cliente não foi encontrado!"));
+        
+        clienteExistente.setCpfCnpj(cliente.getCpfCnpj());
+        clienteExistente.setNomeRazao(cliente.getNomeRazao());
+        clienteExistente.setFantasia(cliente.getFantasia());
+        clienteExistente.setRevenda(cliente.getRevenda());
+        clienteExistente.setPfOuPj(cliente.getPfOuPj());
+        
+        return clienteRepository.save(clienteExistente);
     }
 
     public void deletar(Long id) {
