@@ -15,7 +15,7 @@ import java.time.LocalDate;
 public class Vendedor {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+    private Long id;
 
     private LocalDate nascimento;
     private Float desconto = 0.00f;

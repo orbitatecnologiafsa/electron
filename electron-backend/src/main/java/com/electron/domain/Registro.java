@@ -16,7 +16,7 @@ import java.util.List;
 public class Registro {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+    private Long id;
 
     private String cpfCnpj;
     private String nomeRazao;

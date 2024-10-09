@@ -16,7 +16,7 @@ import java.util.List;
 public class Transportador {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+    private Long id;
 
     @Enumerated(EnumType.STRING)
     private PForPJ pfOuPj;
