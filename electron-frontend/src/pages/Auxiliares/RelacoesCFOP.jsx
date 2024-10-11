@@ -5,7 +5,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faUser, faSort, faCalendar, faMagnifyingGlass } from '@fortawesome/free-solid-svg-icons';
 import { Menu, MenuButton, MenuItems, MenuItem } from '@headlessui/react';
 
-function Montagem() {
+function RelacoesCFOP() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [campoValue, setCampoValue] = useState('Selecione um Campo');
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -39,26 +39,16 @@ function Montagem() {
   // Colunas da Tabela
   const tableColumns = [
     '',
-    'Emissão',
-    'Código',
-    'Composição',
-    'Unidade',
-    'Quantidade',
-    'Total',
-    'Usuário',
+    'CFOP Origem',
+    'CFOP Convertido',
   ];
 
   // Dados da tabela
   const exampleData = [
     {
       index: "",
-      emissao: '12/02/2004',
-      codigo: 56,
-      composicao: '?????',
-      unidade: 45,
-      quantidade: 89,
-      total: 789,
-      usuario: 'João Pessoal',
+      cfoporigem: '????',
+      cfopconvertido: '???',
     },
   ];
 
@@ -76,67 +66,12 @@ function Montagem() {
           <div className="space-y-12 mt-10 ml-10">
             <div className="border-b border-gray-900/10 pb-12">
               <h2 className="text-base font-semibold leading-7 text-gray-900">
-                Listagem Pedidos de compra
+                Relação CFOP
               </h2>
               <div className="mt-10 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-4 mr-10">
                 <div className="sm:col-span-4">
-                  <div className="mt-2 flex">
-                    {/* Busca do cliente */}
-                    <div className="flex-initial w-full">
-                      <label htmlFor="input1" className="block text-sm font-medium leading-6 text-gray-900">Descrição</label>
-                      <div className="flex rounded-md shadow-sm ring-1 ring-inset ring-gray-300 focus-within:ring-2 focus-within:ring-inset focus-within:ring-indigo-600 sm:max-w-md">
-                        <span className="flex select-none items-center pl-3 text-gray-500 sm:text-sm">
-                          <FontAwesomeIcon icon={faUser} />
-                        </span>
-                        <input
-                          type="text"
-                          id="input1"
-                          className="block w-full ml-3 rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-                        />
-                      </div>
-                      {/* Filtros de busca */}
-                      <div className="flex-auto w-full">
-                        <label htmlFor="input1" className="block text-sm font-medium leading-6 text-gray-900">Filtros</label>
-                        <div className="flex rounded-md sm:max-w-md">
-                          <Menu as="div" className="flex rounded-md">
-                            <div>
-                              <MenuButton className="w-56 rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50">
-                                {campoValue || 'Selecione um Campo'}
-                              </MenuButton>
-                            </div>
-                            <MenuItems
-                              transition
-                              className="absolute z-10 mt-10 w-56 origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 transition focus:outline-none data-[closed]:scale-95 data-[closed]:transform data-[closed]:opacity-0 data-[enter]:duration-100 data-[leave]:duration-75 data-[enter]:ease-out data-[leave]:ease-in"
-                            >
-                              <div className="py-1">
-                                {['Todos', 'Emissão', 'Código', 'Composição', 'Unidade', 'Quantidade', 'Total', 'Usuário'].map(item => (
-                                  <MenuItem key={item}>
-                                    <a
-                                      className="block px-4 py-2 text-sm text-gray-700 data-[focus]:bg-gray-100 data-[focus]:text-gray-900"
-                                      onClick={() => handleMenuItemClick(item)}
-                                    >
-                                      {item}
-                                    </a>
-                                  </MenuItem>
-                                ))}
-                              </div>
-                            </MenuItems>
-                          </Menu>
-                          <button
-                            type="button"
-                            className="w-10 ml-4 rounded-md bg-white px-2 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50"
-                            onClick={handleModalToggle}
-                          >
-                            <FontAwesomeIcon icon={faCalendar} />
-                          </button>
-                          <button className="w-44 ml-4 rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50">
-                            Pesquisar
-                          </button>
-                        </div>
-                      </div>
-                    </div>
+                  <div className="mt-2 flex">                
                   </div>
-
                   {/* Tabela */}
                   <div className="overflow-x-auto overflow-y-auto mt-5">
                     <div className="max-h-[24rem] overflow-y-auto">
@@ -156,13 +91,8 @@ function Montagem() {
                               <td className="px-4 py-4 whitespace-nowrap text-sm text-gray-700">
                                 <FontAwesomeIcon icon={faMagnifyingGlass} />
                               </td>
-                              <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700">{data.emissao}</td>
-                              <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700">{data.codigo}</td>
-                              <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700">{data.composicao}</td>
-                              <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700">{data.unidade}</td>
-                              <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700">{data.quantidade}</td>
-                              <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700">{data.total}</td>
-                              <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700">{data.usuario}</td>
+                              <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700">{data.cfoporigem}</td>
+                              <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700">{data.cfopconvertido}</td>
                             </tr>
                           ))}
                         </tbody>
@@ -241,4 +171,4 @@ function Montagem() {
   );
 }
 
-export default Montagem;
+export default RelacoesCFOP;

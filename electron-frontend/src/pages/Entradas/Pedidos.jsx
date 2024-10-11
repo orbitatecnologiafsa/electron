@@ -84,7 +84,7 @@ function Pedidos() {
           <div className="space-y-12 mt-10 ml-10">
             <div className="border-b border-gray-900/10 pb-12">
               <h2 className="text-base font-semibold leading-7 text-gray-900">
-                Listagem de Clientes
+                Listagem Pedidos de compra
               </h2>
               <div className="mt-10 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-4 mr-10">
                 <div className="sm:col-span-4">
@@ -240,6 +240,11 @@ function Pedidos() {
                   </>
                 )}
                 </div>
+                <div className="mr-10 mt-10 h-10">
+                <button className="w-auto float-end rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50">
+                  Cadastrar
+                </button>
+              </div>
             </div>
           </div>
         </form>

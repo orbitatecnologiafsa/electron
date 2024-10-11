@@ -5,7 +5,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faUser, faSort, faCalendar, faMagnifyingGlass } from '@fortawesome/free-solid-svg-icons';
 import { Menu, MenuButton, MenuItems, MenuItem } from '@headlessui/react';
 
-function Montagem() {
+function Tributacoes() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [campoValue, setCampoValue] = useState('Selecione um Campo');
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -39,26 +39,28 @@ function Montagem() {
   // Colunas da Tabela
   const tableColumns = [
     '',
-    'Emissão',
-    'Código',
-    'Composição',
-    'Unidade',
-    'Quantidade',
-    'Total',
-    'Usuário',
+    'Origem',
+    'Destino',
+    'CFOP',
+    'CST/CSOSN',
+    '% BC ICMS',
+    '% ICMS',
+    '% BC ICMS ST',
+    '% ICMS ST',
   ];
 
   // Dados da tabela
   const exampleData = [
     {
       index: "",
-      emissao: '12/02/2004',
-      codigo: 56,
-      composicao: '?????',
-      unidade: 45,
-      quantidade: 89,
-      total: 789,
-      usuario: 'João Pessoal',
+      origem: '?',
+      destino: '?',
+      cfop: '?',
+      cstcsosn: '?',
+      bcicms: '?',
+      icms: '?',
+      bcicmsst: '?',
+      icmsst: '?',
     },
   ];
 
@@ -76,14 +78,14 @@ function Montagem() {
           <div className="space-y-12 mt-10 ml-10">
             <div className="border-b border-gray-900/10 pb-12">
               <h2 className="text-base font-semibold leading-7 text-gray-900">
-                Listagem Pedidos de compra
+                Tributações
               </h2>
               <div className="mt-10 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-4 mr-10">
                 <div className="sm:col-span-4">
                   <div className="mt-2 flex">
                     {/* Busca do cliente */}
                     <div className="flex-initial w-full">
-                      <label htmlFor="input1" className="block text-sm font-medium leading-6 text-gray-900">Descrição</label>
+                      <label htmlFor="input1" className="block text-sm font-medium leading-6 text-gray-900">Tributação</label>
                       <div className="flex rounded-md shadow-sm ring-1 ring-inset ring-gray-300 focus-within:ring-2 focus-within:ring-inset focus-within:ring-indigo-600 sm:max-w-md">
                         <span className="flex select-none items-center pl-3 text-gray-500 sm:text-sm">
                           <FontAwesomeIcon icon={faUser} />
@@ -109,7 +111,7 @@ function Montagem() {
                               className="absolute z-10 mt-10 w-56 origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 transition focus:outline-none data-[closed]:scale-95 data-[closed]:transform data-[closed]:opacity-0 data-[enter]:duration-100 data-[leave]:duration-75 data-[enter]:ease-out data-[leave]:ease-in"
                             >
                               <div className="py-1">
-                                {['Todos', 'Emissão', 'Código', 'Composição', 'Unidade', 'Quantidade', 'Total', 'Usuário'].map(item => (
+                                {['Todos', 'Documento', 'Nome', 'Fantasia', 'Contato', 'Município', 'UF', 'Telefone', 'Celular', 'Última compra', 'Data de nascimento', 'Incompleto'].map(item => (
                                   <MenuItem key={item}>
                                     <a
                                       className="block px-4 py-2 text-sm text-gray-700 data-[focus]:bg-gray-100 data-[focus]:text-gray-900"
@@ -156,13 +158,14 @@ function Montagem() {
                               <td className="px-4 py-4 whitespace-nowrap text-sm text-gray-700">
                                 <FontAwesomeIcon icon={faMagnifyingGlass} />
                               </td>
-                              <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700">{data.emissao}</td>
-                              <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700">{data.codigo}</td>
-                              <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700">{data.composicao}</td>
-                              <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700">{data.unidade}</td>
-                              <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700">{data.quantidade}</td>
-                              <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700">{data.total}</td>
-                              <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700">{data.usuario}</td>
+                              <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700">{data.origem}</td>
+                              <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700">{data.destino}</td>
+                              <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700">{data.cfop}</td>
+                              <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700">{data.cstcsosn}</td>
+                              <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700">{data.bcicms}</td>
+                              <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700">{data.icms}</td>
+                              <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700">{data.bcicmsst}</td>
+                              <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700">{data.icmsst}</td>
                             </tr>
                           ))}
                         </tbody>
@@ -241,4 +244,4 @@ function Montagem() {
   );
 }
 
-export default Montagem;
+export default Tributacoes;

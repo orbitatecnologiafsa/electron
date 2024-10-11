@@ -22,14 +22,19 @@ import Pedidos from './pages/Entradas/Pedidos';
 import Montagem from './pages/Entradas/Montagem';
 import NotaEntrada from './pages/Entradas/NotaEntrada';
 import MDE from './pages/Entradas/MDE';
-// Import pages Entradas
+// Import pages Saídas
 import CupomFiscal from './pages/Saidas/CupomFiscal';
 import Faturamento from './pages/Saidas/Faturamento';
 import NotaServico from './pages/Saidas/NotaServico';
-import MDFE from './pages/Saidas/MDFE';
 import Orcamento from './pages/Saidas/Orcamento';
 import Pedido from './pages/Saidas/Pedido';
 import PreVenda from './pages/Saidas/PreVenda';
+// import pages Financeiros
+import Caixa from './pages/Financeiro/Caixa';
+// import pages Auxiliares
+import Tributacoes from './pages/Auxiliares/Tributacoes';
+import RelacoesCFOP from './pages/Auxiliares/RelacoesCFOP';
+// import pages Relatorios
 
 function App() {
 
@@ -59,10 +64,13 @@ function App() {
         <Route exact path="/saidas/cupomFiscal" element={<CupomFiscal/>} />
         <Route exact path="/saidas/faturamento" element={<Faturamento/>} />
         <Route exact path="/saidas/NotaServico" element={<NotaServico/>} />
-        <Route exact path="/saidas/MDFE" element={<MDFE/>} />
         <Route exact path="/saidas/orcamento" element={<Orcamento/>} />
         <Route exact path="/saidas/pedido" element={<Pedido/>} />
         <Route exact path="/saidas/preVenda" element={<PreVenda/>} />
+        <Route exact path="/financeiro/Caixa" element={<Caixa/>} />
+        <Route exact path="/auxiliares/tributacoes" element={<Tributacoes/>} />
+        <Route exact path="/auxiliares/cfop" element={<RelacoesCFOP/>} />
+       
        
       
 

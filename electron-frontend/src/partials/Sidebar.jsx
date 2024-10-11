@@ -334,10 +334,10 @@ function Sidebar({
                         }}
                       >
                         <div className="flex items-center justify-between">
-                          <div className="flex items-center">
+                          <div className="flex items-center ml-1">
                             <FontAwesomeIcon icon={faCircleRight} />
                             <span className="text-sm font-medium ml-4 lg:opacity-0 lg:sidebar-expanded:opacity-100 2xl:opacity-100 duration-200">
-                              Entradas
+                              Entradas CERTO
                             </span>
                           </div>
                           {/* Icon */}
@@ -359,7 +359,7 @@ function Sidebar({
                               }
                             >
                               <span className="text-sm font-medium lg:opacity-0 lg:sidebar-expanded:opacity-100 2xl:opacity-100 duration-200">
-                                Pedidos de compras
+                                Pedidos de compras FIM
                               </span>
                             </NavLink>
                           </li>
@@ -414,8 +414,7 @@ function Sidebar({
                 pathname === "/saidas/pedido" || 
                 pathname === "/saidas/prevenda" || 
                 pathname === "/saidas/faturamento" || 
-                pathname === "/saidas/notaservico" || 
-                pathname === "/saidas/mdfe" || 
+                pathname === "/saidas/notaservico" ||  
                 pathname === "/saidas/cupomfiscal"
               }>
                 {(handleClick, open) => {
@@ -511,20 +510,7 @@ function Sidebar({
                             >
                               <span className="text-sm font-medium lg:opacity-0 lg:sidebar-expanded:opacity-100 2xl:opacity-100 duration-200">
                                 Nota de serviço
-                              </span>
-                            </NavLink>
-                          </li>
-                          <li className="mb-1 last:mb-0">
-                            <NavLink
-                              end
-                              to="/saidas/mdfe"
-                              className={({ isActive }) =>
-                                "block transition duration-150 truncate " + (isActive ? "text-violet-500" : "text-gray-500/90 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200")
-                              }
-                            >
-                              <span className="text-sm font-medium lg:opacity-0 lg:sidebar-expanded:opacity-100 2xl:opacity-100 duration-200">
-                                MDF-e
-                              </span>
+                              </span>  
                             </NavLink>
                           </li>
                           <li className="mb-1 last:mb-0">
@@ -548,10 +534,9 @@ function Sidebar({
               </SidebarLinkGroup>
               {/* Financeiro */}
               <SidebarLinkGroup activecondition={
-                pathname === "/financeiro/contareceber" ||
-                pathname === "/financeiro/contapagar" || 
-                pathname === "/financeiro/caixa" || 
-                pathname === "/financeiro/movimentacaobancaria"
+                pathname === "/financeiro/contasareceber" ||
+                pathname === "/financeiro/contasapagar" || 
+                pathname === "/financeiro/caixa" 
               }>
                 {(handleClick, open) => {
                   return (
@@ -559,7 +544,9 @@ function Sidebar({
                       <a
                         href="#0"
                         className={`block text-gray-800 dark:text-gray-100 truncate transition duration-150 ${
-                          pathname.includes("job") ? "" : "hover:text-gray-900 dark:hover:text-white"
+                          pathname === "/financeiro/contasareceber" ||
+                          pathname === "/financeiro/contasapagar" || 
+                          pathname === "/financeiro/caixa" ? "" : "hover:text-gray-900 dark:hover:text-white"
                         }`}
                         onClick={(e) => {
                           e.preventDefault();
@@ -587,7 +574,7 @@ function Sidebar({
                           <li className="mb-1 last:mb-0">
                             <NavLink
                               end
-                              to="https://cruip.com/mosaic/"
+                              to="financeiro/contasareceber"
                               className={({ isActive }) =>
                                 "block transition duration-150 truncate " + (isActive ? "text-violet-500" : "text-gray-500/90 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200")
                               }
@@ -600,7 +587,7 @@ function Sidebar({
                           <li className="mb-1 last:mb-0">
                             <NavLink
                               end
-                              to="https://cruip.com/mosaic/"
+                              to="financeiro/contasapagar"
                               className={({ isActive }) =>
                                 "block transition duration-150 truncate " + (isActive ? "text-violet-500" : "text-gray-500/90 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200")
                               }
@@ -613,26 +600,14 @@ function Sidebar({
                           <li className="mb-1 last:mb-0">
                             <NavLink
                               end
-                              to="https://cruip.com/mosaic/"
+                              to="financeiro/caixa"
                               className={({ isActive }) =>
                                 "block transition duration-150 truncate " + (isActive ? "text-violet-500" : "text-gray-500/90 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200")
                               }
                             >
                               <span className="text-sm font-medium lg:opacity-0 lg:sidebar-expanded:opacity-100 2xl:opacity-100 duration-200">
                                 Caixa
-                              </span>
-                            </NavLink>
-                          </li>
-                          <li className="mb-1 last:mb-0">
-                            <NavLink
-                              end
-                              to="https://cruip.com/mosaic/"
-                              className={({ isActive }) =>
-                                "block transition duration-150 truncate " + (isActive ? "text-violet-500" : "text-gray-500/90 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200")
-                              }
-                            >
-                              <span className="text-sm font-medium lg:opacity-0 lg:sidebar-expanded:opacity-100 2xl:opacity-100 duration-200">
-                                Movimentação bancária
+                                
                               </span>
                             </NavLink>
                           </li>
@@ -687,7 +662,7 @@ function Sidebar({
                           <li className="mb-1 last:mb-0">
                             <NavLink
                               end
-                              to="https://cruip.com/mosaic/"
+                              to="/auxiliares/tributacoes"
                               className={({ isActive }) =>
                                 "block transition duration-150 truncate " + (isActive ? "text-violet-500" : "text-gray-500/90 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200")
                               }
@@ -700,91 +675,13 @@ function Sidebar({
                           <li className="mb-1 last:mb-0">
                             <NavLink
                               end
-                              to="https://cruip.com/mosaic/"
+                              to="/auxiliares/cfop/"
                               className={({ isActive }) =>
                                 "block transition duration-150 truncate " + (isActive ? "text-violet-500" : "text-gray-500/90 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200")
                               }
                             >
                               <span className="text-sm font-medium lg:opacity-0 lg:sidebar-expanded:opacity-100 2xl:opacity-100 duration-200">
                                 Relação CFOP
-                              </span>
-                            </NavLink>
-                          </li>
-                          <li className="mb-1 last:mb-0">
-                            <NavLink
-                              end
-                              to="https://cruip.com/mosaic/"
-                              className={({ isActive }) =>
-                                "block transition duration-150 truncate " + (isActive ? "text-violet-500" : "text-gray-500/90 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200")
-                              }
-                            >
-                              <span className="text-sm font-medium lg:opacity-0 lg:sidebar-expanded:opacity-100 2xl:opacity-100 duration-200">
-                                SPED Fiscal
-                              </span>
-                            </NavLink>
-                          </li>
-                          <li className="mb-1 last:mb-0">
-                            <NavLink
-                              end
-                              to="https://cruip.com/mosaic/"
-                              className={({ isActive }) =>
-                                "block transition duration-150 truncate " + (isActive ? "text-violet-500" : "text-gray-500/90 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200")
-                              }
-                            >
-                              <span className="text-sm font-medium lg:opacity-0 lg:sidebar-expanded:opacity-100 2xl:opacity-100 duration-200">
-                                SPED Contribuições
-                              </span>
-                            </NavLink>
-                          </li>
-                          <li className="mb-1 last:mb-0">
-                            <NavLink
-                              end
-                              to="https://cruip.com/mosaic/"
-                              className={({ isActive }) =>
-                                "block transition duration-150 truncate " + (isActive ? "text-violet-500" : "text-gray-500/90 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200")
-                              }
-                            >
-                              <span className="text-sm font-medium lg:opacity-0 lg:sidebar-expanded:opacity-100 2xl:opacity-100 duration-200">
-                                Sintegra
-                              </span>
-                            </NavLink>
-                          </li>
-                          <li className="mb-1 last:mb-0">
-                            <NavLink
-                              end
-                              to="https://cruip.com/mosaic/"
-                              className={({ isActive }) =>
-                                "block transition duration-150 truncate " + (isActive ? "text-violet-500" : "text-gray-500/90 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200")
-                              }
-                            >
-                              <span className="text-sm font-medium lg:opacity-0 lg:sidebar-expanded:opacity-100 2xl:opacity-100 duration-200">
-                                Gerenciador de boletos
-                              </span>
-                            </NavLink>
-                          </li>
-                          <li className="mb-1 last:mb-0">
-                            <NavLink
-                              end
-                              to="https://cruip.com/mosaic/"
-                              className={({ isActive }) =>
-                                "block transition duration-150 truncate " + (isActive ? "text-violet-500" : "text-gray-500/90 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200")
-                              }
-                            >
-                              <span className="text-sm font-medium lg:opacity-0 lg:sidebar-expanded:opacity-100 2xl:opacity-100 duration-200">
-                                Cobrança PIX
-                              </span>
-                            </NavLink>
-                          </li>
-                          <li className="mb-1 last:mb-0">
-                            <NavLink
-                              end
-                              to="https://cruip.com/mosaic/"
-                              className={({ isActive }) =>
-                                "block transition duration-150 truncate " + (isActive ? "text-violet-500" : "text-gray-500/90 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200")
-                              }
-                            >
-                              <span className="text-sm font-medium lg:opacity-0 lg:sidebar-expanded:opacity-100 2xl:opacity-100 duration-200">
-                                Download de XMLs
                               </span>
                             </NavLink>
                           </li>
