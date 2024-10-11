@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import Sidebar from '../../partials/Sidebar';
 import Header from '../../partials/Header';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faUser, faSort, faCircleInfo } from '@fortawesome/free-solid-svg-icons';
+import { faUser, faSort, faCircleInfo, faMagnifyingGlass } from '@fortawesome/free-solid-svg-icons';
 import { Menu, MenuButton, MenuItems, MenuItem } from '@headlessui/react';
 
 function Clientes() {
@@ -17,6 +17,40 @@ function Clientes() {
   const handleModalToggle = () => {
     setIsModalOpen(!isModalOpen);
   };
+
+  {/* Colunas da Tabela */}
+  const tableColumns = [
+    '',
+    'Documento',
+    'Nome',
+    'Fantasia',
+    'Contato',
+    'Município',
+    'UF',
+    'Telefone',
+    'Celular',
+    'Ativo',
+    'Última compra',
+    'Data de Nascimento',
+  ];
+
+  {/* Dados da tabela */}
+  const exampleData = [
+    {
+      index: "",
+      documento: '123456789',
+      nome: 'João Silva',
+      fantasia: 'Silva Comércio',
+      contato: 'Contato 1',
+      municipio: 'São Paulo',
+      uf: 'SP',
+      telefone: '+55 11 98765-4321',
+      celular: '+55 11 91234-5678',
+      ativo: 'Sim',
+      ultimaCompra: '01/10/2023',
+      dataNascimento: '01/01/2000',
+    },
+  ];
 
   return (
     <div className="flex h-screen overflow-hidden">
@@ -54,9 +88,9 @@ function Clientes() {
                       <div className="flex-auto w-full">
                         <label htmlFor="input1" className="block text-sm font-medium leading-6 text-gray-900">Filtros</label>
                         <div className="flex rounded-md sm:max-w-md">
-                        <Menu as="div" className="flex rounded-md">
+                          <Menu as="div" className="flex rounded-md">
                             <div>
-                              <MenuButton className="w-52 rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50">
+                              <MenuButton className="w-56 rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50">
                                 {campoValue || 'Selecione um Campo'}
                               </MenuButton>
                             </div>
@@ -80,13 +114,12 @@ function Clientes() {
                           </Menu>
                           <button
                             type="button"
-                            className="w-25 ml-14 rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50"
+                            className="w-10 ml-4 rounded-md bg-white px-2 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50"
                             onClick={handleModalToggle}
                           >
                             <FontAwesomeIcon icon={faCircleInfo} />
                           </button>
-                          
-                          <button className="w-25 ml-14 rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50">
+                          <button className="w-44 ml-4 rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50">
                             Pesquisar
                           </button>
                         </div>
@@ -96,41 +129,39 @@ function Clientes() {
 
                   {/* Tabela */}
                   <div className="overflow-x-auto overflow-y-auto mt-5">
-                    <table className="min-w-full max-w-full divide-y divide-gray-200">
-                      <thead className="bg-gray-100">
-                        <tr>
-                          <th className="px-4 py-3 text-left text-sm font-medium text-gray-700">Documento <FontAwesomeIcon icon={faSort} /></th>
-                          <th className="px-4 py-3 text-left text-sm font-medium text-gray-700">Nome <FontAwesomeIcon icon={faSort} /></th>
-                          <th className="px-4 py-3 text-left text-sm font-medium text-gray-700">Fantasia <FontAwesomeIcon icon={faSort} /></th>
-                          <th className="px-4 py-3 text-left text-sm font-medium text-gray-700">Contato <FontAwesomeIcon icon={faSort} /></th>
-                          <th className="px-4 py-3 text-left text-sm font-medium text-gray-700">Município <FontAwesomeIcon icon={faSort} /></th>
-                          <th className="px-4 py-3 text-left text-sm font-medium text-gray-700">UF <FontAwesomeIcon icon={faSort} /></th>
-                          <th className="px-4 py-3 text-left text-sm font-medium text-gray-700">Telefone <FontAwesomeIcon icon={faSort} /></th>
-                          <th className="px-4 py-3 text-left text-sm font-medium text-gray-700">Celular <FontAwesomeIcon icon={faSort} /></th>
-                          <th className="px-4 py-3 text-left text-sm font-medium text-gray-700">Ativo <FontAwesomeIcon icon={faSort} /></th>
-                          <th className="px-4 py-3 text-left text-sm font-medium text-gray-700">Última compra <FontAwesomeIcon icon={faSort} /></th>
-                          <th className="px-4 py-3 text-left text-sm font-medium text-gray-700">Data de Nascimento <FontAwesomeIcon icon={faSort} /></th>
-                        </tr>
-                      </thead>
-                      <tbody className="bg-white divide-y divide-gray-200">
-                        {/* Exemplo de dados */}
-                        {[...Array(5)].map((_, index) => (
-                          <tr key={index}>
-                            <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700">123456789</td>
-                            <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700">João Silva</td>
-                            <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700">Silva Comércio</td>
-                            <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700">Contato 1</td>
-                            <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700">São Paulo</td>
-                            <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700">SP</td>
-                            <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700">+55 11 98765-4321</td>
-                            <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700">+55 11 91234-5678</td>
-                            <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700">Sim</td>
-                            <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700">01/10/2023</td>
-                            <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700">01/01/2000</td>
+                    <div className="max-h-[24rem] overflow-y-auto">
+                      <table className="min-w-full max-w-full divide-y divide-gray-200">
+                        <thead className="bg-gray-100">
+                          <tr>
+                            {tableColumns.map((column, index) => (
+                              <th key={column} className="px-6 py-3 text-center text-sm font-medium text-gray-700">
+                                {index === 0 ? column : <>{column} <FontAwesomeIcon icon={faSort} /></>}
+                              </th>
+                            ))}
                           </tr>
-                        ))}
-                      </tbody>
-                    </table>
+                        </thead>
+                        <tbody className="bg-white divide-y divide-gray-200 text-center">
+                          {exampleData.map((data, index) => (
+                            <tr key={index}>
+                              <td className="px-4 py-4 whitespace-nowrap text-sm text-gray-700">
+                                <FontAwesomeIcon icon={faMagnifyingGlass} />
+                              </td>
+                              <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700">{data.documento}</td>
+                              <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700">{data.nome}</td>
+                              <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700">{data.fantasia}</td>
+                              <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700">{data.contato}</td>
+                              <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700">{data.municipio}</td>
+                              <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700">{data.uf}</td>
+                              <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700">{data.telefone}</td>
+                              <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700">{data.celular}</td>
+                              <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700">{data.ativo}</td>
+                              <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700">{data.ultimaCompra}</td>
+                              <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700">{data.dataNascimento}</td>
+                            </tr>
+                          ))}
+                        </tbody>
+                      </table>
+                    </div>
                   </div>
 
                   {/* Modal */}
@@ -139,9 +170,16 @@ function Clientes() {
                       <div className="bg-white rounded-lg p-6 w-96">
                         <h3 className="text-lg font-semibold">Legenda da tabela</h3>
                         <ul className="mt-4 space-y-2">
-                          <li>Item 1: Descrição do primeiro item.</li>
-                          <li>Item 2: Descrição do segundo item.</li>
-                          <li>Item 3: Descrição do terceiro item.</li>
+                          <li>Documento: Número de identificação do cliente.</li>
+                          <li>Nome: Nome completo do cliente.</li>
+                          <li>Fantasia: Nome fantasia do cliente.</li>
+                          <li>Contato: Nome da pessoa de contato.</li>
+                          <li>Município: Cidade onde o cliente reside.</li>
+                          <li>UF: Unidade Federativa.</li>
+                          <li>Telefone/Celular: Números de contato.</li>
+                          <li>Ativo: Indica se o cliente está ativo.</li>
+                          <li>Última compra: Data da última compra realizada.</li>
+                          <li>Data de Nascimento: Data de nascimento do cliente.</li>
                         </ul>
                         <div className="mt-4 flex justify-end">
                           <button
@@ -157,10 +195,10 @@ function Clientes() {
                 </div>
               </div>
               <div className="mr-10 mt-10 h-10">
-                  <button className="w-auto float-end  rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50">
-                    Cadastrar
-                  </button>
-                </div>
+                <button className="w-auto float-end rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50">
+                  Cadastrar
+                </button>
+              </div>
             </div>
           </div>
         </form>

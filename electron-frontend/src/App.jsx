@@ -8,7 +8,7 @@ import {
 import './css/style.css';
 import './charts/ChartjsConfig';
 
-// Import pages Cadrastros
+// Import pages Cadastros
 import Dashboard from './pages/Dashboard/Dashboard';
 import Dados from './pages/Dashboard/Dados';
 import Clientes from './pages/Cadastros/Clientes';
@@ -49,7 +49,7 @@ function App() {
         <Route exact path="/cadastro/clientes" element={<Clientes/>} />
         <Route exact path="/cadastro/fornecedores" element={<Fornecedores/>} />
         <Route exact path="/cadastro/produtos" element={<Produtos/>} />
-        <Route exact path="/cadastro/serviços" element={<Serviços/>} />
+        <Route exact path="/cadastro/servicos" element={<Serviços/>} />
         <Route exact path="/cadastro/transportadoras" element={<Transportadoras/>} />
         <Route exact path="/cadastro/vendedores" element={<Vendedores/>} />
         <Route exact path="/entradas/pedidos" element={<Pedidos/>} />
