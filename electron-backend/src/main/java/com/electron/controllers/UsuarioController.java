@@ -13,43 +13,43 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.electron.domain.Registro;
-import com.electron.services.RegistroService;
+import com.electron.domain.Usuario;
+import com.electron.services.UsuarioService;
 
 @RestController
-@RequestMapping("/api/registros")
-public class RegistroController {
+@RequestMapping("/api/usuarios")
+public class UsuarioController {
 
-    private final RegistroService registroService;
+    private final UsuarioService usuarioService;
 
-    public RegistroController(RegistroService registroService) {
-        this.registroService = registroService;
+    public UsuarioController(UsuarioService usuarioService) {
+        this.usuarioService = usuarioService;
     }
 
     @GetMapping
-    public ResponseEntity<List<Registro>> listarTodos() {
-        return ResponseEntity.ok(registroService.listarTodos());
+    public ResponseEntity<List<Usuario>> listarTodos() {
+        return ResponseEntity.ok(usuarioService.listarTodos());
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Registro> listarPorId(@PathVariable Long id) {
-        return ResponseEntity.ok(registroService.listarPorId(id));
+    public ResponseEntity<Usuario> listarPorId(@PathVariable Long id) {
+        return ResponseEntity.ok(usuarioService.listarPorId(id));
     }
 
     @PostMapping
-    public ResponseEntity<Void> criar(@RequestBody Registro registro) {
-        registroService.criar(registro);
+    public ResponseEntity<Void> criar(@RequestBody Usuario usuario) {
+        usuarioService.criar(usuario);
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Registro> atualizar(@PathVariable Long id, @RequestBody Registro registro) {
-        return ResponseEntity.ok(registroService.atualizar(id, registro));
+    public ResponseEntity<Usuario> atualizar(@PathVariable Long id, @RequestBody Usuario usuario) {
+        return ResponseEntity.ok(usuarioService.atualizar(id, usuario));
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deletar(@PathVariable Long id) {
-        registroService.deletar(id);
+        usuarioService.deletar(id);
         return ResponseEntity.noContent().build();
     }
 }

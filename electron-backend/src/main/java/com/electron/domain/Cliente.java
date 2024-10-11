@@ -2,10 +2,7 @@ package com.electron.domain;
 
 import com.electron.domain.enums.PForPJ;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
@@ -15,7 +12,7 @@ import lombok.NoArgsConstructor;
 @Data
 @EqualsAndHashCode(callSuper = true)
 @NoArgsConstructor
-public class Cliente extends Registro {
+public class Cliente extends Pessoa {
 
     @Enumerated(EnumType.STRING)
     private PForPJ pfOuPj;
