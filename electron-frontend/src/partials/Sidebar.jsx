@@ -311,7 +311,7 @@ function Sidebar({
               </SidebarLinkGroup>
               {/* Entradas */}
               <SidebarLinkGroup activecondition={
-                pathname === "/entradas/pedido" ||
+                pathname === "/entradas/pedidos" ||
                 pathname === "/entradas/notaentrada" || 
                 pathname === "/entradas/montagem" || 
                 pathname === "/entradas/mde"
@@ -322,7 +322,10 @@ function Sidebar({
                       <a
                         href="#0"
                         className={`block text-gray-800 dark:text-gray-100 truncate transition duration-150 ${
-                          pathname.includes("community") ? "" : "hover:text-gray-900 dark:hover:text-white"
+                          pathname === "/entradas/pedidos" ||
+                          pathname === "/entradas/notaentrada" || 
+                          pathname === "/entradas/montagem" || 
+                          pathname === "/entradas/mde" ? "" : "hover:text-gray-900 dark:hover:text-white"
                         }`}
                         onClick={(e) => {
                           e.preventDefault();
@@ -356,7 +359,7 @@ function Sidebar({
                               }
                             >
                               <span className="text-sm font-medium lg:opacity-0 lg:sidebar-expanded:opacity-100 2xl:opacity-100 duration-200">
-                                Pedido de compra
+                                Pedidos de compras
                               </span>
                             </NavLink>
                           </li>
