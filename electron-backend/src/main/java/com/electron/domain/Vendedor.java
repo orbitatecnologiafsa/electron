@@ -1,21 +1,19 @@
 package com.electron.domain;
 
-import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-
 import java.time.LocalDate;
 
+import jakarta.persistence.Entity;
+import jakarta.persistence.Table;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
+
 @Entity
-@Table(name = "sellers")
+@Table(name = "vendedores")
 @Data
-@AllArgsConstructor
+@EqualsAndHashCode(callSuper = true)
 @NoArgsConstructor
-public class Vendedor {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+public class Vendedor extends Pessoa {
 
     private LocalDate nascimento;
     private Float desconto = 0.00f;
@@ -23,7 +21,4 @@ public class Vendedor {
     private String tipoComissao;
     private String baseCalculo;
 
-    @ManyToOne
-    @JoinColumn(name = "registro_id", nullable = false)
-    private Registro registro;
 }

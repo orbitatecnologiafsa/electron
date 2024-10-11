@@ -1,25 +1,18 @@
 package com.electron.domain;
-
 import com.electron.domain.enums.PForPJ;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
 @Entity
 @Table(name = "fornecedores")
 @Data
-@AllArgsConstructor
+@EqualsAndHashCode(callSuper = true)
 @NoArgsConstructor
-public class Fornecedor {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+public class Fornecedor extends Pessoa {
 
     @Enumerated(EnumType.STRING)
     private PForPJ pfOuPj;
 
-    @ManyToOne
-    @JoinColumn(name = "registro_id", nullable = false)
-    private Registro registro;
 }

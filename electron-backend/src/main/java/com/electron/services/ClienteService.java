@@ -18,22 +18,17 @@ public class ClienteService {
     }
 
     public List<Cliente> listarTodos() {
-        List<Cliente> clientes = clienteRepository.findAll();
-        return clientes;
+        return clienteRepository.findAll();
     }
 
     public Cliente listarPorId(Long id) {
-        Cliente cliente = clienteRepository.findById(id).orElseThrow(() -> new NotFoundException("Usuário não foi achado!"));
-        return cliente;
+        return clienteRepository.findById(id)
+                .orElseThrow(() -> new NotFoundException("Cliente não foi encontrado!"));
     }
 
     public void criar(Cliente cliente) {
         try {
-
-            cliente.setPfOuPj(cliente.getPfOuPj());
-            cliente.setRevenda(cliente.getRevenda());
             cliente.setAtivo(cliente.getAtivo() != null ? cliente.getAtivo() : true);
-
             clienteRepository.save(cliente);
         } catch (DataIntegrityViolationException e) {
             if (e.getMessage().contains("UK9ilieyd1wui4hh2uiixixdk7m")) {
@@ -47,9 +42,27 @@ public class ClienteService {
         Cliente clienteExistente = clienteRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException("Cliente não foi encontrado!"));
         
+        // Atualizar todos os campos herdados de Pessoa
         clienteExistente.setCpfCnpj(cliente.getCpfCnpj());
         clienteExistente.setNomeRazao(cliente.getNomeRazao());
         clienteExistente.setFantasia(cliente.getFantasia());
+        clienteExistente.setRgInscricaoEstadual(cliente.getRgInscricaoEstadual());
+        clienteExistente.setInscricaoEstadualMunicipal(cliente.getInscricaoEstadualMunicipal());
+        clienteExistente.setContato(cliente.getContato());
+        clienteExistente.setCep(cliente.getCep());
+        clienteExistente.setLogradouro(cliente.getLogradouro());
+        clienteExistente.setNumero(cliente.getNumero());
+        clienteExistente.setBairro(cliente.getBairro());
+        clienteExistente.setComplemento(cliente.getComplemento());
+        clienteExistente.setUf(cliente.getUf());
+        clienteExistente.setMunicipio(cliente.getMunicipio());
+        clienteExistente.setTelefone(cliente.getTelefone());
+        clienteExistente.setCelular(cliente.getCelular());
+        clienteExistente.setEmail(cliente.getEmail());
+        clienteExistente.setObservacao(cliente.getObservacao());
+        clienteExistente.setAtivo(cliente.getAtivo());
+        
+        // Atualizar campos específicos de Cliente
         clienteExistente.setRevenda(cliente.getRevenda());
         clienteExistente.setPfOuPj(cliente.getPfOuPj());
         
@@ -59,5 +72,4 @@ public class ClienteService {
     public void deletar(Long id) {
         clienteRepository.deleteById(id);
     }
-
 }
