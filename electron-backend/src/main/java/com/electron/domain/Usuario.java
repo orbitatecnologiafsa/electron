@@ -1,18 +1,26 @@
 package com.electron.domain;
 
-import com.electron.domain.enums.Cargo;
-import jakarta.persistence.*;
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Size;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import java.util.Collection;
+import java.util.List;
+
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import java.util.Collection;
-import java.util.List;
+import com.electron.domain.enums.Cargo;
+
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
+import jakarta.validation.constraints.NotNull;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Entity
 @Table(name = "usuarios")
@@ -21,6 +29,12 @@ import java.util.List;
 @NoArgsConstructor
 public class Usuario implements UserDetails {
 
+    public Usuario(String email, String senha, String nome, Cargo cargo) {
+        this.email = email;
+        this.senha = senha;
+        this.nome = nome;
+        this.cargo = cargo;
+    }
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -29,7 +43,7 @@ public class Usuario implements UserDetails {
     private String email;
 
     @NotNull
-    @Size(min = 6, max = 14)
+    // @Size(min = 6, max = 14)
     private String senha;
 
     @NotNull
@@ -47,7 +61,7 @@ public class Usuario implements UserDetails {
 
     @Override
     public String getPassword() {
-        return "";
+        return senha;
     }
 
     @Override
