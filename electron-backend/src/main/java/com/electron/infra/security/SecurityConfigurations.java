@@ -10,16 +10,27 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 @Configuration
 @EnableWebSecurity
 public class SecurityConfigurations {
+
+    private FiltroDeSeguranca filtroDeSeguranca;
+
+    public SecurityConfigurations(FiltroDeSeguranca filtroDeSeguranca) {
+        this.filtroDeSeguranca = filtroDeSeguranca;
+    }
+
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
         return httpSecurity
                 .csrf(csfr -> csfr.disable())
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-//  aqui vao as rotas que precisam de autorizacao              .authorizeHttpRequests(authorize -> authorize)
+//                .authorizeHttpRequests(authorize -> authorize
+//                        .requestMatchers(HttpMethod.POST, "")           aqui vão as rotas que precisam de autorizacao!!!
+//                )
+                .addFilterBefore(filtroDeSeguranca, UsernamePasswordAuthenticationFilter.class)
                 .build();
     }
 

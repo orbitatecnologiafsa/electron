@@ -2,7 +2,9 @@ package com.electron.controllers;
 
 import com.electron.domain.Usuario;
 import com.electron.domain.dtos.LoginDTO;
+import com.electron.domain.dtos.LoginReponseDTO;
 import com.electron.domain.dtos.RegistroDTO;
+import com.electron.infra.security.TokenService;
 import com.electron.repositories.UsuarioRepository;
 import jakarta.validation.*;
 import org.springframework.http.HttpStatus;
@@ -23,10 +25,12 @@ public class AutenticacaoController {
 
     private AuthenticationManager authenticationManager;
     private UsuarioRepository usuarioRepository;
+    private TokenService tokenService;
 
-    public AutenticacaoController(AuthenticationManager authenticationManager, UsuarioRepository usuarioRepository) {
+    public AutenticacaoController(AuthenticationManager authenticationManager, UsuarioRepository usuarioRepository, TokenService tokenService) {
         this.authenticationManager = authenticationManager;
         this.usuarioRepository = usuarioRepository;
+        this.tokenService = tokenService;
     }
 
     @PostMapping("/login")
@@ -34,7 +38,9 @@ public class AutenticacaoController {
         var senha = new UsernamePasswordAuthenticationToken(autenticacaoDTO.email(), autenticacaoDTO.senha());
         var auth = this.authenticationManager.authenticate(senha);
 
-        return ResponseEntity.ok().build();
+        var token = tokenService.gerarToken((Usuario) auth.getPrincipal());
+
+        return ResponseEntity.ok(new LoginReponseDTO(token));
     }
 
     @PostMapping("/registrar")
