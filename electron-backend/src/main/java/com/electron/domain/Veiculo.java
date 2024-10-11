@@ -9,6 +9,7 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
 @Table(name = "veiculos")
@@ -26,5 +27,6 @@ public class Veiculo {
 
     @ManyToOne
     @JoinColumn(name = "transportadora_id", nullable = false)
+    @JsonIgnore
     private Transportadora transportadora;
 }

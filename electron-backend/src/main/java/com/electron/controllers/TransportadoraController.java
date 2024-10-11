@@ -29,9 +29,9 @@ public class TransportadoraController {
     }
 
     @PostMapping
-    public ResponseEntity<Void> criar(@RequestBody Transportadora transportadora) {
-        transportadoraService.criar(transportadora);
-        return ResponseEntity.status(HttpStatus.CREATED).build();
+    public ResponseEntity<Transportadora> criar(@RequestBody Transportadora transportadora) {
+        Transportadora createdTransportadora = transportadoraService.criar(transportadora);
+        return ResponseEntity.status(HttpStatus.CREATED).body(createdTransportadora);
     }
 
     @PutMapping("/{id}")
