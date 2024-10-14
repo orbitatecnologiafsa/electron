@@ -5,7 +5,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faUser, faSort, faCalendar, faMagnifyingGlass } from '@fortawesome/free-solid-svg-icons';
 import { Menu, MenuButton, MenuItems, MenuItem } from '@headlessui/react';
 
-function Faturamento() {
+function Relatorio() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [campoValue, setCampoValue] = useState('Selecione um Campo');
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -42,37 +42,35 @@ function Faturamento() {
     'Número',
     'Série',
     'Emissão',
-    'Cliente',
+    'Fornecedor',
     'CNPJ/CPF',
-    'BC ICMS',
+    'BC IMCS',
     'ICMS',
     'Total',
-    'Vendedor',
-    'Chave de Acesso',
-    'Status NFe',
+    'Chave Acesso',
     'Data/Hora Autorização',
     'Protocolo',
-    'Usuário'
-    ];
+    'Usuário',
+    'Entrada',
+  ];
 
   // Dados da tabela
   const exampleData = [
     {
       index: "",
-      numero:56,
-      serie:1,
-      emissao:'12/08/2001 11:13:00',
-      cliente:'Aislan',
+      numero:'+55 9123-4567',
+      serie:123,
+      emissao:'02/12/2004',
+      fornecedor:'Master',
       cnpjcpf:'011.111.254-23',
-      bcicms:'R$457',
-      icms: 'R$45',
-      total:'R$895',
-      vendedor:'Marcio',
-      chavedeacesso:5,
-      statusnfe:'Ativo',
-      datahoraautorizacao:'12/03/2005 12:45:00',
-      protocolo:45,
-      usuario:'Ailton',
+      bcimcs:'R$456',
+      icms:'R$123',
+      total:'789',
+      cahveacesso:45,
+      dataautorizacao:'12/09/2005',
+      protocolo:7895,
+      usuario:'joao',
+      entrada:789,
     },
   ];
 
@@ -90,7 +88,7 @@ function Faturamento() {
           <div className="space-y-12 mt-10 ml-10">
             <div className="border-b border-gray-900/10 pb-12">
               <h2 className="text-base font-semibold leading-7 text-gray-900">
-                Listagem Listagem 
+                Listagem de Relatório
               </h2>
               <div className="mt-10 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-4 mr-10">
                 <div className="sm:col-span-4">
@@ -123,7 +121,7 @@ function Faturamento() {
                               className="absolute z-10 mt-10 w-56 origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 transition focus:outline-none data-[closed]:scale-95 data-[closed]:transform data-[closed]:opacity-0 data-[enter]:duration-100 data-[leave]:duration-75 data-[enter]:ease-out data-[leave]:ease-in"
                             >
                               <div className="py-1">
-                                {['Todos',  'Número','Cliente/Fornecedor','Usuário', 'Vendedor','Chave de Acesso','Incompleto'].map(item => (
+                                {['Todos', 'Número', 'Série', 'Emissão', 'Fornecedor', 'CNPJ/CPF', 'BC IMCS', 'ICMS', 'Total', 'Chave Acesso', 'Data/Hora Autorização','Protocolo','Usuário','Entrada', 'Incompleto'].map(item => (
                                   <MenuItem key={item}>
                                     <a
                                       className="block px-4 py-2 text-sm text-gray-700 data-[focus]:bg-gray-100 data-[focus]:text-gray-900"
@@ -173,17 +171,16 @@ function Faturamento() {
                               <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700">{data.numero}</td>
                               <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700">{data.serie}</td>
                               <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700">{data.emissao}</td>
-                              <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700">{data.cliente}</td>
+                              <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700">{data.fornecedor}</td>
                               <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700">{data.cnpjcpf}</td>
-                              <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700">{data.bcicms}</td>
+                              <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700">{data.bcimcs}</td>
                               <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700">{data.icms}</td>
                               <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700">{data.total}</td>
-                              <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700">{data.vendedor}</td>
-                              <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700">{data.chavedeacesso}</td>
-                              <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700">{data.statusnfe}</td>
-                              <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700">{data.datahoraautorizacao}</td>
+                              <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700">{data.cahveacesso}</td>
+                              <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700">{data.dataautorizacao}</td>
                               <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700">{data.protocolo}</td>
                               <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700">{data.usuario}</td>
+                              <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700">{data.entrada}</td>
                             </tr>
                           ))}
                         </tbody>
@@ -262,4 +259,4 @@ function Faturamento() {
   );
 }
 
-export default Faturamento;
+export default Relatorio;

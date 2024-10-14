@@ -19,22 +19,29 @@ import Transportadoras from './pages/Cadastros/Transportadoras';
 import Vendedores from './pages/Cadastros/Vendedores';
 // Import pages Entradas
 import Pedidos from './pages/Entradas/Pedidos';
-import Montagem from './pages/Entradas/Montagem';
 import NotaEntrada from './pages/Entradas/NotaEntrada';
-import MDE from './pages/Entradas/MDE';
 // Import pages Saídas
-import CupomFiscal from './pages/Saidas/CupomFiscal';
-import Faturamento from './pages/Saidas/Faturamento';
-import NotaServico from './pages/Saidas/NotaServico';
 import Orcamento from './pages/Saidas/Orcamento';
 import Pedido from './pages/Saidas/Pedido';
-import PreVenda from './pages/Saidas/PreVenda';
+import NotaFiscalNFE from './pages/Saidas/NotaFiscalNFE';
 // import pages Financeiros
 import Caixa from './pages/Financeiro/Caixa';
 // import pages Auxiliares
 import Tributacoes from './pages/Auxiliares/Tributacoes';
 import RelacoesCFOP from './pages/Auxiliares/RelacoesCFOP';
-// import pages Relatorios
+// import pages Configurações
+import Empresa from './pages/Configuracoes/Empresa';
+import Estoque from './pages/Configuracoes/Estoque';
+import NFE from './pages/Configuracoes/NFE';
+import Produto from './pages/Configuracoes/Produto';
+// import pages Permissoes
+import Cadastros from './pages/Permissoes/Cadastros';
+import Entradas from './pages/Permissoes/Entradas';
+//import Estoque from './pages/Permissoes/Estoque';
+import Financeiro from './pages/Permissoes/Financeiro';
+import Relatorios from './pages/Permissoes/Relatorios';
+import Saidas from './pages/Permissoes/Saidas';
+import Estoque2 from './pages/Permissoes/Estoque2';
 
 function App() {
 
@@ -58,24 +65,24 @@ function App() {
         <Route exact path="/cadastro/transportadoras" element={<Transportadoras/>} />
         <Route exact path="/cadastro/vendedores" element={<Vendedores/>} />
         <Route exact path="/entradas/pedidos" element={<Pedidos/>} />
-        <Route exact path="/entradas/montagem" element={<Montagem/>} />
         <Route exact path="/entradas/NotaEntrada" element={<NotaEntrada/>} />
-        <Route exact path="/entradas/MDE" element={<MDE/>} />
-        <Route exact path="/saidas/cupomFiscal" element={<CupomFiscal/>} />
-        <Route exact path="/saidas/faturamento" element={<Faturamento/>} />
-        <Route exact path="/saidas/NotaServico" element={<NotaServico/>} />
         <Route exact path="/saidas/orcamento" element={<Orcamento/>} />
         <Route exact path="/saidas/pedido" element={<Pedido/>} />
-        <Route exact path="/saidas/preVenda" element={<PreVenda/>} />
+        <Route exact path="/saidas/notafiscalnfe" element={<NotaFiscalNFE/>} />
         <Route exact path="/financeiro/Caixa" element={<Caixa/>} />
         <Route exact path="/auxiliares/tributacoes" element={<Tributacoes/>} />
-        <Route exact path="/auxiliares/cfop" element={<RelacoesCFOP/>} />
-       
-       
-      
+        <Route exact path="/auxiliares/cfop" element={<RelacoesCFOP/>} /> 
+        <Route exact path="/configuracoes/Empresa" element={<Empresa/>} /> 
+        <Route exact path="/configuracoes/Estoque" element={<Estoque/>} /> 
+        <Route exact path="/configuracoes/NFE" element={<NFE/>} /> 
+        <Route exact path="/configuracoes/Produto" element={<Produto/>} /> 
 
-
-        
+        <Route exact path="/permissoes/Cadastros" element={<Cadastros/>} />
+        <Route exact path="/permissoes/Entradas" element={<Entradas/>} />
+        <Route exact path="/permissoes/Estoque2" element={<Estoque2/>} />
+        <Route exact path="/permissoes/Financeiro" element={<Financeiro/>} />
+        <Route exact path="/permissoes/Relatorios" element={<Relatorios/>} />
+        <Route exact path="/permissoes/Saidas" element={<Saidas/>} />
       </Routes>
     </>
   );

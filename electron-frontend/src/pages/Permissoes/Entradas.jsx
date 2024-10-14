@@ -5,7 +5,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faUser, faSort, faCalendar, faMagnifyingGlass } from '@fortawesome/free-solid-svg-icons';
 import { Menu, MenuButton, MenuItems, MenuItem } from '@headlessui/react';
 
-function Montagem() {
+function Entrada() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [campoValue, setCampoValue] = useState('Selecione um Campo');
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -39,26 +39,38 @@ function Montagem() {
   // Colunas da Tabela
   const tableColumns = [
     '',
+    'Número',
+    'Série',
     'Emissão',
-    'Código',
-    'Composição',
-    'Unidade',
-    'Quantidade',
+    'Fornecedor',
+    'CNPJ/CPF',
+    'BC IMCS',
+    'ICMS',
     'Total',
+    'Chave Acesso',
+    'Data/Hora Autorização',
+    'Protocolo',
     'Usuário',
+    'Entrada',
   ];
 
   // Dados da tabela
   const exampleData = [
     {
       index: "",
-      emissao: '12/02/2004',
-      codigo: 56,
-      composicao: '?????',
-      unidade: 45,
-      quantidade: 89,
-      total: 789,
-      usuario: 'João Pessoal',
+      numero:'+55 9123-4567',
+      serie:123,
+      emissao:'02/12/2004',
+      fornecedor:'Master',
+      cnpjcpf:'011.111.254-23',
+      bcimcs:'R$456',
+      icms:'R$123',
+      total:'789',
+      cahveacesso:45,
+      dataautorizacao:'12/09/2005',
+      protocolo:7895,
+      usuario:'joao',
+      entrada:789,
     },
   ];
 
@@ -76,7 +88,7 @@ function Montagem() {
           <div className="space-y-12 mt-10 ml-10">
             <div className="border-b border-gray-900/10 pb-12">
               <h2 className="text-base font-semibold leading-7 text-gray-900">
-                Listagem Pedidos de compra
+                Listagem de Entrada
               </h2>
               <div className="mt-10 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-4 mr-10">
                 <div className="sm:col-span-4">
@@ -109,7 +121,7 @@ function Montagem() {
                               className="absolute z-10 mt-10 w-56 origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 transition focus:outline-none data-[closed]:scale-95 data-[closed]:transform data-[closed]:opacity-0 data-[enter]:duration-100 data-[leave]:duration-75 data-[enter]:ease-out data-[leave]:ease-in"
                             >
                               <div className="py-1">
-                                {['Todos', 'Emissão', 'Código', 'Composição', 'Unidade', 'Quantidade', 'Total', 'Usuário'].map(item => (
+                                {['Todos', 'Número', 'Série', 'Emissão', 'Fornecedor', 'CNPJ/CPF', 'BC IMCS', 'ICMS', 'Total', 'Chave Acesso', 'Data/Hora Autorização','Protocolo','Usuário','Entrada', 'Incompleto'].map(item => (
                                   <MenuItem key={item}>
                                     <a
                                       className="block px-4 py-2 text-sm text-gray-700 data-[focus]:bg-gray-100 data-[focus]:text-gray-900"
@@ -156,13 +168,19 @@ function Montagem() {
                               <td className="px-4 py-4 whitespace-nowrap text-sm text-gray-700">
                                 <FontAwesomeIcon icon={faMagnifyingGlass} />
                               </td>
+                              <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700">{data.numero}</td>
+                              <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700">{data.serie}</td>
                               <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700">{data.emissao}</td>
-                              <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700">{data.codigo}</td>
-                              <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700">{data.composicao}</td>
-                              <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700">{data.unidade}</td>
-                              <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700">{data.quantidade}</td>
+                              <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700">{data.fornecedor}</td>
+                              <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700">{data.cnpjcpf}</td>
+                              <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700">{data.bcimcs}</td>
+                              <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700">{data.icms}</td>
                               <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700">{data.total}</td>
+                              <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700">{data.cahveacesso}</td>
+                              <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700">{data.dataautorizacao}</td>
+                              <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700">{data.protocolo}</td>
                               <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700">{data.usuario}</td>
+                              <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700">{data.entrada}</td>
                             </tr>
                           ))}
                         </tbody>
@@ -241,4 +259,4 @@ function Montagem() {
   );
 }
 
-export default Montagem;
+export default Entrada;
