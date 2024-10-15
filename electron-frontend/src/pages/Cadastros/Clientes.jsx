@@ -1,65 +1,123 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Sidebar from '../../partials/Sidebar';
 import Header from '../../partials/Header';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faUser, faSort, faCircleInfo, faMagnifyingGlass } from '@fortawesome/free-solid-svg-icons';
+import axios from 'axios';
 import { Menu, MenuButton, MenuItems, MenuItem } from '@headlessui/react';
 
 function Clientes() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [campoValue, setCampoValue] = useState('Selecione um Campo');
-  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isModalLegendaOpen, setIsModalLegendaOpen] = useState(false);
+  const [isModalCadastroOpen, setIsModalCadastroOpen] = useState(false);
+  const [posts, setPosts] = useState([]);
+  const [sortColumn, setSortColumn] = useState('id'); 
+  const [sortDirection, setSortDirection] = useState('asc'); 
+  const [formData, setFormData] = useState({
+    nome: '',
+    fantasia: '',
+    documento: '',
+    municipio: '',
+    uf: '',
+    telefone: '',
+    ativo: true,
+    ultimaCompra: '',
+    dataNascimento: '',
+  });
 
   const handleMenuItemClick = (value) => {
     setCampoValue(value);
   };
 
-  const handleModalToggle = () => {
-    setIsModalOpen(!isModalOpen);
+  const handleModalLegendaToggle = (event) => {
+    event.preventDefault();
+    setIsModalLegendaOpen(!isModalLegendaOpen);
   };
 
-  {/* Colunas da Tabela */}
+  const handleModalCadastroToggle = (event) => {
+    event.preventDefault();
+    setIsModalCadastroOpen(!isModalCadastroOpen);
+  };
+
+  {/* Consumindo API */}
+  const getPosts = async () => {
+    try {
+      const response = await axios.get("http://localhost:8080/api/clientes");
+      setPosts(response.data);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  useEffect(() => {
+    getPosts();
+  }, []);
+
+  {/* Sort da tabela pela coluna */}
+  const handleSort = (column) => {
+    const direction = (sortColumn === column && sortDirection === 'asc') ? 'desc' : 'asc';
+    setSortColumn(column);
+    setSortDirection(direction);
+  };
+
+  const sortedPosts = [...posts].sort((a, b) => {
+    const aValue = a[sortColumn];
+    const bValue = b[sortColumn];
+
+    if (aValue < bValue) return sortDirection === 'asc' ? -1 : 1;
+    if (aValue > bValue) return sortDirection === 'asc' ? 1 : -1;
+    return 0;
+  });
+
+  {/* Colunas da  tabela */}
   const tableColumns = [
     '',
-    'Documento',
+    'ID',
     'Nome',
     'Fantasia',
-    'Contato',
+    'Documento',
     'Município',
     'UF',
     'Telefone',
-    'Celular',
     'Ativo',
     'Última compra',
-    'Data de Nascimento',
   ];
 
-  {/* Dados da tabela */}
-  const exampleData = [
-    {
-      index: "",
-      documento: '123456789',
-      nome: 'João Silva',
-      fantasia: 'Silva Comércio',
-      contato: 'Contato 1',
-      municipio: 'São Paulo',
-      uf: 'SP',
-      telefone: '+55 11 98765-4321',
-      celular: '+55 11 91234-5678',
-      ativo: 'Sim',
-      ultimaCompra: '01/10/2023',
-      dataNascimento: '01/01/2000',
-    },
-  ];
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setFormData({ ...formData, [name]: value });
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      await axios.post("http://localhost:8080/api/clientes", formData);
+      setFormData({
+        nome: '',
+        fantasia: '',
+        documento: '',
+        municipio: '',
+        uf: '',
+        telefone: '',
+        ativo: true,
+        ultimaCompra: '',
+        dataNascimento: '',
+      });
+      setIsModalCadastroOpen(false);
+      {/* Get Posts para atualizar lista após cadastro no modal */}
+      getPosts();
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   return (
     <div className="flex h-screen overflow-hidden">
       {/* Sidebar */}
       <Sidebar sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} />
-
       {/* Conteúdo */}
       <div className="relative flex flex-col flex-1 overflow-y-auto overflow-x-hidden">
-        {/* Site header */}
         <Header sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} />
         {/* Form Clientes */}
         <form>
@@ -71,7 +129,7 @@ function Clientes() {
               <div className="mt-10 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-4 mr-10">
                 <div className="sm:col-span-4">
                   <div className="mt-2 flex">
-                    {/* Busca do cliente */}
+                    {/* Busca do Cliente */}
                     <div className="flex-initial w-full">
                       <label htmlFor="input1" className="block text-sm font-medium leading-6 text-gray-900">Descrição</label>
                       <div className="flex rounded-md shadow-sm ring-1 ring-inset ring-gray-300 focus-within:ring-2 focus-within:ring-inset focus-within:ring-indigo-600 sm:max-w-md">
@@ -84,7 +142,7 @@ function Clientes() {
                           className="block w-full ml-3 rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
                         />
                       </div>
-                      {/* Filtros de busca */}
+                      {/* Filtros da busca */}
                       <div className="flex-auto w-full">
                         <label htmlFor="input1" className="block text-sm font-medium leading-6 text-gray-900">Filtros</label>
                         <div className="flex rounded-md sm:max-w-md">
@@ -115,7 +173,7 @@ function Clientes() {
                           <button
                             type="button"
                             className="w-10 ml-4 rounded-md bg-white px-2 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50"
-                            onClick={handleModalToggle}
+                            onClick={handleModalLegendaToggle}
                           >
                             <FontAwesomeIcon icon={faCircleInfo} />
                           </button>
@@ -135,28 +193,33 @@ function Clientes() {
                           <tr>
                             {tableColumns.map((column, index) => (
                               <th key={column} className="px-6 py-3 text-center text-sm font-medium text-gray-700">
-                                {index === 0 ? column : <>{column} <FontAwesomeIcon icon={faSort} /></>}
+                                {index === 0 ? (
+                                  column
+                                ) : (
+                                  <div className="flex items-center justify-center cursor-pointer" onClick={() => handleSort(column)}>
+                                    <span className="mr-1">{column}</span>
+                                    <FontAwesomeIcon icon={faSort} />
+                                  </div>
+                                )}
                               </th>
                             ))}
                           </tr>
                         </thead>
                         <tbody className="bg-white divide-y divide-gray-200 text-center">
-                          {exampleData.map((data, index) => (
+                          {sortedPosts.map((data, index) => (
                             <tr key={index}>
-                              <td className="px-4 py-4 whitespace-nowrap text-sm text-gray-700">
+                              <td className="px-4 py-4 whitespace-nowrap text-center text-sm text-gray-700">
                                 <FontAwesomeIcon icon={faMagnifyingGlass} />
                               </td>
-                              <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700">{data.documento}</td>
-                              <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700">{data.nome}</td>
+                              <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700">{data.id}</td>
+                              <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700">{data.nomeRazao}</td>
                               <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700">{data.fantasia}</td>
-                              <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700">{data.contato}</td>
+                              <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700">{data.cpfCnpj}</td>
                               <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700">{data.municipio}</td>
                               <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700">{data.uf}</td>
                               <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700">{data.telefone}</td>
-                              <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700">{data.celular}</td>
-                              <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700">{data.ativo}</td>
-                              <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700">{data.ultimaCompra}</td>
-                              <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700">{data.dataNascimento}</td>
+                              <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700">{data.ativo ? 'Sim' : 'Não'}</td>
+                              <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700">{data.ultimaCompra || 'N/A'}</td>
                             </tr>
                           ))}
                         </tbody>
@@ -164,8 +227,8 @@ function Clientes() {
                     </div>
                   </div>
 
-                  {/* Modal */}
-                  {isModalOpen && (
+                  {/* Modal de legendas da tabela */}
+                  {isModalLegendaOpen && (
                     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
                       <div className="bg-white rounded-lg p-6 w-96">
                         <h3 className="text-lg font-semibold">Legenda da tabela</h3>
@@ -184,7 +247,7 @@ function Clientes() {
                         <div className="mt-4 flex justify-end">
                           <button
                             className="rounded-md bg-indigo-600 px-4 py-2 text-white"
-                            onClick={handleModalToggle}
+                            onClick={handleModalLegendaToggle}
                           >
                             OK
                           </button>
@@ -192,10 +255,92 @@ function Clientes() {
                       </div>
                     </div>
                   )}
+
+                  {/* Modal de Cadastro de Clientes */}
+                  {isModalCadastroOpen && (
+                    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
+                      <div className="bg-white rounded-lg p-6 w-96">
+                        <h3 className="text-lg font-semibold">Cadastro de Cliente</h3>
+                        <form onSubmit={handleSubmit} className="mt-4 space-y-4 ">
+                          <input
+                            type="text"
+                            name="nome"
+                            placeholder="Nome"
+                            value={formData.nome}
+                            onChange={handleInputChange}
+                            className="w-full px-3 py-2 rounded-md ring-1 ring-inset ring-gray-300 focus-within:ring-2 focus-within:ring-inset focus-within:ring-indigo-600 sm:max-w-md"
+                            required
+                          />
+                          <input
+                            type="text"
+                            name="fantasia"
+                            placeholder="Fantasia"
+                            value={formData.fantasia}
+                            onChange={handleInputChange}
+                            className="w-full px-3 py-2 rounded-md ring-1 ring-inset ring-gray-300 focus-within:ring-2 focus-within:ring-inset focus-within:ring-indigo-600 sm:max-w-md"
+                          />
+                          <input
+                            type="text"
+                            name="documento"
+                            placeholder="Documento"
+                            value={formData.documento}
+                            onChange={handleInputChange}
+                            className="w-full px-3 py-2 rounded-md ring-1 ring-inset ring-gray-300 focus-within:ring-2 focus-within:ring-inset focus-within:ring-indigo-600 sm:max-w-md"
+                          />
+                          <input
+                            type="text"
+                            name="municipio"
+                            placeholder="Município"
+                            value={formData.municipio}
+                            onChange={handleInputChange}
+                            className="w-full px-3 py-2 rounded-md ring-1 ring-inset ring-gray-300 focus-within:ring-2 focus-within:ring-inset focus-within:ring-indigo-600 sm:max-w-md"
+                          />
+                          <input
+                            type="text"
+                            name="uf"
+                            placeholder="UF"
+                            value={formData.uf}
+                            onChange={handleInputChange}
+                            className="w-full px-3 py-2 rounded-md ring-1 ring-inset ring-gray-300 focus-within:ring-2 focus-within:ring-inset focus-within:ring-indigo-600 sm:max-w-md"
+                          />
+                          <input
+                            type="text"
+                            name="telefone"
+                            placeholder="Telefone"
+                            value={formData.telefone}
+                            onChange={handleInputChange}
+                            className="w-full px-3 py-2 rounded-md ring-1 ring-inset ring-gray-300 focus-within:ring-2 focus-within:ring-inset focus-within:ring-indigo-600 sm:max-w-md"
+                          />
+                          <div className="flex items-center">
+                            <input
+                              type="checkbox"
+                              name="ativo"
+                              checked={formData.ativo}
+                              onChange={() => setFormData({ ...formData, ativo: !formData.ativo })}
+                              className="mr-2 rounded checked:bg-indigo-600"
+                            />
+                            <label className="text-sm">Ativo</label>
+                          </div>
+                          <div className="flex justify-between">
+                            <button type="submit" className="mt-4 rounded-md bg-indigo-600 hover:bg-indigo-800 px-4 py-2 text-white">
+                              Cadastrar
+                            </button>
+                            <button
+                              className="mt-4 bg-white rounded-md px-4 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50"
+                              onClick={handleModalCadastroToggle}
+                            >
+                              Cancelar
+                            </button>
+                          </div>
+                        </form>
+                      </div>
+                    </div>
+                  )}
                 </div>
               </div>
               <div className="mr-10 mt-10 h-10">
-                <button className="w-auto float-end rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50">
+                <button className="w-auto float-end rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50"
+                  onClick={handleModalCadastroToggle}>
                   Cadastrar
                 </button>
               </div>
