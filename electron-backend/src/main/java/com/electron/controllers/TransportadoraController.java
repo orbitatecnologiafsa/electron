@@ -1,7 +1,10 @@
 package com.electron.controllers;
 
+import com.electron.controllers.exceptions.StandardError;
 import com.electron.domain.Transportadora;
 import com.electron.services.TransportadoraService;
+import com.electron.services.exceptions.NotFoundException;
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -49,4 +52,16 @@ public class TransportadoraController {
     public ResponseEntity<String> handleRuntimeException(RuntimeException ex) {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ex.getMessage());
     }
+    @ExceptionHandler(NotFoundException.class)
+    public ResponseEntity<StandardError> handleNotFoundException(NotFoundException ex, HttpServletRequest request) {
+        StandardError error = new StandardError(
+            System.currentTimeMillis(),
+            HttpStatus.NOT_FOUND.value(),
+            "Not Found",
+            ex.getMessage(),
+            request.getRequestURI()
+        );
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(error);
+    }
+
 }
