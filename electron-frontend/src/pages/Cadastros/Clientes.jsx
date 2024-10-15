@@ -40,10 +40,12 @@ function Clientes() {
     setIsModalCadastroOpen(!isModalCadastroOpen);
   };
 
-  {/* Consumindo API */}
+  {/* Consumindo API Clientes */}
   const getPosts = async () => {
     try {
+      {/* URL API */}
       const response = await axios.get("http://localhost:8080/api/clientes");
+      console.log(response.data);
       setPosts(response.data);
     } catch (error) {
       console.log(error);
@@ -54,9 +56,10 @@ function Clientes() {
     getPosts();
   }, []);
 
-  {/* Sort da tabela pela coluna */}
+  {/* Sort da tabela */}
   const handleSort = (column) => {
     const direction = (sortColumn === column && sortDirection === 'asc') ? 'desc' : 'asc';
+    console.log(`Sorting by ${column} in ${direction} order`);
     setSortColumn(column);
     setSortDirection(direction);
   };
@@ -65,25 +68,27 @@ function Clientes() {
     const aValue = a[sortColumn];
     const bValue = b[sortColumn];
 
-    if (aValue < bValue) return sortDirection === 'asc' ? -1 : 1;
-    if (aValue > bValue) return sortDirection === 'asc' ? 1 : -1;
-    return 0;
+    if (typeof aValue === 'string' && typeof bValue === 'string') {
+      return sortDirection === 'asc' ? aValue.localeCompare(bValue) : bValue.localeCompare(aValue);
+    }
+    return sortDirection === 'asc' ? aValue - bValue : bValue - aValue;
   });
 
-  {/* Colunas da  tabela */}
+  {/* Colunas da tabela */}
   const tableColumns = [
-    '',
-    'ID',
-    'Nome',
-    'Fantasia',
-    'Documento',
-    'Município',
-    'UF',
-    'Telefone',
-    'Ativo',
-    'Última compra',
+    { label: '', key: 'action' },
+    { label: 'ID', key: 'id' },
+    { label: 'Nome/Razão', key: 'nomeRazao' },
+    { label: 'Fantasia', key: 'fantasia' },
+    { label: 'Documento', key: 'cpfCnpj' },
+    { label: 'Município', key: 'municipio' },
+    { label: 'UF', key: 'uf' },
+    { label: 'Telefone', key: 'telefone' },
+    { label: 'Ativo', key: 'ativo' },
+    { label: 'Última Compra', key: 'ultimaCompra' },
   ];
 
+  {/* Modal de Cadastro */}
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
@@ -105,7 +110,6 @@ function Clientes() {
         dataNascimento: '',
       });
       setIsModalCadastroOpen(false);
-      {/* Get Posts para atualizar lista após cadastro no modal */}
       getPosts();
     } catch (error) {
       console.log(error);
@@ -129,7 +133,6 @@ function Clientes() {
               <div className="mt-10 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-4 mr-10">
                 <div className="sm:col-span-4">
                   <div className="mt-2 flex">
-                    {/* Busca do Cliente */}
                     <div className="flex-initial w-full">
                       <label htmlFor="input1" className="block text-sm font-medium leading-6 text-gray-900">Descrição</label>
                       <div className="flex rounded-md shadow-sm ring-1 ring-inset ring-gray-300 focus-within:ring-2 focus-within:ring-inset focus-within:ring-indigo-600 sm:max-w-md">
@@ -142,7 +145,6 @@ function Clientes() {
                           className="block w-full ml-3 rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
                         />
                       </div>
-                      {/* Filtros da busca */}
                       <div className="flex-auto w-full">
                         <label htmlFor="input1" className="block text-sm font-medium leading-6 text-gray-900">Filtros</label>
                         <div className="flex rounded-md sm:max-w-md">
@@ -192,34 +194,30 @@ function Clientes() {
                         <thead className="bg-gray-100">
                           <tr>
                             {tableColumns.map((column, index) => (
-                              <th key={column} className="px-6 py-3 text-center text-sm font-medium text-gray-700">
-                                {index === 0 ? (
-                                  column
-                                ) : (
-                                  <div className="flex items-center justify-center cursor-pointer" onClick={() => handleSort(column)}>
-                                    <span className="mr-1">{column}</span>
-                                    <FontAwesomeIcon icon={faSort} />
-                                  </div>
-                                )}
+                              <th key={index} className="px-6 py-3 text-center text-sm font-medium text-gray-700">
+                                <div className="flex items-center justify-center cursor-pointer" onClick={() => handleSort(column.key)}>
+                                  <span className="mr-1">{column.label}</span>
+                                  {index !== 0 && <FontAwesomeIcon icon={faSort} />}
+                                </div>
                               </th>
                             ))}
                           </tr>
                         </thead>
-                        <tbody className="bg-white divide-y divide-gray-200 text-center">
-                          {sortedPosts.map((data, index) => (
-                            <tr key={index}>
-                              <td className="px-4 py-4 whitespace-nowrap text-center text-sm text-gray-700">
-                                <FontAwesomeIcon icon={faMagnifyingGlass} />
+                        <tbody className="bg-white divide-y divide-gray-200">
+                          {sortedPosts.map((data) => (
+                            <tr key={data.id}>
+                              <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700 text-center">
+                                <FontAwesomeIcon icon={faMagnifyingGlass} className="cursor-pointer" />
                               </td>
-                              <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700">{data.id}</td>
-                              <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700">{data.nomeRazao}</td>
-                              <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700">{data.fantasia}</td>
-                              <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700">{data.cpfCnpj}</td>
-                              <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700">{data.municipio}</td>
-                              <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700">{data.uf}</td>
-                              <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700">{data.telefone}</td>
-                              <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700">{data.ativo ? 'Sim' : 'Não'}</td>
-                              <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700">{data.ultimaCompra || 'N/A'}</td>
+                              <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700 text-center">{data.id}</td>
+                              <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700 text-center">{data.nomeRazao}</td>
+                              <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700 text-center">{data.fantasia}</td>
+                              <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700 text-center">{data.cpfCnpj}</td>
+                              <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700 text-center">{data.municipio}</td>
+                              <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700 text-center">{data.uf}</td>
+                              <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700 text-center">{data.telefone}</td>
+                              <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700 text-center">{data.ativo ? 'Sim' : 'Não'}</td>
+                              <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700 text-center">{data.ultimaCompra}</td>
                             </tr>
                           ))}
                         </tbody>
@@ -255,7 +253,7 @@ function Clientes() {
                       </div>
                     </div>
                   )}
-
+                  
                   {/* Modal de Cadastro de Clientes */}
                   {isModalCadastroOpen && (
                     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
@@ -338,6 +336,7 @@ function Clientes() {
                   )}
                 </div>
               </div>
+              {/* Botão cadastrar novo cliente */}
               <div className="mr-10 mt-10 h-10">
                 <button className="w-auto float-end rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50"
                   onClick={handleModalCadastroToggle}>
