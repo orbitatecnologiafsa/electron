@@ -69,6 +69,10 @@ public class FornecedorService {
     }
 
     public void deletar(Long id) {
-        fornecedorRepository.deleteById(id);
+        if(fornecedorRepository.findById(id).isPresent()){
+            fornecedorRepository.deleteById(id);
+            return;
+        }
+        throw new NotFoundException("Não foi possível deletar o fornecedor de id " + id);
     }
 }

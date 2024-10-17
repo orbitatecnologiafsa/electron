@@ -70,6 +70,10 @@ public class ClienteService {
     }
 
     public void deletar(Long id) {
-        clienteRepository.deleteById(id);
+        if(clienteRepository.findById(id).isPresent()) {
+            clienteRepository.deleteById(id);
+            return;
+        }
+        throw new NotFoundException("Não foi possível excluir o cliente de id " + id);
     }
 }
