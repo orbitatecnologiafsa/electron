@@ -9,7 +9,8 @@ import { Menu, MenuButton, MenuItems, MenuItem } from '@headlessui/react';
 function Clientes() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [campoValue, setCampoValue] = useState('Selecione um Campo');
-  const [documentoValue, setDocumentoValue] = useState('');;
+  const [documentoValue, setDocumentoValue] = useState(null);;
+  const [isDocumentoSelected, setIsDocumentoSelected] = useState(false);
   const [tipoCliente, setTipoCliente] = useState('-');
   const [isModalLegendaOpen, setIsModalLegendaOpen] = useState(false);
   const [isModalCadastroOpen, setIsModalCadastroOpen] = useState(false);
@@ -17,7 +18,7 @@ function Clientes() {
   const [sortColumn, setSortColumn] = useState('id'); 
   const [sortDirection, setSortDirection] = useState('asc'); 
   const [formData, setFormData] = useState({
-      nome: '',
+      nomeRazao: '',
       fantasia: '',
       documento: '',
       cep: '',
@@ -25,14 +26,17 @@ function Clientes() {
       uf: '',
       bairro: '',
       logradouro: '',
+      numero: '',
       complemento: '',
-      cpf_cnpj: '',
+      cpfCnpj: '',
+      pfOuPj: '',
       email: '',
       telefone: '',
       celular: '',
       contato: '',
-      rg_inscricao_estadual: '',
+      rgInscricaoEstadual: '',
       ativo: true,
+      revenda: false,
     });
 
   const handleMenuItemClick = (value) => {
@@ -41,8 +45,15 @@ function Clientes() {
 
   const handleDocumentoItemClick = (item) => {
     setDocumentoValue(item);
-    setTipoCliente(item === 'CPF' ? 'PF' : 'PJ');
-    setFormData((prevData) => ({ ...prevData, documento: '', cpf_cnpj: '' })); // Limpa os campos
+    const tipoCliente = item === 'CPF' ? 'PF' : 'PJ';
+    setTipoCliente(tipoCliente);
+    setFormData((prevData) => ({
+        ...prevData,
+        documento: '',
+        cpfCnpj: '',
+        pfOuPj: tipoCliente,
+    }));
+    setIsDocumentoSelected(true);
   };
 
   const handleModalLegendaToggle = (event) => {
@@ -109,32 +120,38 @@ function Clientes() {
     setFormData((prevData) => ({ ...prevData, [name]: value }));
   };
 
+
+  {/* Post ADD Tabela */}
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      await axios.post("http://localhost:8080/api/clientes", formData);
-      setFormData({
-        nome: '',
-        fantasia: '',
-        documento: '',
-        cep: '',
-        municipio: '',
-        uf: '',
-        bairro: '',
-        logradouro: '',
-        complemento: '',
-        cpf_cnpj: '',
-        email: '',
-        telefone: '',
-        celular: '',
-        contato: '',
-        rg_inscricao_estadual: '',
-        ativo: true,
-      });
-      setIsModalCadastroOpen(false);
-      getPosts();
+        console.log('Enviando dados:', formData); // Adicione este log
+        const response = await axios.post("http://localhost:8080/api/clientes", formData);
+        console.log('Resposta da API:', response.data); // Log da resposta
+        setFormData({
+            nomeRazao: '',
+            fantasia: '',
+            documento: '',
+            cep: '',
+            municipio: '',
+            uf: '',
+            bairro: '',
+            logradouro: '',
+            numero: '',
+            complemento: '',
+            cpfCnpj: '',
+            pfOuPj: '',
+            email: '',
+            telefone: '',
+            celular: '',
+            contato: '',
+            rgInscricaoEstadual: '',
+            ativo: true,
+        });
+        setIsModalCadastroOpen(false);
+        getPosts();
     } catch (error) {
-      console.log(error);
+        console.error('Erro ao cadastrar cliente:', error.response ? error.response.data : error.message);
     }
   };
 
@@ -145,6 +162,203 @@ function Clientes() {
       {/* Conteúdo */}
       <div className="relative flex flex-col flex-1 overflow-y-auto overflow-x-hidden">
         <Header sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} />
+        {isModalCadastroOpen && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
+          <div className="bg-white rounded-lg p-6 w-8/12 max-h-fit overflow-auto">
+            <h3 className="text-lg font-semibold">Cadastro de Cliente</h3>
+            <form onSubmit={handleSubmit} className="space-y-6 mt-10">
+              
+              {/* Tipo de Documento */}
+              <Menu as="div" className="flex justify-center mb-4">
+                <div>
+                  <MenuButton className="w-60 h-11 px-3 py-2 rounded-md bg-white text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50">
+                    {documentoValue || 'Tipo de Documento'}
+                  </MenuButton>
+                </div>
+                <MenuItems className="absolute z-10 mt-10 w-60 origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 transition focus:outline-none">
+                  <div className="py-1">
+                    {['CPF', 'CNPJ'].map(item => (
+                      <MenuItem key={item}>
+                        <a
+                          className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                          onClick={() => handleDocumentoItemClick(item)}
+                        >
+                          {item}
+                        </a>
+                      </MenuItem>
+                    ))}
+                  </div>
+                </MenuItems>
+              </Menu>
+              
+              {/* Dados do Cliente */}
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <input
+                  type="text"
+                  name="nomeRazao"
+                  placeholder="Nome"
+                  value={formData.nomeRazao}
+                  onChange={handleInputChange}
+                  className="h-11 px-3 py-2 rounded-md ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-indigo-600"
+                  required
+                />
+                <input
+                  type="text"
+                  name="fantasia"
+                  placeholder="Fantasia"
+                  value={formData.fantasia}
+                  onChange={handleInputChange}
+                  className="h-11 px-3 py-2 rounded-md ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-indigo-600"
+                />
+                <input
+                  type="text"
+                  name="rgInscricaoEstadual"
+                  placeholder="RG Inscrição Estadual"
+                  value={formData.rgInscricaoEstadual}
+                  onChange={handleInputChange}
+                  className="h-11 px-3 py-2 rounded-md ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-indigo-600"
+                />
+                <input
+                  type="text"
+                  name="cpfCnpj"
+                  placeholder="Preencha o documento"
+                  value={formData.cpfCnpj}
+                  onChange={handleInputChange}
+                  disabled={!isDocumentoSelected}
+                  className="h-11 px-3 py-2 rounded-md ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-indigo-600 disabled:bg-gray-300"
+                />
+              </div>
+
+              {/* Endereço do Cliente */}
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <input
+                  type="text"
+                  name="cep"
+                  placeholder="CEP"
+                  value={formData.cep}
+                  onChange={handleInputChange}
+                  className="h-11 px-3 py-2 rounded-md ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-indigo-600"
+                />
+                <input
+                  type="text"
+                  name="municipio"
+                  placeholder="Cidade / Município"
+                  value={formData.municipio}
+                  onChange={handleInputChange}
+                  className="h-11 px-3 py-2 rounded-md ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-indigo-600"
+                />
+                <input
+                  type="text"
+                  name="uf"
+                  placeholder="Estado / UF"
+                  value={formData.uf}
+                  onChange={handleInputChange}
+                  className="h-11 px-3 py-2 rounded-md ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-indigo-600"
+                />
+                <input
+                  type="text"
+                  name="bairro"
+                  placeholder="Bairro"
+                  value={formData.bairro}
+                  onChange={handleInputChange}
+                  className="h-11 px-3 py-2 rounded-md ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-indigo-600"
+                />
+                <input
+                  type="text"
+                  name="logradouro"
+                  placeholder="Rua / Logradouro"
+                  value={formData.logradouro}
+                  onChange={handleInputChange}
+                  className="h-11 px-3 py-2 rounded-md ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-indigo-600"
+                />
+                <input
+                  type="text"
+                  name="numero"
+                  placeholder="Número"
+                  value={formData.numero}
+                  onChange={handleInputChange}
+                  className="h-11 px-3 py-2 rounded-md ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-indigo-600"
+                />
+                <input
+                  type="text"
+                  name="complemento"
+                  placeholder="Complemento"
+                  value={formData.complemento}
+                  onChange={handleInputChange}
+                  className="h-11 px-3 py-2 rounded-md ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-indigo-600"
+                />
+                <div className="mt-2">
+                  <input
+                    type="checkbox"
+                    name="ativo"
+                    checked={formData.ativo}
+                    onChange={() => setFormData({ ...formData, ativo: !formData.ativo })}
+                    className="mr-2 p-2 rounded checked:bg-indigo-600"
+                  />
+                  <label className="text-base">Ativo</label>
+                </div>
+                <div className="mt-2">
+                  <input
+                    type="checkbox"
+                    name="revenda"
+                    checked={formData.revenda}
+                    onChange={() => setFormData({ ...formData, revenda: !formData.revenda })}
+                    className="mr-2 p-2 rounded checked:bg-indigo-600"
+                  />
+                  <label className="text-base">Revenda</label>
+                </div>
+              </div>
+
+              {/* Contato do Cliente */}
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <input
+                  type="email"
+                  name="email"
+                  placeholder="Email"
+                  value={formData.email}
+                  onChange={handleInputChange}
+                  className="h-11 px-3 py-2 rounded-md ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-indigo-600"
+                />
+                <input
+                  type="text"
+                  name="telefone"
+                  placeholder="Telefone"
+                  value={formData.telefone}
+                  onChange={handleInputChange}
+                  className="h-11 px-3 py-2 rounded-md ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-indigo-600"
+                />
+                <input
+                  type="text"
+                  name="celular"
+                  placeholder="Celular"
+                  value={formData.celular}
+                  onChange={handleInputChange}
+                  className="h-11 px-3 py-2 rounded-md ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-indigo-600"
+                />
+                <input
+                  type="text"
+                  name="contato"
+                  placeholder="Contato"
+                  value={formData.contato}
+                  onChange={handleInputChange}
+                  className="h-11 px-3 py-2 rounded-md ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-indigo-600"
+                />
+              </div>
+
+              <div className="flex items-center float-end gap-6 mt-4">
+                {/* Botões de ação aqui */}
+                <button type="submit" className="h-11 px-4 py-2 rounded-md bg-indigo-600 text-white hover:bg-indigo-700">
+                  Cadastrar
+                </button>
+                <button type="button" onClick={() => setIsModalCadastroOpen(false)} className="h-11 px-4 py-2 rounded-md bg-gray-300 text-gray-800 hover:bg-gray-400">
+                  Cancelar
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
+
         {/* Form Clientes */}
         <form>
           <div className="space-y-12 mt-10 ml-10">
@@ -201,7 +415,7 @@ function Clientes() {
                           >
                             <FontAwesomeIcon icon={faCircleInfo} />
                           </button>
-                          <button className="w-44 ml-4 rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50">
+                          <button className="w-44 ml-4 rounded-md bg-indigo-600 text-white hover:bg-indigo-700">
                             Pesquisar
                           </button>
                         </div>
@@ -278,198 +492,11 @@ function Clientes() {
                       </div>
                     </div>
                   )}
-                  
-                  {/* Modal de Cadastro de Clientes */}
-                  {isModalCadastroOpen && (
-                  <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
-                    <div className="bg-white rounded-lg p-6 w-150">
-                      <h3 className="text-lg font-semibold">Cadastro de Cliente</h3>
-                      <form onSubmit={handleSubmit} className="mt-4 space-y-4">
-                        <div className="flex gap-4">
-                          <input
-                            type="text"
-                            name="nome"
-                            placeholder="Nome"
-                            value={formData.nome}
-                            onChange={handleInputChange}
-                            className="w-full h-11 px-3 py-2 rounded-md ring-1 ring-inset ring-gray-300 focus-within:ring-2 focus-within:ring-inset focus-within:ring-indigo-600 sm:max-w-md"
-                            required
-                          />
-                          <input
-                            type="text"
-                            name="fantasia"
-                            placeholder="Fantasia"
-                            value={formData.fantasia}
-                            onChange={handleInputChange}
-                            className="w-full h-11 px-3 py-2 rounded-md ring-1 ring-inset ring-gray-300 focus-within:ring-2 focus-within:ring-inset focus-within:ring-indigo-600 sm:max-w-md"
-                          />
-                          <input
-                            type="text"
-                            name="rg_inscricao_estadual"
-                            placeholder="RG Inscrição Estadual"
-                            value={formData.rg_inscricao_estadual}
-                            onChange={handleInputChange}
-                            className="w-30 px-3 py-2 rounded-md ring-1 ring-inset ring-gray-300 focus-within:ring-2 focus-within:ring-inset focus-within:ring-indigo-600 sm:max-w-md"
-                          />
-                        </div>
-                        {/* Endereço do Cliente */}
-                        <div className="flex gap-4">
-                          <input
-                            type="text"
-                            name="cep"
-                            placeholder="CEP"
-                            value={formData.cep}
-                            onChange={handleInputChange}
-                            className="w-30 h-11 px-3 py-2 rounded-md ring-1 ring-inset ring-gray-300 focus-within:ring-2 focus-within:ring-inset focus-within:ring-indigo-600 sm:max-w-md"
-                          />
-                          <input
-                            type="text"
-                            name="municipio"
-                            placeholder="Cidade / Município"
-                            value={formData.municipio}
-                            onChange={handleInputChange}
-                            className="w-30 h-11 px-3 py-2 rounded-md ring-1 ring-inset ring-gray-300 focus-within:ring-2 focus-within:ring-inset focus-within:ring-indigo-600 sm:max-w-md"
-                          />
-                          <input
-                            type="text"
-                            name="uf"
-                            placeholder="Estado / UF"
-                            value={formData.uf}
-                            onChange={handleInputChange}
-                            className="w-30 h-11 px-3 py-2 rounded-md ring-1 ring-inset ring-gray-300 focus-within:ring-2 focus-within:ring-inset focus-within:ring-indigo-600 sm:max-w-md"
-                          />
-                        </div>
-                        <div className="flex gap-4">
-                          <input
-                            type="text"
-                            name="bairro"
-                            placeholder="Bairro"
-                            value={formData.bairro}
-                            onChange={handleInputChange}
-                            className="w-30 h-11 px-3 py-2 rounded-md ring-1 ring-inset ring-gray-300 focus-within:ring-2 focus-within:ring-inset focus-within:ring-indigo-600 sm:max-w-md"
-                          />
-                          <input
-                            type="text"
-                            name="logradouro"
-                            placeholder="Rua / Logradouro"
-                            value={formData.logradouro}
-                            onChange={handleInputChange}
-                            className="w-30 h-11 px-3 py-2 rounded-md ring-1 ring-inset ring-gray-300 focus-within:ring-2 focus-within:ring-inset focus-within:ring-indigo-600 sm:max-w-md"
-                          />
-                          <input
-                            type="text"
-                            name="complemento"
-                            placeholder="Complemento"
-                            value={formData.complemento}
-                            onChange={handleInputChange}
-                            className="w-30 h-11 px-3 py-2 rounded-md ring-1 ring-inset ring-gray-300 focus-within:ring-2 focus-within:ring-inset focus-within:ring-indigo-600 sm:max-w-md"
-                          />
-                        </div>
-                        <div className="flex gap-4">
-                          <Menu as="div" className="flex">
-                            <div>
-                              <MenuButton className="w-60 h-11 px-3 py-2 rounded-md bg-white text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50">
-                                {documentoValue || 'Tipo de Documento'}
-                              </MenuButton>
-                            </div>
-                            <MenuItems className="absolute z-10 mt-10 w-60 origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 transition focus:outline-none">
-                              <div className="py-1">
-                                {['CPF', 'CNPJ'].map(item => (
-                                  <MenuItem key={item}>
-                                    <a
-                                      className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-                                      onClick={() => handleDocumentoItemClick(item)}
-                                    >
-                                      {item}
-                                    </a>
-                                  </MenuItem>
-                                ))}
-                              </div>
-                            </MenuItems>
-                          </Menu>
-                          <input
-                            type="text"
-                            name="cpf_cnpj"
-                            placeholder="Preencha o documento"
-                            value={formData.cpf_cnpj}
-                            onChange={handleInputChange}
-                            className="w-30 px-3 py-2 rounded-md ring-1 ring-inset ring-gray-300 focus-within:ring-2 focus-within:ring-inset focus-within:ring-indigo-600 sm:max-w-md"
-                          />
-                          <input
-                            type="email"
-                            name="email"
-                            placeholder="Email"
-                            value={formData.email}
-                            onChange={handleInputChange}
-                            className="w-30 px-3 py-2 rounded-md ring-1 ring-inset ring-gray-300 focus-within:ring-2 focus-within:ring-inset focus-within:ring-indigo-600 sm:max-w-md"
-                          />
-                        </div>
-                        <div className="flex gap-4">
-                          <input
-                            type="text"
-                            name="telefone"
-                            placeholder="Telefone"
-                            value={formData.telefone}
-                            onChange={handleInputChange}
-                            className="w-30 px-3 py-2 rounded-md ring-1 ring-inset ring-gray-300 focus-within:ring-2 focus-within:ring-inset focus-within:ring-indigo-600 sm:max-w-md"
-                          />
-                          <input
-                            type="text"
-                            name="celular"
-                            placeholder="Celular"
-                            value={formData.celular}
-                            onChange={handleInputChange}
-                            className="w-30 px-3 py-2 rounded-md ring-1 ring-inset ring-gray-300 focus-within:ring-2 focus-within:ring-inset focus-within:ring-indigo-600 sm:max-w-md"
-                          />
-                          <input
-                            type="text"
-                            name="contato"
-                            placeholder="Contato"
-                            value={formData.contato}
-                            onChange={handleInputChange}
-                            className="w-30 px-3 py-2 rounded-md ring-1 ring-inset ring-gray-300 focus-within:ring-2 focus-within:ring-inset focus-within:ring-indigo-600 sm:max-w-md"
-                          />
-                        </div>
-                        <div className="flex items-center justify-center">
-                          <div>
-                            <input
-                              type="checkbox"
-                              name="ativo"
-                              checked={formData.ativo}
-                              onChange={() => setFormData({ ...formData, ativo: !formData.ativo })}
-                              className="mr-2 rounded checked:bg-indigo-600"
-                            />
-                            <label className="text-sm">Ativo</label>
-                          </div>
-                          <div className="flex justify-between">
-                            <label className="text-sm block ml-8 leading-6 text-gray-900">
-                              Tipo de cliente:
-                            </label>
-                            <label className="text-sm block ml-2 leading-6 text-gray-900">
-                              {tipoCliente}
-                            </label>
-                          </div>
-                        </div>
-                        <div className="flex float-end gap-2">
-                          <button type="submit" className="mt-4 rounded-md bg-indigo-600 hover:bg-indigo-800 px-4 py-2 text-white">
-                            Cadastrar
-                          </button>
-                          <button
-                            className="mt-4 bg-white rounded-md px-4 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50"
-                            onClick={() => setIsModalCadastroOpen(false)}
-                          >
-                            Cancelar
-                          </button>
-                        </div>
-                      </form>
-                    </div>
-                  </div>
-                )}
                 </div>
               </div>
               {/* Botão cadastrar novo cliente */}
               <div className="mr-10 mt-10 h-10">
-                <button className="w-auto float-end rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50"
+                <button className="w-auto float-end px-3 py-2 rounded-md bg-indigo-600 text-white hover:bg-indigo-700"
                   onClick={handleModalCadastroToggle}>
                   Cadastrar
                 </button>
