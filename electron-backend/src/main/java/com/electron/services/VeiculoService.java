@@ -41,6 +41,10 @@ public class VeiculoService {
     }
 
     public void deletar(Long id) {
-        veiculoRepository.deleteById(id);
+        if(veiculoRepository.findById(id).isPresent()){
+            veiculoRepository.deleteById(id);
+            return;
+        }
+        throw new NotFoundException("Não foi possível encontrar o veículo de id " + id);
     }
 }

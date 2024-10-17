@@ -73,6 +73,10 @@ public class VendedorService {
     }
 
     public void deletar(Long id) {
-        vendedorRepository.deleteById(id);
+        if(vendedorRepository.findById(id).isPresent() ){
+            vendedorRepository.deleteById(id);
+            return;
+        }
+        throw new NotFoundException("Não foi possível achar o vendedor de id" + id);
     }
 }

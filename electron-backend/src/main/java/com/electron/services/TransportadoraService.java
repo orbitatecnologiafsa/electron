@@ -58,8 +58,11 @@ public class TransportadoraService {
         return transportadoraRepository.save(transportadoraExistente);
     }
 
-    @Transactional
     public void deletar(Long id) {
-        transportadoraRepository.deleteById(id);
+        if(transportadoraRepository.findById(id).isPresent()){
+            transportadoraRepository.deleteById(id);
+            return;
+        }
+        throw new NotFoundException("Não foi possível deletar a transportadora de id " + id);
     }
 }

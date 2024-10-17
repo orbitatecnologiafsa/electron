@@ -30,7 +30,12 @@ public class UsuarioService {
     }
 
     public void deletar(Long id) {
-        usuarioRepository.deleteById(id);
+        if(usuarioRepository.findById(id).isPresent()){
+            usuarioRepository.deleteById(id);
+            return;
+        }
+        throw new NotFoundException("Não foi possível deletar o usuário de id: " + id);
+
     }
 
     public Usuario atualizar(Long id, Usuario usuarioAtualizado) {
