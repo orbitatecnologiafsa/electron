@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/fornecedores")
+@RequestMapping("/fornecedores")
 public class FornecedorController {
 
     private final FornecedorService fornecedorService;

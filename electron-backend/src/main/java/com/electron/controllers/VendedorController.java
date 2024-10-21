@@ -18,7 +18,7 @@ import com.electron.domain.Vendedor;
 import com.electron.services.VendedorService;
 
 @RestController
-@RequestMapping("/api/vendedores")
+@RequestMapping("/vendedores")
 public class VendedorController {
 
     private final VendedorService vendedorService;

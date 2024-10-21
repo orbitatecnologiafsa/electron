@@ -18,7 +18,7 @@ import com.electron.domain.Cliente;
 import com.electron.services.ClienteService;
 
 @RestController
-@RequestMapping("/api/clientes")
+@RequestMapping("/clientes")
 public class ClienteController {
 
     private final ClienteService clienteService;

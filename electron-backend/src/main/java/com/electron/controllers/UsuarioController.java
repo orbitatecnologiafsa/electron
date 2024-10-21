@@ -17,7 +17,7 @@ import com.electron.domain.Usuario;
 import com.electron.services.UsuarioService;
 
 @RestController
-@RequestMapping("/api/usuarios")
+@RequestMapping("/usuarios")
 public class UsuarioController {
 
     private final UsuarioService usuarioService;
