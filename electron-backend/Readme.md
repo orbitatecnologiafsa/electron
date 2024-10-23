@@ -15,7 +15,7 @@ automaticamente. Porém, caso contrário, você precisará:
 Você também precisará do JDK 8 ou superior para executar o projeto.
 
 ### Documentação da API
-[Swagger](http://localhost:8080/swagger-ui/index.htm)
+[Swagger](http://localhost:8080/swagger-ui/index.html)
 Lembre-se de rodar a aplicação antes de testar no Swagger
 
 ### Configurações

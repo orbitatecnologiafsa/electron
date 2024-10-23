@@ -1,5 +1,6 @@
 package com.electron.domain;
 
+
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -11,11 +12,16 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class PdvFormaPagamento {
-     @Id
+
+    @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-     //  pdvfpagamento_fk_pdv_empresa INT,
+    @Column(name = "pdv_forma_pagamento", nullable = false, length = 100)
+    private String pdvFormaPagamento;
 
-    private String formaDePagamento;
+    @ManyToOne
+    @JoinColumn(name = "pdvfpagamento_fk_pdv_empresa", insertable = false, updatable = false)
+    private PdvEmpresa pdvEmpresa;
+
 }

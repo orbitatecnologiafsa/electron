@@ -1,18 +1,14 @@
 package com.electron.domain;
 
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotEmpty;
-import jakarta.validation.constraints.Size;
-import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 
 @Entity
 @Table(name = "pdv_empresa")
 @Data
-@AllArgsConstructor
 @NoArgsConstructor
 public class PdvEmpresa {
 
@@ -20,21 +16,28 @@ public class PdvEmpresa {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    //fk empresa
+    @Column(name = "pdv_nome", nullable = false, length = 100)
+    private String pdvNome;
 
-    @NotEmpty
-    private String nome;
+    @Column(name = "pdv_numero_caixa", nullable = false, length = 10)
+    private String pdvNumeroCaixa;
 
-    @NotEmpty
-    private String numeroCaixa;
+    @Column(name = "pdv_ativo")
+    private Boolean pdvAtivo = true;
 
-    //fk usuario
+    @Column(name = "pdv_data_instalacao")
+    private LocalDate pdvDataInstalacao;
 
-    @OneToOne // nao sei se é one to one, vai saber ne
+    @Lob
+    @Column(name = "pdv_observacoes")
+    private String pdvObservacoes;
+
+    @ManyToOne
+    @JoinColumn(name = "pdv_fk_empresa", insertable = false, updatable = false)
+    private EmpresaProprietaria empresa;
+
+    @ManyToOne
+    @JoinColumn(name = "pdv_fk_dispositivo", insertable = false, updatable = false)
     private Dispositivo dispositivo;
 
-    @Column(columnDefinition = "BOOLEAN DEFAULT TRUE")
-    private Boolean ativo;
-
-    private LocalDateTime dataInstalacao;
 }

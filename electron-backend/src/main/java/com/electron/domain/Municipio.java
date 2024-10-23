@@ -1,5 +1,5 @@
 package com.electron.domain;
-import com.electron.domain.Estado;
+
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -13,6 +13,7 @@ import lombok.NoArgsConstructor;
 public class Municipio {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "municipio_id")
     private Long id;
 
     @Column(name = "municipios_nome", nullable = false, length = 255)

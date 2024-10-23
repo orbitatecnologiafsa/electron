@@ -1,39 +1,26 @@
 package com.electron.domain;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import com.electron.domain.enums.PForPJ;
-
-import jakarta.persistence.CascadeType;
-import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
-import jakarta.persistence.OneToMany;
-import jakarta.persistence.Table;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
+import jakarta.persistence.*;
 
 @Entity
-@Data
-@EqualsAndHashCode(callSuper = true)
-@NoArgsConstructor
-public class Transportadora extends Pessoa {
+@Table(name = "transportadora")
+public class Transportadora extends BasePessoa {
 
-    @Enumerated(EnumType.STRING)
-    private PForPJ pfOuPj;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long transportadoraId;
 
-    @OneToMany(mappedBy = "transportadora", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Veiculo> veiculos = new ArrayList<>();
+    @ManyToOne
+    @JoinColumn(name = "transportadora_fk_pessoas")
+    private Pessoa pessoa;
 
-    public void addVeiculo(Veiculo veiculo) {
-        veiculos.add(veiculo);
-        veiculo.setTransportadora(this);
-    }
+    @ManyToOne
+    @JoinColumn(name = "transportadora_fk_empresa")
+    private EmpresaProprietaria empresa;
 
-    public void removeVeiculo(Veiculo veiculo) {
-        veiculos.remove(veiculo);
-        veiculo.setTransportadora(null);
-    }
+    @Column(name = "placa_veiculo", length = 7)
+    private String placaVeiculo;
+
+    @Column(name = "antt_veiculo", length = 20)
+    private String anttVeiculo;
 }
