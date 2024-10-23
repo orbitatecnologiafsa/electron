@@ -47,7 +47,7 @@ public class ClienteService {
         clienteExistente.setNomeRazao(cliente.getNomeRazao());
         clienteExistente.setFantasia(cliente.getFantasia());
         clienteExistente.setRgInscricaoEstadual(cliente.getRgInscricaoEstadual());
-        clienteExistente.setInscricaoEstadualMunicipal(cliente.getInscricaoEstadualMunicipal());
+        //clienteExistente.setInscricaoEstadualMunicipal(cliente.getInscricaoEstadualMunicipal());
         clienteExistente.setContato(cliente.getContato());
         clienteExistente.setCep(cliente.getCep());
         clienteExistente.setLogradouro(cliente.getLogradouro());

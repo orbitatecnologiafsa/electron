@@ -47,7 +47,7 @@ public class VendedorService {
         vendedorExistente.setNomeRazao(vendedor.getNomeRazao());
         vendedorExistente.setFantasia(vendedor.getFantasia());
         vendedorExistente.setRgInscricaoEstadual(vendedor.getRgInscricaoEstadual());
-        vendedorExistente.setInscricaoEstadualMunicipal(vendedor.getInscricaoEstadualMunicipal());
+        //vendedorExistente.setInscricaoEstadualMunicipal(vendedor.getInscricaoEstadualMunicipal());
         vendedorExistente.setContato(vendedor.getContato());
         vendedorExistente.setCep(vendedor.getCep());
         vendedorExistente.setLogradouro(vendedor.getLogradouro());

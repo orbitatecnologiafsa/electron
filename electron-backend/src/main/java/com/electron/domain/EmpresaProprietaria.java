@@ -29,7 +29,7 @@ public class EmpresaProprietaria {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "empresa_id")
-    private Integer id;
+    private Long id;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "empresatipo", nullable = false)

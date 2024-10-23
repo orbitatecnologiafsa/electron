@@ -15,7 +15,7 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 public class Dispositivo {
 
-     @Id
+    @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 

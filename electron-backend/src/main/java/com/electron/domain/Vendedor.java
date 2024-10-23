@@ -9,7 +9,6 @@ import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
 @Entity
-@Table(name = "vendedores")
 @Data
 @EqualsAndHashCode(callSuper = true)
 @NoArgsConstructor

@@ -47,7 +47,7 @@ public class FornecedorService {
         fornecedorExistente.setNomeRazao(fornecedor.getNomeRazao());
         fornecedorExistente.setFantasia(fornecedor.getFantasia());
         fornecedorExistente.setRgInscricaoEstadual(fornecedor.getRgInscricaoEstadual());
-        fornecedorExistente.setInscricaoEstadualMunicipal(fornecedor.getInscricaoEstadualMunicipal());
+        //fornecedorExistente.setInscricaoEstadualMunicipal(fornecedor.getInscricaoEstadualMunicipal());
         fornecedorExistente.setContato(fornecedor.getContato());
         fornecedorExistente.setCep(fornecedor.getCep());
         fornecedorExistente.setLogradouro(fornecedor.getLogradouro());

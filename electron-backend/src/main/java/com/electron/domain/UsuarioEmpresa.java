@@ -20,7 +20,7 @@ public class UsuarioEmpresa {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "usuario_id")
-    private Integer id;
+    private Long id;
 
     @Column(name = "usuario_cpf", length = 11, nullable = false, unique = true)
     private String cpf;

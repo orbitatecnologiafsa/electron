@@ -1,6 +1,8 @@
 package com.electron.domain;
 
-import com.electron.domain.enums.TipoAcesso;
+import java.time.LocalDate;
+
+import com.electron.domain.enums.TipoAssinatura;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -16,33 +18,29 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Entity
-@Table(name = "usuario_empresa_relacao")
+@Table(name = "plano_assinatura")
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class UsuarioEmpresaRelacao {
+public class PlanoAssinatura {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "usuario_empresa_relacao_id")
+    @Column(name = "assinatura_id")
     private Long id;
 
-    @Column(name = "relacao_fk_usuario_empresa")
-    private Long usuarioEmpresaId;
-
-    @Column(name = "relacao_fk_empresa", nullable = false)
-    private Long empresaId;
-
     @Enumerated(EnumType.STRING)
-    @Column(name = "relacao_tipo_acesso", nullable = false)
-    private TipoAcesso tipoAcesso;
+    @Column(name = "assinatura_tipo", nullable = false)
+    private TipoAssinatura tipo;
+
+    @Column(name = "assinatura_data_inicio", nullable = false)
+    private LocalDate dataInicio;
+
+    @Column(name = "assinatura_data_fim", nullable = false)
+    private LocalDate dataFim;
 
     @ManyToOne
-    @JoinColumn(name = "usuario_id")
-    private UsuarioEmpresa usuarioEmpresa;
-
-    @ManyToOne
-    @JoinColumn(name = "empresa_id")
-    private EmpresaProprietaria empresaProprietaria;
+    @JoinColumn(name = "assinatura_fk_empresa")
+    private EmpresaProprietaria empresa;
 
 }

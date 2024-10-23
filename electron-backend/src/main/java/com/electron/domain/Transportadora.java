@@ -16,7 +16,6 @@ import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
 @Entity
-@Table(name = "transportadoras")
 @Data
 @EqualsAndHashCode(callSuper = true)
 @NoArgsConstructor
