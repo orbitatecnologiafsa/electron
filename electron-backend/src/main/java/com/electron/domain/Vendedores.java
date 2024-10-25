@@ -7,6 +7,8 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.math.BigDecimal;
+
 @Entity
 @Data
 @AllArgsConstructor
@@ -24,10 +26,10 @@ public class Vendedores {
     private Pessoa pessoa;
 
     @Column(name = "vendedor_desconto", precision = 10, scale = 2)
-    private Double desconto;
+    private BigDecimal desconto;
 
     @Column(name = "vendedor_comissao", precision = 10, scale = 2)
-    private Double comissao;
+    private BigDecimal comissao;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "vendedor_tipo_comissao")

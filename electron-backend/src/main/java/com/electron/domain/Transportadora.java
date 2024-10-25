@@ -1,9 +1,15 @@
 package com.electron.domain;
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Entity
 @Table(name = "transportadora")
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class Transportadora extends BasePessoa {
 
     @Id
