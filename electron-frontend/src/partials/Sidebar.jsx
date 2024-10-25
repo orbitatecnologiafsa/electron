@@ -183,6 +183,7 @@ function Sidebar({
               {/* Cadastros */}
               <SidebarLinkGroup activecondition={
                 pathname === "/cadastro/clientes" ||
+                pathname === "/cadastro/clientes/adicionar" ||
                 pathname === "/cadastro/produtos" || 
                 pathname === "/cadastro/fornecedores" || 
                 pathname === "/cadastro/transportadoras" || 
@@ -196,6 +197,7 @@ function Sidebar({
                         href="#0"
                         className={`block text-gray-800 dark:text-gray-100 truncate transition duration-150 ${
                           pathname === "/cadastro/clientes" ||
+                          pathname === "/cadastro/clientes/adicionar" ||
                           pathname === "/cadastro/produtos" || 
                           pathname === "/cadastro/fornecedores" || 
                           pathname === "/cadastro/transportadoras" || 
