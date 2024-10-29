@@ -16,9 +16,6 @@ function EmpresasAdd() {
   const [tipoCliente, setTipoCliente] = useState('-');
   const [cep, setCep] = useState('');
 
-  {/* Upload de Imagem */}
-  const [selectedImage, setSelectedImage] = useState(null);
-
   const handleDocumentoItemClick = (item) => {
     setDocumentoValue(item);
     setDocDigitado('');
@@ -77,14 +74,6 @@ function EmpresasAdd() {
         });
     } catch (error) {
         console.error('Erro ao cadastrar empresa:', error.response ? error.response.data : error.message);
-    }
-  };
-
-  {/* Upload de Imagem */}
-  const handleImageChange = (event) => {
-    const file = event.target.files[0];
-    if (file) {
-      setSelectedImage(URL.createObjectURL(file));
     }
   };
 
@@ -240,50 +229,22 @@ function EmpresasAdd() {
         {/* Conteúdo */}
         <div className="relative flex flex-col flex-1 overflow-y-auto overflow-x-hidden">
           <Header sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} />
-          <div className="flex justify-center">
-            <form onSubmit={handleSubmit} className="space-y-5 mx-4 max-w-3xl">
+          <div className="flex justify-center w-full">
+            <form onSubmit={handleSubmit} className="space-y-5 mx-[2rem] max-w-full">
               <h3 className="text-lg font-semibold justify-center text-center mb-4 mt-4 ml-1">Cadastro de Empresa</h3>
-              {/* Img */}
-              <div className="flex flex-col md:flex-row mb-4 gap-4 justify-center">
-                <label className="flex items-center cursor-pointer">
-                  <FontAwesomeIcon icon={faImage} size="8x" />
-                  <input
-                    type="file"
-                    accept="image/*"
-                    onChange={handleImageChange}
-                    className="hidden"
-                  />
-                </label>
-                {selectedImage && (
-                  <img src={selectedImage} alt="Preview" className="w-32 h-32 object-cover" />
-                )}
-              </div>
 
-              <div className="flex">
-                <Menu as="div" className="flex-1">
-                  <div>
-                    <MenuButton className="w-64 h-11 px-3 py-2 rounded-md bg-white text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50">
-                      {documentoValue || 'Tipo de Documento'}
-                    </MenuButton>
+              <div className="flex justify-between">
+                <div className="flex gap-4 mt-2 mr-3">
+                  <div className="flex items-center">
+                    <label className="text-base">Tipo de documento:</label>
                   </div>
-                  <MenuItems className=" w-64 absolute z-10 mt-1 origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 transition focus:outline-none">
-                    <div className="py-1">
-                      {['CPF', 'CNPJ'].map(item => (
-                        <MenuItem key={item}>
-                          <a
-                            className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-                            onClick={() => handleDocumentoItemClick(item)}
-                          >
-                            {item}
-                          </a>
-                        </MenuItem>
-                      ))}
-                    </div>
-                  </MenuItems>
-                </Menu>
+                  <div className="flex items-center">
+                    <label className="text-base">CPF</label>
+                  </div>
+                </div>
 
                 {/* Ativo e Revenda */}
-                <div className="flex gap-4 mt-2 mr-3 justify-end">
+                <div className="flex gap-4 mt-2 mr-3">
                   <div className="flex items-center">
                     <input
                       type="checkbox"
@@ -316,19 +277,8 @@ function EmpresasAdd() {
                     name="nomeRazao"
                     value={formData.nomeRazao}
                     onChange={handleInputChange}
-                    className=" w-full h-11 px-3 py-2 rounded-md ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-indigo-600"
+                    className=" w-[50rem] h-11 px-3 py-2 rounded-md ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-indigo-600"
                     required
-                  />
-                </div>
-                <div className="flex flex-col">
-                  <label className="block ml-1 text-sm font-medium leading-6 text-gray-900">Nome Fantasia</label>
-                  <input
-                    type="text"
-                    name="fantasia"
-                    value={formData.fantasia}
-                    onChange={handleInputChange}
-                    disabled={documentoValue === 'CPF'}
-                    className="h-11 px-3 py-2 rounded-md ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-indigo-600 disabled:bg-gray-300"
                   />
                 </div>
                 <div className="flex flex-col">
@@ -338,12 +288,23 @@ function EmpresasAdd() {
                     name="cpfCnpj"
                     value={docDigitado}
                     onChange={handleInputChange}
-                    disabled={!isDocumentoSelected}
                     maxLength={documentoValue === 'CPF' ? 14 : 18}
-                    className="w-60 h-11 px-3 py-2 rounded-md ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-indigo-600 disabled:bg-gray-300"
+                    className="w-[15rem] h-11 px-3 py-2 rounded-md ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-indigo-600 disabled:bg-gray-300"
                   />
                 </div>
               </div>
+
+              <div className="flex flex-col">
+                  <label className="block ml-1 text-sm font-medium leading-6 text-gray-900">Nome Fantasia</label>
+                  <input
+                    type="text"
+                    name="fantasia"
+                    value={formData.fantasia}
+                    onChange={handleInputChange}
+                    disabled={documentoValue === 'CPF'}
+                    className="w-[66rem] h-11 px-3 py-2 rounded-md ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-indigo-600 disabled:bg-gray-300"
+                  />
+                </div>
               
               {/* Endereço do Cliente */}
               <div className="flex flex-col md:flex-row gap-4">
@@ -354,7 +315,7 @@ function EmpresasAdd() {
                     name="cep"
                     value={cep}
                     onChange={handleCepChange}
-                    className="h-11 w-32 px-3 py-2 rounded-md ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-indigo-600"
+                    className="w-[15rem] h-11 px-3 py-2 rounded-md ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-indigo-600"
                   />
                 </div>
                 <div className="flex flex-col">
@@ -365,7 +326,7 @@ function EmpresasAdd() {
                     value={formData.logradouro}
                     onChange={handleInputChange}
                     readOnly
-                    className="w-[31rem] h-11 px-3 py-2 rounded-md ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-indigo-600"
+                    className="w-[42rem] h-11 px-3 py-2 rounded-md ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-indigo-600"
                   />
                 </div>
                 <div className="flex flex-col">
@@ -375,7 +336,7 @@ function EmpresasAdd() {
                     name="numero"
                     value={formData.numero}
                     onChange={handleInputChange}
-                    className="w-[6rem] h-11 px-3 py-2 rounded-md ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-indigo-600"
+                    className="w-[7rem] h-11 px-3 py-2 rounded-md ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-indigo-600"
                   />
                 </div>
               </div>
@@ -389,7 +350,7 @@ function EmpresasAdd() {
                     value={formData.bairro}
                     onChange={handleInputChange}
                     readOnly
-                    className="w-[15rem] h-11 px-3 py-2 rounded-md ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-indigo-600"
+                    className="w-[26rem] h-11 px-3 py-2 rounded-md ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-indigo-600"
                   />
                 </div>
                 <div className="flex flex-col">
@@ -399,7 +360,7 @@ function EmpresasAdd() {
                     name="complemento"
                     value={formData.complemento}
                     onChange={handleInputChange}
-                    className="w-[13rem] h-11 px-3 py-2 rounded-md ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-indigo-600"
+                    className="w-[20rem] h-11 px-3 py-2 rounded-md ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-indigo-600"
                   />
                 </div>
                 <div className="flex flex-col">
@@ -421,7 +382,7 @@ function EmpresasAdd() {
                     value={formData.municipio}
                     onChange={handleInputChange}
                     readOnly
-                    className="w-[10rem] h-11 px-3 py-2 rounded-md ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-indigo-600"
+                    className="w-[11rem] h-11 px-3 py-2 rounded-md ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-indigo-600"
                   />
                 </div>
               </div>
@@ -434,7 +395,7 @@ function EmpresasAdd() {
                     name="rgInscricaoEstadual"
                     value={formData.rgInscricaoEstadual}
                     onChange={handleInputChange}
-                    className="w-[24rem] h-11 px-3 py-2 rounded-md ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-indigo-600"
+                    className="w-[33rem] h-11 px-3 py-2 rounded-md ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-indigo-600"
                   />
                 </div>
                 <div className="flex flex-col">
@@ -444,71 +405,80 @@ function EmpresasAdd() {
                     name="inscricaoEstadualMunicipal"
                     value={formData.inscricaoEstadualMunicipal}
                     onChange={handleInputChange}
-                    className="w-[22rem] h-11 px-3 py-2 rounded-md ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-indigo-600"
+                    className="w-[32rem] h-11 px-3 py-2 rounded-md ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-indigo-600"
                   />
                 </div>
               </div>
 
-              {/* Contato do Cliente */}
-              <div className="flex flex-col md:flex-row gap-4">
-                <div className="flex flex-col">
-                  <label className="block ml-1 text-sm font-medium leading-6 text-gray-900">Email</label>
-                  <input
-                    type="email"
-                    name="email"
-                    value={formData.email}
-                    onChange={handleInputChange}
-                    className="w-[20rem] h-11 px-3 py-2 rounded-md ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-indigo-600"
-                  />
-                </div>
-                <div className="flex flex-col">
+                {/* Contato do Cliente */}
+                <div className="flex">
+                  <div className="grid grid-cols-1 gap-4">
+                    <div className="flex flex-col md:flex-row gap-4 max-w-[30rem]">
+                      <div className="flex flex-col">
+                        <label className="block ml-1 text-sm font-medium leading-6 text-gray-900">Email</label>
+                        <input
+                          type="email"
+                          name="email"
+                          value={formData.email}
+                          onChange={handleInputChange}
+                          className="w-[22rem] h-11 px-3 py-2 rounded-md ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-indigo-600"
+                        />
+                      </div>
+                      <div className="flex flex-col">
+                        <label className="block ml-1 text-sm font-medium leading-6 text-gray-900">Contato</label>
+                        <input
+                          type="text"
+                          name="contato"
+                          value={formData.contato}
+                          onChange={handleInputChange}
+                          className="w-[10rem] h-11 px-3 py-2 rounded-md ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-indigo-600"
+                        />
+                      </div>
+                    </div>
+                    <div className="flex flex-col md:flex-row gap-4 max-w-[30rem]">
+                    <div>
+                          <label className="block ml-1 text-sm font-medium leading-6 text-gray-900">Telefone</label>
+                          <input
+                            type="text"
+                            name="telefone"
+                            value={formData.telefone}
+                            onChange={handleInputChange}
+                            className="w-[16rem] h-11 px-3 py-2 rounded-md ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-indigo-600"
+                          />
+                        </div>
+                        <div>
+                          <label className="block ml-1 text-sm font-medium leading-6 text-gray-900">Celular</label>
+                          <input
+                            type="text"
+                            name="celular"
+                            value={formData.celular}
+                            onChange={handleInputChange}
+                            className="w-[16rem] h-11 px-3 py-2 rounded-md ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-indigo-600"
+                          />
+                        </div>
+                    </div>
+                    </div>
+                      <div>
+                    </div>
+                  </div>
+                  <div className="absolute bottom-[168px] right-[19rem]">
                   <label className="block ml-1 text-sm font-medium leading-6 text-gray-900">Observação</label>
-                  <input
+                  <textarea
                     type="text"
                     name="observacao"
                     value={formData.observacao}
                     onChange={handleInputChange}
-                    className="w-[26rem] h-11 px-3 py-2 rounded-md ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-indigo-600"
+                    className="w-[32rem] h-[128px] resize-none px-3 py-2 rounded-md ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-indigo-600"
                   />
-                </div>
-              </div>
-              <div className="flex flex-col md:flex-row gap-4">
-                <div className="flex flex-col">
-                  <label className="block ml-1 text-sm font-medium leading-6 text-gray-900">Telefone</label>
-                  <input
-                    type="text"
-                    name="telefone"
-                    value={formData.telefone}
-                    onChange={handleInputChange}
-                    className="h-11 w-60 px-3 py-2 rounded-md ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-indigo-600"
-                  />
-                </div>
-                <div className="flex flex-col">
-                  <label className="block ml-1 text-sm font-medium leading-6 text-gray-900">Celular</label>
-                  <input
-                    type="text"
-                    name="celular"
-                    value={formData.celular}
-                    onChange={handleInputChange}
-                    className="h-11 px-3 py-2 rounded-md ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-indigo-600"
-                  />
-                </div>
-                <div className="flex flex-col">
-                  <label className="block ml-1 text-sm font-medium leading-6 text-gray-900">Contato</label>
-                  <input
-                    type="text"
-                    name="contato"
-                    value={formData.contato}
-                    onChange={handleInputChange}
-                    className="h-11 px-3 py-2 rounded-md ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-indigo-600"
-                  />
-                </div>
-              </div>
-              <div className="flex justify-end gap-4 mt-4">
-                <button type="submit" className="h-11 w-40 px-4 py-2 rounded-md bg-indigo-600 text-white hover:bg-indigo-700">
+                  </div>
+              <div className="flex justify-end gap-4">
+                <button type="submit" className="h-[3rem] w-40 px-4 py-2 rounded-md bg-indigo-600 text-white hover:bg-indigo-700">
                   Cadastrar
                 </button>
-                <button type="button" onClick={handleRedirect} className="h-11 w-40 rounded-mdbg-white px-4 py-2 text-sm font-semibold text-gray-900 shadow-sm rounded-md ring-1 ring-inset ring-gray-300 hover:bg-gray-50">
+                <button type="button" className="h-[3rem] w-[10rem] rounded-mdbg-white px-4 py-2 text-sm font-semibold text-gray-900 shadow-sm rounded-md ring-1 ring-inset ring-gray-300 hover:bg-gray-50">
+                  Copiar
+                </button>
+                <button type="button" onClick={handleRedirect} className="h-[3rem] w-[10rem] rounded-mdbg-white px-4 py-2 text-sm font-semibold text-gray-900 shadow-sm rounded-md ring-1 ring-inset ring-gray-300 hover:bg-gray-50">
                   Voltar
                 </button>
               </div>
