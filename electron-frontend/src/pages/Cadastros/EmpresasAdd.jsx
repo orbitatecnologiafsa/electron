@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Sidebar from '../../partials/Sidebar';
 import Header from '../../partials/Header';
@@ -7,13 +7,9 @@ import { faImage } from '@fortawesome/free-solid-svg-icons';
 import axios from 'axios';
 import { Menu, MenuButton, MenuItems, MenuItem } from '@headlessui/react';
 
-function ClientesAdd() {
+function EmpresasAdd() {
 
-  {/* Const para uso da API de CNPJ */}
-  const [documentType, setDocumentType] = useState('');
   const [docDigitado, setDocDigitado] = useState('');
-  const [cpf, setCpf] = useState('');
-  const [cnpj, setCnpj] = useState('');
 
   const [documentoValue, setDocumentoValue] = useState('');
   const [isDocumentoSelected, setIsDocumentoSelected] = useState(false);
@@ -56,20 +52,20 @@ function ClientesAdd() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-        const response = await axios.post("http://localhost:8080/clientes", formData);
+        const response = await axios.post("http://localhost:8080/empresas-proprietarias/", formData);
         setFormData({
-            nomeRazao: '',
-            fantasia: '',
-            documento: '',
+            tipo: '',
+            razaoSocial: '',
+            nomeFantasia: '',
+            cpfCnpj: '',
             cep: '',
+            nomeExibicao: '',
             municipio: '',
             uf: '',
             bairro: '',
             logradouro: '',
             numero: '',
             complemento: '',
-            cpfCnpj: '',
-            pfOuPj: '',
             email: '',
             telefone: '',
             celular: '',
@@ -80,7 +76,7 @@ function ClientesAdd() {
             ativo: true,
         });
     } catch (error) {
-        console.error('Erro ao cadastrar cliente:', error.response ? error.response.data : error.message);
+        console.error('Erro ao cadastrar empresa:', error.response ? error.response.data : error.message);
     }
   };
 
@@ -193,9 +189,9 @@ function ClientesAdd() {
 
 
 
-  {/* Redireciona para Clientes */}
+  {/* Redireciona para Empresas */}
   const handleRedirect = () => {
-    navigate('/cadastro/clientes');
+    navigate('/cadastro/empresas');
   };
   const navigate = useNavigate();
 
@@ -246,7 +242,7 @@ function ClientesAdd() {
           <Header sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} />
           <div className="flex justify-center">
             <form onSubmit={handleSubmit} className="space-y-6 mx-4 max-w-3xl">
-              <h3 className="text-lg font-semibold justify-center text-center mb-4 mt-4 ml-1">Cadastro de Cliente</h3>
+              <h3 className="text-lg font-semibold justify-center text-center mb-4 mt-4 ml-1">Cadastro de Empresa</h3>
               {/* Img */}
               <div className="flex flex-col md:flex-row mb-4 gap-4 justify-center">
                 <label className="flex items-center cursor-pointer">
@@ -297,7 +293,7 @@ function ClientesAdd() {
                 />
               </div>
               
-              {/* Dados do Cliente */}
+              {/* Dados da Empresa */}
               <div className="flex flex-col md:flex-row gap-4">
                 <input
                   type="text"
@@ -489,4 +485,4 @@ function ClientesAdd() {
     );
   }
 
-export default ClientesAdd;
+export default EmpresasAdd;

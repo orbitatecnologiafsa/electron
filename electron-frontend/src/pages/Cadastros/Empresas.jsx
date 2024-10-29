@@ -9,7 +9,7 @@ import { Menu, MenuButton, MenuItems, MenuItem } from '@headlessui/react';
 
 
 
-function Clientes() {
+function Empresas() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [campoValue, setCampoValue] = useState('Todos');
 
@@ -50,12 +50,13 @@ function Clientes() {
 
   const [inputInfo, setInputInfo] = useState('');
   const [filteredPosts, setFilteredPosts] = useState([]);
+  const [searchInfo, setSearchInfo] = useState('');
 
   
 
   {/* Redireciona para Cadastro de Clientes */}
   const handleRedirect = () => {
-    navigate('/cadastro/clientes/adicionar');
+    navigate('/cadastro/empresas/adicionar');
   };
 
 
@@ -68,11 +69,11 @@ function Clientes() {
     setIsModalLegendaOpen(!isModalLegendaOpen);
   };
 
-  {/* Consumindo API Clientes */}
+  {/* Consumindo API Empresas */}
   const getPosts = async () => {
     try {
       {/* URL API */}
-      const response = await axios.get("http://localhost:8080/clientes");
+      const response = await axios.get("http://localhost:8080/empresas-proprietarias/");
       console.log(response.data);
       setPosts(response.data);
     } catch (error) {
@@ -88,23 +89,28 @@ function Clientes() {
   useEffect(() => {
     if (campoValue === 'Todos') {
       setFilteredPosts(posts);
-    } else if (inputInfo) {
-      console.log(campoValue);
+    } else if (searchInfo) {
       const propertyName = campoValueMapping[campoValue];
       const filteredData = posts.filter(data => {
         const fieldValue = data[propertyName];
-        return fieldValue && fieldValue.toString().toLowerCase() === inputInfo.toLowerCase();
+        return fieldValue && fieldValue.toString().toLowerCase() === searchInfo.toLowerCase();
       });
-  
+    
       setFilteredPosts(filteredData);
     } else {
       setFilteredPosts([]);
     }
-  }, [inputInfo, posts, campoValue]);
+  }, [searchInfo, posts, campoValue]);
   
   const handleInputFilterChange = (e) => {
     setInputInfo(e.target.value);
   };
+  
+  const handleSearchClick = (event) => {
+    event.preventDefault();
+    setSearchInfo(inputInfo);
+  };
+
 
   {/* Sort da tabela */}
   const handleSort = (column) => {
@@ -127,40 +133,30 @@ function Clientes() {
   const tableColumns = [
     { label: '', key: 'action' },
     { label: 'ID', key: 'id' },
-    { label: 'Nome/Razão', key: 'nomeRazao' },
-    { label: 'Fantasia', key: 'fantasia' },
-    { label: 'Documento', key: 'cpfCnpj' },
+    { label: 'Razão Social', key: 'razaoSocial' },
+    { label: 'Nome Fantasia', key: 'nomeFantasia' },
+    { label: 'CNPJ', key: 'cpfCnpj' },
+    { label: 'Matriz / Filial', key: 'matrizOuFilial' },
     { label: 'Município', key: 'municipio' },
     { label: 'UF', key: 'uf' },
     { label: 'Telefone', key: 'telefone' },
     { label: 'Ativo', key: 'ativo' },
-    { label: 'Última Compra', key: 'ultimaCompra' },
+    { label: 'Data de Integração', key: 'dataCriacao' },
   ];
 
   {/*Filtro*/}
   const campoValueMapping = {
-    'Todos': null, // Adicione este mapeamento
+    'Todos': null,
     'ID': 'id',
-    'Cpf/Cnpj': 'cpfCnpj',
-    'Nome/Razao': 'nomeRazao',
-    'Fantasia': 'fantasia',
-    'Rg Inscrição Estadual': 'rgInscricaoEstadual',
-    'Inscrição Estadual Municipal': 'inscricaoEstadualMunicipal',
-    'Contato': 'contato',
-    'CEP': 'cep',
-    'Logradouro': 'logradouro',
-    'Numero': 'numero',
-    'Bairro': 'bairro',
-    'Complemento': 'complemento',
-    'Uf': 'uf',
-    'Municipio': 'municipio',
+    'Razão Social': 'razaoSocial',
+    'Nome Fantasia': 'nomeFantasia',
+    'CNPJ': 'cpfCnpj',
+    'Matriz / Filial': 'matrizOuFilial',
+    'Município': 'municipio',
+    'UF': 'uf',
     'Telefone': 'telefone',
-    'Celular': 'celular',
-    'Email': 'email',
-    'Observação': 'observacao',
     'Ativo': 'ativo',
-    'Pf/Pj': 'pfOuPj',
-    'Revenda': 'revenda'
+    'Data de Integração': 'dataCriacao'
   };
 
   return (
@@ -170,12 +166,12 @@ function Clientes() {
       {/* Conteúdo */}
       <div className="relative flex flex-col flex-1 overflow-y-auto overflow-x-hidden">
         <Header sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} />
-        {/* Form Clientes */}
+        {/* Form Empresas */}
         <form>
           <div className="space-y-12 mt-10 ml-10">
             <div className="border-b border-gray-900/10 pb-12">
               <h2 className="text-base font-semibold leading-7 text-gray-900">
-                Listagem de Clientes
+                Listagem de Empresas
               </h2>
               <div className="mt-10 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-4 mr-10">
                 <div className="sm:col-span-4">
@@ -207,7 +203,7 @@ function Clientes() {
                               className="absolute z-10 mt-10 w-56 origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 transition focus:outline-none data-[closed]:scale-95 data-[closed]:transform data-[closed]:opacity-0 data-[enter]:duration-100 data-[leave]:duration-75 data-[enter]:ease-out data-[leave]:ease-in"
                             >
                               <div className="py-1">
-                                {["Todos","ID","Cpf/Cnpj","Nome/Razao","Fantasia","Rg Inscricão Estadual","Inscrição Estadual Municipal","Contato","CEP","Logradouro","Numero","Bairro","Complemento","Uf","Municipio","Telefone","Celular","Email","Observação","Ativo","Pf/Pj","Revenda"].map(item => (
+                                {["Todos","ID", "Razão Social", "Nome Fantasia", "CNPJ", "Matriz / Filial", "Município", "UF", "Telefone","Ativo","Data de Integração"].map(item => (
                                   <MenuItem key={item}>
                                     <a
                                       className="block px-4 py-2 text-sm text-gray-700 data-[focus]:bg-gray-100 data-[focus]:text-gray-900"
@@ -229,7 +225,11 @@ function Clientes() {
                             <FontAwesomeIcon icon={faCircleInfo} />
                           </button>
                           
-                          <button className="w-44 ml-4 rounded-md bg-indigo-600 text-white hover:bg-indigo-700">
+                          <button
+                            type="button"
+                            className="w-44 ml-4 rounded-md bg-indigo-600 text-white hover:bg-indigo-700"
+                            onClick={handleSearchClick}
+                          >
                             Pesquisar
                           </button>
                         </div>
@@ -260,14 +260,15 @@ function Clientes() {
                                 <FontAwesomeIcon icon={faMagnifyingGlass} className="cursor-pointer" />
                               </td>
                               <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700 text-center">{data.id}</td>
-                              <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700 text-center">{data.nomeRazao}</td>
-                              <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700 text-center">{data.fantasia}</td>
+                              <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700 text-center">{data.razaoSocial}</td>
+                              <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700 text-center">{data.nomeFantasia}</td>
                               <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700 text-center">{data.cpfCnpj}</td>
+                              <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700 text-center">{data.matrizOuFilial}</td>
                               <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700 text-center">{data.municipio}</td>
                               <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700 text-center">{data.uf}</td>
                               <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700 text-center">{data.telefone}</td>
                               <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700 text-center">{data.ativo ? 'Sim' : 'Não'}</td>
-                              <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700 text-center">{data.ultimaCompra}</td>
+                              <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700 text-center">{data.dataCriacao}</td>
                               <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700 text-center">
                                 <FontAwesomeIcon icon={faPenToSquare} className="cursor-pointer" />
                               </td>
@@ -323,4 +324,4 @@ function Clientes() {
   );
 }
 
-export default Clientes;
+export default Empresas;

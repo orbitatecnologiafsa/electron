@@ -11,8 +11,8 @@ import './charts/ChartjsConfig';
 // Import pages Cadastros
 import Dashboard from './pages/Dashboard/Dashboard';
 import Dados from './pages/Dashboard/Dados';
-import Clientes from './pages/Cadastros/Clientes';
-import ClientesAdd from './pages/Cadastros/ClientesAdd';
+import Empresas from './pages/Cadastros/Empresas';
+import EmpresasAdd from './pages/Cadastros/EmpresasAdd';
 import Fornecedores from './pages/Cadastros/Fornecedores';  
 import Produtos from './pages/Cadastros/Produtos';
 import Serviços from './pages/Cadastros/Serviços';
@@ -59,8 +59,8 @@ function App() {
       <Routes>
         <Route exact path="/" element={<Dashboard/>} />
         <Route exact path="/dados" element={<Dados/>} />
-        <Route exact path="/cadastro/clientes" element={<Clientes/>} />
-        <Route exact path="/cadastro/clientes/adicionar" element={<ClientesAdd/>} />
+        <Route exact path="/cadastro/empresas" element={<Empresas/>} />
+        <Route exact path="/cadastro/empresas/adicionar" element={<EmpresasAdd/>} />
         <Route exact path="/cadastro/fornecedores" element={<Fornecedores/>} />
         <Route exact path="/cadastro/produtos" element={<Produtos/>} />
         <Route exact path="/cadastro/servicos" element={<Serviços/>} />
