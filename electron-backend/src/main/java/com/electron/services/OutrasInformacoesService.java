@@ -9,7 +9,7 @@ import java.util.List;
 
 @Service
 public class OutrasInformacoesService {
-    private OutrasInformacoesRepository outrasInformacoesRepository;
+    private final OutrasInformacoesRepository outrasInformacoesRepository;
 
     public OutrasInformacoesService(OutrasInformacoesRepository outrasInformacoesRepository) {
         this.outrasInformacoesRepository = outrasInformacoesRepository;
@@ -33,21 +33,21 @@ public class OutrasInformacoesService {
 
         outrasInformacoesObj.setPessoa(outrasInformacoes.getPessoa());
         outrasInformacoesObj.setEstadoCivil(outrasInformacoes.getEstadoCivil());
-        outrasInformacoesObj.setOutrasConjuge(outrasInformacoes.getOutrasConjuge());
-        outrasInformacoesObj.setOutrasNomeMae(outrasInformacoes.getOutrasNomeMae());
-        outrasInformacoesObj.setOutrasNomePai(outrasInformacoes.getOutrasNomePai());
-        outrasInformacoesObj.setOutrasLocalTrabalho(outrasInformacoes.getOutrasLocalTrabalho());
+//        outrasInformacoesObj.setOutrasConjuge(outrasInformacoes.getOutrasConjuge());
+//        outrasInformacoesObj.setOutrasNomeMae(outrasInformacoes.getOutrasNomeMae());
+//        outrasInformacoesObj.setOutrasNomePai(outrasInformacoes.getOutrasNomePai());
+//        outrasInformacoesObj.setOutrasLocalTrabalho(outrasInformacoes.getOutrasLocalTrabalho());
         outrasInformacoesObj.setOutrasProfissao(outrasInformacoes.getOutrasProfissao());
-        outrasInformacoesObj.setOutrasDataNascimento(outrasInformacoes.getOutrasDataNascimento());
-        outrasInformacoesObj.setOutrasNaturalidade(outrasInformacoes.getOutrasNaturalidade());
-        outrasInformacoesObj.setOutrasDiaAcerto(outrasInformacoes.getOutrasDiaAcerto());
-        outrasInformacoesObj.setOutrasRendaMensal(outrasInformacoes.getOutrasRendaMensal());
-        outrasInformacoesObj.setOutrasLimiteCredito(outrasInformacoes.getOutrasLimiteCredito());
-        outrasInformacoesObj.setOutrasCreditoDisponivel(outrasInformacoes.getOutrasCreditoDisponivel());
-        outrasInformacoesObj.setOutrasCreditoData(outrasInformacoes.getOutrasCreditoData());
-        outrasInformacoesObj.setOutrasDiaFaturamento(outrasInformacoes.getOutrasDiaFaturamento());
+//        outrasInformacoesObj.setOutrasDataNascimento(outrasInformacoes.getOutrasDataNascimento());
+//        outrasInformacoesObj.setOutrasNaturalidade(outrasInformacoes.getOutrasNaturalidade());
+//        outrasInformacoesObj.setOutrasDiaAcerto(outrasInformacoes.getOutrasDiaAcerto());
+//        outrasInformacoesObj.setOutrasRendaMensal(outrasInformacoes.getOutrasRendaMensal());
+//        outrasInformacoesObj.setOutrasLimiteCredito(outrasInformacoes.getOutrasLimiteCredito());
+//        outrasInformacoesObj.setOutrasCreditoDisponivel(outrasInformacoes.getOutrasCreditoDisponivel());
+//        outrasInformacoesObj.setOutrasCreditoData(outrasInformacoes.getOutrasCreditoData());
+//        outrasInformacoesObj.setOutrasDiaFaturamento(outrasInformacoes.getOutrasDiaFaturamento());
         outrasInformacoesObj.setFormaPagamento(outrasInformacoes.getFormaPagamento());
-        outrasInformacoesObj.setOutrasNumParcelasFaturamento(outrasInformacoes.getOutrasNumParcelasFaturamento());
+//        outrasInformacoesObj.setOutrasNumParcelasFaturamento(outrasInformacoes.getOutrasNumParcelasFaturamento());
         outrasInformacoesObj.setReterIr(outrasInformacoes.getReterIr());
         outrasInformacoesObj.setReterCsll(outrasInformacoes.getReterCsll());
         outrasInformacoesObj.setReterPrevidenciaSocial(outrasInformacoes.getReterPrevidenciaSocial());

@@ -5,8 +5,6 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.List;
-
 @Entity
 @Table(name = "estados")
 @Data
@@ -15,12 +13,10 @@ import java.util.List;
 public class Estado {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "estados_id")
     private Long id;
 
     @Column(name = "estados_nome", nullable = false, length = 100)
     private String nome;
-
-    @OneToMany(mappedBy = "estado")
-    private List<Municipio> municipios;
 
 }

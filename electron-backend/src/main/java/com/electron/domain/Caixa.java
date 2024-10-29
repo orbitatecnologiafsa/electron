@@ -1,21 +1,12 @@
 package com.electron.domain;
 
-import java.time.LocalDate;
-
 import com.electron.domain.enums.TipoCaixa;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+
+import java.time.LocalDate;
 
 @Entity
 @Table(name = "caixas")
@@ -28,9 +19,6 @@ public class Caixa {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "caixa_id")
     private Long id;
-
-    @Column(name = "caixa_fk_empresa", nullable = false)
-    private Long empresaId;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "caixa_tipo", nullable = false)

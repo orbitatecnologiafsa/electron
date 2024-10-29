@@ -19,7 +19,10 @@ public class FatorConversao {
     @Column(name = "fator_conversao_id")
     private Long id;
 
-    @Column(name = "fator_conversao_descricao")
+    @Column(name = "fator_conversao_codigo", length = 10)
+    private String codigo;
+
+    @Column(name = "fator_conversao_descricao", columnDefinition = "TEXT")
     private String descricao;
 
     @Enumerated(EnumType.STRING)

@@ -14,7 +14,8 @@ public class Transportadora extends BasePessoa {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long transportadoraId;
+    @Column(name = "transportadora_id")
+    private Long id;
 
     @ManyToOne
     @JoinColumn(name = "transportadora_fk_pessoas")
@@ -23,7 +24,7 @@ public class Transportadora extends BasePessoa {
     @ManyToOne
     @JoinColumn(name = "transportadora_fk_empresa")
     private EmpresaProprietaria empresa;
-
+    
     @Column(name = "placa_veiculo", length = 7)
     private String placaVeiculo;
 

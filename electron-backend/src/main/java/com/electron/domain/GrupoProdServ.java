@@ -17,6 +17,6 @@ public class GrupoProdServ {
     @Column(name = "grupo_prod_serv_id")
     private Long id;
 
-    @Column(name = "grupo_prod_serv_nome", length = 255)
+    @Column(name = "grupo_prod_serv_nome")
     private String nome;
 }

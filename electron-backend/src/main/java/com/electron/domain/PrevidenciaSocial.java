@@ -15,17 +15,15 @@ import java.math.BigDecimal;
 public class PrevidenciaSocial {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "previdencia_social_id")
     private Long id;
 
-    @Column(name = "retencao_contribuicao_previdenciaria", columnDefinition = "BOOLEAN DEFAULT FALSE")
-    private final Boolean retencaoContribuicaoPrevidenciaria = false;
-
-    @Column(name = "previdencia_social_percentual_basecalculo")
+    @Column(name = "previdencia_social_percentual_basecalculo", precision = 10, scale = 2)
     private BigDecimal percentualBaseCalculo;
 
-    @Column(name = "previdencia_social_percentual")
+    @Column(name = "previdencia_social_percentual", precision = 10, scale = 2)
     private BigDecimal percentual;
 
-    @Column(name = "previdencia_social_observacoes")
+    @Column(name = "previdencia_social_observacoes", columnDefinition = "TEXT")
     private String observacoes;
 }

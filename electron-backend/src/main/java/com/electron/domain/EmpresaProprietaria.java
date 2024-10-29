@@ -1,23 +1,15 @@
 package com.electron.domain;
 
-import java.time.LocalDate;
-
 import com.electron.domain.enums.RegimeTributario;
-import com.electron.domain.enums.TipoEmpresa;
+import com.electron.domain.enums.TipoPessoa;
+import com.electron.domain.enums.TipoUnidade;
 import com.electron.domain.enums.VersaoEmpresa;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+
+import java.time.LocalDate;
 
 @Entity
 @Table(name = "empresa_proprietaria")
@@ -32,8 +24,12 @@ public class EmpresaProprietaria {
     private Long id;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "empresatipo", nullable = false)
-    private TipoEmpresa tipo;
+    @Column(name = "empresa_tipo_unidade", nullable = false)
+    private TipoUnidade tipoUnidade;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "empresa_tipo_pessoa", nullable = false)
+    private TipoPessoa tipoPessoa;
 
     @Column(name = "empresa_cpf_cnpj", nullable = false, unique = true, length = 18)
     private String cpfCnpj;

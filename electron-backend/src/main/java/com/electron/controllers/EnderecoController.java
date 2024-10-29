@@ -12,7 +12,7 @@ import java.util.List;
 @RequestMapping("/enderecos")
 public class EnderecoController {
 
-    private EnderecoService enderecoService;
+    private final EnderecoService enderecoService;
 
     public EnderecoController(EnderecoService enderecoService) {
         this.enderecoService = enderecoService;
@@ -28,10 +28,10 @@ public class EnderecoController {
         return ResponseEntity.ok(enderecoService.listarPorId(id));
     }
 
-    @GetMapping("/pessoa/{pessoaId}")
-    public ResponseEntity<List<Endereco>> listarPorPessoa(@PathVariable Long pessoaId) {
-        return ResponseEntity.ok(enderecoService.listarPorPessoa(pessoaId));
-    }
+//    @GetMapping("/pessoa/{pessoaId}")
+//    public ResponseEntity<List<Endereco>> listarPorPessoa(@PathVariable Long pessoaId) {
+//        return ResponseEntity.ok(enderecoService.listarPorPessoa(pessoaId));
+//    }
 
     @PostMapping
     public ResponseEntity<Void> criar(@RequestBody Endereco endereco) {

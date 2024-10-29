@@ -1,5 +1,6 @@
 package com.electron.domain;
 
+import com.electron.domain.enums.PagamentoAceito;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -14,30 +15,44 @@ public class PdvEmpresa {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "pdv_id")
     private Long id;
 
     @Column(name = "pdv_nome", nullable = false, length = 100)
-    private String pdvNome;
+    private String nome;
 
     @Column(name = "pdv_numero_caixa", nullable = false, length = 10)
-    private String pdvNumeroCaixa;
+    private String numeroCaixa;
+
+    @ManyToOne
+    @JoinColumn(name = "pdv_fk_usuario", insertable = false, updatable = false)
+    private Usuario usuario;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "pdv_tipo_pagamento_aceito", nullable = false)
+    private PagamentoAceito pagamentoAceito;
 
     @Column(name = "pdv_ativo")
-    private Boolean pdvAtivo = true;
+    private Boolean ativo = true;
 
     @Column(name = "pdv_data_instalacao")
-    private LocalDate pdvDataInstalacao;
+    private LocalDate dataInstalacao;
 
-    @Lob
-    @Column(name = "pdv_observacoes")
-    private String pdvObservacoes;
+    @Column(name = "pdv_data_ultimo_acesso")
+    private LocalDate dataUltimoAcesso;
 
-    @ManyToOne
-    @JoinColumn(name = "pdv_fk_empresa", insertable = false, updatable = false)
-    private EmpresaProprietaria empresa;
+    @Column(name = "pdv_mode_teste")
+    private Boolean modoTeste = false;
 
-    @ManyToOne
-    @JoinColumn(name = "pdv_fk_dispositivo", insertable = false, updatable = false)
-    private Dispositivo dispositivo;
+    @Column(name = "pdv_chave_acesso", unique = true)
+    private String chaveAcesso;
 
+    @Column(name = "pdv_fiscal")
+    private Boolean fiscal = false;
+
+    @Column(name = "pdv_cfop_padrao", length = 11)
+    private Integer cfopPadrao;
+
+    @Column(name = "pdv_observacoes", columnDefinition = "TEXT")
+    private String observacoes;
 }
