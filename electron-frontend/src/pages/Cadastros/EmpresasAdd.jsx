@@ -241,7 +241,7 @@ function EmpresasAdd() {
         <div className="relative flex flex-col flex-1 overflow-y-auto overflow-x-hidden">
           <Header sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} />
           <div className="flex justify-center">
-            <form onSubmit={handleSubmit} className="space-y-6 mx-4 max-w-3xl">
+            <form onSubmit={handleSubmit} className="space-y-5 mx-4 max-w-3xl">
               <h3 className="text-lg font-semibold justify-center text-center mb-4 mt-4 ml-1">Cadastro de Empresa</h3>
               {/* Img */}
               <div className="flex flex-col md:flex-row mb-4 gap-4 justify-center">
@@ -260,7 +260,7 @@ function EmpresasAdd() {
               </div>
 
               <div className="flex">
-              <Menu as="div" className="flex-1">
+                <Menu as="div" className="flex-1">
                   <div>
                     <MenuButton className="w-64 h-11 px-3 py-2 rounded-md bg-white text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50">
                       {documentoValue || 'Tipo de Documento'}
@@ -281,194 +281,228 @@ function EmpresasAdd() {
                     </div>
                   </MenuItems>
                 </Menu>
-                <input
-                  type="text"
-                  name="cpfCnpj"
-                  placeholder="Documento"
-                  value={docDigitado}
-                  onChange={handleInputChange}
-                  disabled={!isDocumentoSelected}
-                  maxLength={documentoValue === 'CPF' ? 14 : 18}
-                  className="w-64 h-11 px-3 py-2 rounded-md ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-indigo-600 disabled:bg-gray-300"
-                />
+
+                {/* Ativo e Revenda */}
+                <div className="flex gap-4 mt-2 mr-3 justify-end">
+                  <div className="flex items-center">
+                    <input
+                      type="checkbox"
+                      name="ativo"
+                      checked={formData.ativo}
+                      onChange={() => setFormData({ ...formData, ativo: !formData.ativo })}
+                      className="mr-2 rounded"
+                    />
+                    <label className="text-base">Ativo</label>
+                  </div>
+                  <div className="flex items-center">
+                    <input
+                      type="checkbox"
+                      name="revenda"
+                      checked={formData.revenda}
+                      onChange={() => setFormData({ ...formData, revenda: !formData.revenda })}
+                      className="mr-2 rounded"
+                    />
+                    <label className="text-base">Revenda</label>
+                  </div>
+                </div>
               </div>
-              
+
               {/* Dados da Empresa */}
               <div className="flex flex-col md:flex-row gap-4">
-                <input
-                  type="text"
-                  name="nomeRazao"
-                  placeholder="Nome"
-                  value={formData.nomeRazao}
-                  onChange={handleInputChange}
-                  className="flex-1 h-11 px-3 py-2 rounded-md ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-indigo-600"
-                  required
-                />
-                <input
-                  type="text"
-                  name="fantasia"
-                  placeholder="Fantasia"
-                  value={formData.fantasia}
-                  onChange={handleInputChange}
-                  disabled={documentoValue === 'CPF'}
-                  className="flex-1 h-11 px-3 py-2 rounded-md ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-indigo-600 disabled:bg-gray-300"
-                />
+                <div className="flex flex-col">
+                  <label className="block ml-1 text-sm font-medium leading-6 text-gray-900">Razão Social</label>
+                  <input
+                    type="text"
+                    name="nomeRazao"
+                    value={formData.nomeRazao}
+                    onChange={handleInputChange}
+                    className=" w-full h-11 px-3 py-2 rounded-md ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-indigo-600"
+                    required
+                  />
+                </div>
+                <div className="flex flex-col">
+                  <label className="block ml-1 text-sm font-medium leading-6 text-gray-900">Nome Fantasia</label>
+                  <input
+                    type="text"
+                    name="fantasia"
+                    value={formData.fantasia}
+                    onChange={handleInputChange}
+                    disabled={documentoValue === 'CPF'}
+                    className="h-11 px-3 py-2 rounded-md ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-indigo-600 disabled:bg-gray-300"
+                  />
+                </div>
+                <div className="flex flex-col">
+                  <label className="block ml-1 text-sm font-medium leading-6 text-gray-900">Documento</label>
+                  <input
+                    type="text"
+                    name="cpfCnpj"
+                    value={docDigitado}
+                    onChange={handleInputChange}
+                    disabled={!isDocumentoSelected}
+                    maxLength={documentoValue === 'CPF' ? 14 : 18}
+                    className="w-60 h-11 px-3 py-2 rounded-md ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-indigo-600 disabled:bg-gray-300"
+                  />
+                </div>
               </div>
               
               {/* Endereço do Cliente */}
               <div className="flex flex-col md:flex-row gap-4">
-                <input
-                  type="text"
-                  name="cep"
-                  placeholder="CEP"
-                  value={cep}
-                  onChange={handleCepChange}
-                  className="h-11 w-32 px-3 py-2 rounded-md ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-indigo-600"
-                />
-                <input
-                  type="text"
-                  name="municipio"
-                  placeholder="Cidade / Município"
-                  value={formData.municipio}
-                  onChange={handleInputChange}
-                  readOnly
-                  className="flex-1 h-11 px-3 py-2 rounded-md ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-indigo-600"
-                />
-                <input
-                  type="text"
-                  name="uf"
-                  placeholder="Estado"
-                  value={formData.uf}
-                  onChange={handleInputChange}
-                  readOnly
-                  className="w-20 h-11 px-3 py-2 rounded-md ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-indigo-600"
-                />
-                <input
-                  type="text"
-                  name="bairro"
-                  placeholder="Bairro"
-                  value={formData.bairro}
-                  onChange={handleInputChange}
-                  readOnly
-                  className="flex-1 h-11 px-3 py-2 rounded-md ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-indigo-600"
-                />
+                <div className="flex flex-col">
+                  <label className="block ml-1 text-sm font-medium leading-6 text-gray-900">CEP</label>
+                  <input
+                    type="text"
+                    name="cep"
+                    value={cep}
+                    onChange={handleCepChange}
+                    className="h-11 w-32 px-3 py-2 rounded-md ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-indigo-600"
+                  />
+                </div>
+                <div className="flex flex-col">
+                  <label className="block ml-1 text-sm font-medium leading-6 text-gray-900">Logradouro</label>
+                  <input
+                    type="text"
+                    name="logradouro"
+                    value={formData.logradouro}
+                    onChange={handleInputChange}
+                    readOnly
+                    className="w-[31rem] h-11 px-3 py-2 rounded-md ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-indigo-600"
+                  />
+                </div>
+                <div className="flex flex-col">
+                  <label className="block ml-1 text-sm font-medium leading-6 text-gray-900">Número</label>
+                  <input
+                    type="text"
+                    name="numero"
+                    value={formData.numero}
+                    onChange={handleInputChange}
+                    className="w-[6rem] h-11 px-3 py-2 rounded-md ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-indigo-600"
+                  />
+                </div>
               </div>
 
               <div className="flex flex-col md:flex-row gap-4">
-              <input
-                  type="text"
-                  name="logradouro"
-                  placeholder="Rua / Logradouro"
-                  value={formData.logradouro}
-                  onChange={handleInputChange}
-                  readOnly
-                  className="flex-1 h-11 px-3 py-2 rounded-md ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-indigo-600"
-                />
-                <input
-                  type="text"
-                  name="numero"
-                  placeholder="Número"
-                  value={formData.numero}
-                  onChange={handleInputChange}
-                  className="w-24 h-11 px-3 py-2 rounded-md ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-indigo-600"
-                />
-                <input
-                  type="text"
-                  name="complemento"
-                  placeholder="Complemento"
-                  value={formData.complemento}
-                  onChange={handleInputChange}
-                  className="h-11 px-3 py-2 rounded-md ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-indigo-600"
-                />
+                <div className="flex flex-col">
+                  <label className="block ml-1 text-sm font-medium leading-6 text-gray-900">Bairro</label>
+                  <input
+                    type="text"
+                    name="bairro"
+                    value={formData.bairro}
+                    onChange={handleInputChange}
+                    readOnly
+                    className="w-[15rem] h-11 px-3 py-2 rounded-md ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-indigo-600"
+                  />
+                </div>
+                <div className="flex flex-col">
+                  <label className="block ml-1 text-sm font-medium leading-6 text-gray-900">Complemento</label>
+                  <input
+                    type="text"
+                    name="complemento"
+                    value={formData.complemento}
+                    onChange={handleInputChange}
+                    className="w-[13rem] h-11 px-3 py-2 rounded-md ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-indigo-600"
+                  />
+                </div>
+                <div className="flex flex-col">
+                  <label className="block ml-1 text-sm font-medium leading-6 text-gray-900">Estado / UF</label>
+                  <input
+                    type="text"
+                    name="uf"
+                    value={formData.uf}
+                    onChange={handleInputChange}
+                    readOnly
+                    className="w-[6rem] h-11 px-3 py-2 rounded-md ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-indigo-600"
+                  />
+                </div>
+                <div className="flex flex-col">
+                  <label className="block ml-1 text-sm font-medium leading-6 text-gray-900">Município</label>
+                  <input
+                    type="text"
+                    name="municipio"
+                    value={formData.municipio}
+                    onChange={handleInputChange}
+                    readOnly
+                    className="w-[10rem] h-11 px-3 py-2 rounded-md ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-indigo-600"
+                  />
+                </div>
               </div>
               
               <div className="flex flex-col md:flex-row gap-4">
-                <input
-                  type="text"
-                  name="rgInscricaoEstadual"
-                  placeholder="RG Inscrição Estadual"
-                  value={formData.rgInscricaoEstadual}
-                  onChange={handleInputChange}
-                  className="h-11 w-56 px-3 py-2 rounded-md ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-indigo-600"
-                />
-                <input
-                  type="text"
-                  name="inscricaoEstadualMunicipal"
-                  placeholder="Inscrição Estadual Municipal"
-                  value={formData.inscricaoEstadualMunicipal}
-                  onChange={handleInputChange}
-                  className="h-11 px-3 py-2 rounded-md ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-indigo-600"
-                />
-              </div>
-
-              {/* Ativo e Revenda */}
-              <div className="flex gap-4 mt-2 justify-center">
-                <div className="flex items-center">
+                <div className="flex flex-col">
+                  <label className="block ml-1 text-sm font-medium leading-6 text-gray-900">RG Inscrição Estadual</label>
                   <input
-                    type="checkbox"
-                    name="ativo"
-                    checked={formData.ativo}
-                    onChange={() => setFormData({ ...formData, ativo: !formData.ativo })}
-                    className="mr-2 rounded"
+                    type="text"
+                    name="rgInscricaoEstadual"
+                    value={formData.rgInscricaoEstadual}
+                    onChange={handleInputChange}
+                    className="w-[24rem] h-11 px-3 py-2 rounded-md ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-indigo-600"
                   />
-                  <label className="text-base">Ativo</label>
                 </div>
-                <div className="flex items-center">
+                <div className="flex flex-col">
+                  <label className="block ml-1 text-sm font-medium leading-6 text-gray-900">Inscrição Estadual Municipal</label>
                   <input
-                    type="checkbox"
-                    name="revenda"
-                    checked={formData.revenda}
-                    onChange={() => setFormData({ ...formData, revenda: !formData.revenda })}
-                    className="mr-2 rounded"
+                    type="text"
+                    name="inscricaoEstadualMunicipal"
+                    value={formData.inscricaoEstadualMunicipal}
+                    onChange={handleInputChange}
+                    className="w-[22rem] h-11 px-3 py-2 rounded-md ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-indigo-600"
                   />
-                  <label className="text-base">Revenda</label>
                 </div>
               </div>
 
               {/* Contato do Cliente */}
               <div className="flex flex-col md:flex-row gap-4">
-                <input
-                  type="email"
-                  name="email"
-                  placeholder="Email"
-                  value={formData.email}
-                  onChange={handleInputChange}
-                  className="flex-1 h-11 px-3 py-2 rounded-md ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-indigo-600"
-                />
-                <input
-                  type="text"
-                  name="observacao"
-                  placeholder="Observação"
-                  value={formData.observacao}
-                  onChange={handleInputChange}
-                  className="flex-1 h-11 px-3 py-2 rounded-md ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-indigo-600"
-                />
+                <div className="flex flex-col">
+                  <label className="block ml-1 text-sm font-medium leading-6 text-gray-900">Email</label>
+                  <input
+                    type="email"
+                    name="email"
+                    value={formData.email}
+                    onChange={handleInputChange}
+                    className="w-[20rem] h-11 px-3 py-2 rounded-md ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-indigo-600"
+                  />
+                </div>
+                <div className="flex flex-col">
+                  <label className="block ml-1 text-sm font-medium leading-6 text-gray-900">Observação</label>
+                  <input
+                    type="text"
+                    name="observacao"
+                    value={formData.observacao}
+                    onChange={handleInputChange}
+                    className="w-[26rem] h-11 px-3 py-2 rounded-md ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-indigo-600"
+                  />
+                </div>
               </div>
               <div className="flex flex-col md:flex-row gap-4">
-                <input
-                  type="text"
-                  name="telefone"
-                  placeholder="Telefone"
-                  value={formData.telefone}
-                  onChange={handleInputChange}
-                  className="h-11 w-64 px-3 py-2 rounded-md ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-indigo-600"
-                />
-                <input
-                  type="text"
-                  name="celular"
-                  placeholder="Celular"
-                  value={formData.celular}
-                  onChange={handleInputChange}
-                  className="h-11 px-3 py-2 rounded-md ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-indigo-600"
-                />
-                <input
-                  type="text"
-                  name="contato"
-                  placeholder="Contato"
-                  value={formData.contato}
-                  onChange={handleInputChange}
-                  className="h-11 px-3 py-2 rounded-md ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-indigo-600"
-                />
+                <div className="flex flex-col">
+                  <label className="block ml-1 text-sm font-medium leading-6 text-gray-900">Telefone</label>
+                  <input
+                    type="text"
+                    name="telefone"
+                    value={formData.telefone}
+                    onChange={handleInputChange}
+                    className="h-11 w-60 px-3 py-2 rounded-md ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-indigo-600"
+                  />
+                </div>
+                <div className="flex flex-col">
+                  <label className="block ml-1 text-sm font-medium leading-6 text-gray-900">Celular</label>
+                  <input
+                    type="text"
+                    name="celular"
+                    value={formData.celular}
+                    onChange={handleInputChange}
+                    className="h-11 px-3 py-2 rounded-md ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-indigo-600"
+                  />
+                </div>
+                <div className="flex flex-col">
+                  <label className="block ml-1 text-sm font-medium leading-6 text-gray-900">Contato</label>
+                  <input
+                    type="text"
+                    name="contato"
+                    value={formData.contato}
+                    onChange={handleInputChange}
+                    className="h-11 px-3 py-2 rounded-md ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-indigo-600"
+                  />
+                </div>
               </div>
               <div className="flex justify-end gap-4 mt-4">
                 <button type="submit" className="h-11 w-40 px-4 py-2 rounded-md bg-indigo-600 text-white hover:bg-indigo-700">
