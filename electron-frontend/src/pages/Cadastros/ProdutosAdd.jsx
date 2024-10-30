@@ -19,6 +19,7 @@ function ProdutosAdd() {
   const [isDocumentoSelected, setIsDocumentoSelected] = useState(false);
   const [tipoCliente, setTipoCliente] = useState('-');
   const [cep, setCep] = useState('');
+  const [UnSelected, setUnSelected] = useState("");
 
   const [formsData, setFormsData] = useState({
     index: "",
@@ -26,14 +27,14 @@ function ProdutosAdd() {
     barras: '',
     nome: '',
     un: '',
-    quantidade: 0,
-    qtdBloqueada: 0,
-    qtdDisponivel: 0,
-    qtdIdeal: 0,
-    precoCusto: 0,
-    custoMedio: 0,
-    precoVenda: 0,
-    precoRevenda: 0,
+    quantidade: '',
+    qtdBloqueada: '',
+    qtdDisponivel: '',
+    qtdIdeal: '',
+    precoCusto: '',
+    custoMedio: '',
+    precoVenda: '',
+    precoRevenda: '',
     descricao: '',
     contrLote: '',
     contrSerial: '',
@@ -47,32 +48,37 @@ function ProdutosAdd() {
     status: '',
   });
 
-  const handleDocumentoItemClick = (item) => {
-    setDocumentoValue(item);
-    setDocDigitado('');
-    const tipoCliente = item === 'CPF' ? 'PF' : 'PJ';
-    setTipoCliente(tipoCliente);
-    setFormData((prevData) => ({
-        ...prevData,
-        documento: '',
-        cpfCnpj: '',
-        pfOuPj: tipoCliente,
-    }));
-    setIsDocumentoSelected(true);
+  const [formData, setFormData] = useState({
+    nomeRazao: '',
+    fantasia: '',
+    documento: '',
+    cep: '',
+    municipio: '',
+    uf: '',
+    bairro: '',
+    logradouro: '',
+    numero: '',
+    complemento: '',
+    cpfCnpj: '',
+    pfOuPj: '',
+    email: '',
+    telefone: '',
+    celular: '',
+    contato: '',
+    rgInscricaoEstadual: '',
+    inscricaoEstadualMunicipal: '',
+    observacao: '',
+    ativo: true,
+    revenda: false,
+  });
+
+  const handleMenuItemClick = (item) => {
+    setUnSelected(item);
+    formsData.un = (item);
   };
+
 
   const [error, setError] = useState(null);
-
-  const handleCepChange = (e) => {
-    const value = e.target.value.replace(/\D/g, '');
-    const formattedValue = value.replace(/(\d{5})(\d{3})/, '$1-$2');
-  
-    setCep(formattedValue);
-    
-    if (formattedValue.length === 9) {
-      getDadosEnderecoCEP(value);
-    }
-  };
 
 
   const [sidebarOpen, setSidebarOpen] = useState(false);
@@ -81,7 +87,7 @@ function ProdutosAdd() {
     e.preventDefault();
     try {
         const response = await axios.post("http://localhost:8080/empresas-proprietarias/", formData);
-        setFormData({
+        setFormsData({
             tipo: '',
             razaoSocial: '',
             nomeFantasia: '',
@@ -108,29 +114,6 @@ function ProdutosAdd() {
     }
   };
 
-  const [formData, setFormData] = useState({
-    nomeRazao: '',
-    fantasia: '',
-    documento: '',
-    cep: '',
-    municipio: '',
-    uf: '',
-    bairro: '',
-    logradouro: '',
-    numero: '',
-    complemento: '',
-    cpfCnpj: '',
-    pfOuPj: '',
-    email: '',
-    telefone: '',
-    celular: '',
-    contato: '',
-    rgInscricaoEstadual: '',
-    inscricaoEstadualMunicipal: '',
-    observacao: '',
-    ativo: true,
-    revenda: false,
-  });
 
   {/* Pegando dados da API ao digitar o CEP */}
   const getDadosEnderecoCEP = async (cepDigitado) => {
@@ -219,33 +202,7 @@ function ProdutosAdd() {
     const { name, value } = e.target;
 
     // Atualiza o estado normalmente
-    setFormData((prevData) => ({ ...prevData, [name]: value }));
-
-    if (name === 'cpfCnpj') {
-        const numericValue = value.replace(/\D/g, '');
-        let formattedValue = numericValue;
-        const maxLength = documentoValue === 'CPF' ? 14 : 18;
-
-        if (documentoValue === 'CPF') {
-            if (numericValue.length <= 11) {
-                formattedValue = formatarCPF(numericValue);
-            }
-        } else if (documentoValue === 'CNPJ') {
-            if (numericValue.length <= 14) {
-                formattedValue = formatarCNPJ(numericValue);
-            }
-        }
-
-        if (formattedValue.length <= maxLength) {
-            setDocDigitado(formattedValue); // Isso deve ser feito após setar o formData
-            // Atualiza novamente o formData com o valor formatado
-            setFormData((prevData) => ({ ...prevData, [name]: formattedValue }));
-
-            if (documentoValue === 'CNPJ' && numericValue.length === 14) {
-                getDadosCNPJ(numericValue);
-            }
-        }
-    }
+    setFormsData((prevData) => ({ ...prevData, [name]: value }));
 };
 
 
@@ -300,8 +257,8 @@ function ProdutosAdd() {
                 <label className="block ml-1 text-sm font-medium leading-6 text-black">Codigo de Barras</label>
                   <input
                     type="text"
-                    name="nomeRazao"
-                    value={formData.nomeRazao}
+                    name="codigoBarras"
+                    value={formsData.codigo}
                     onChange={handleInputChange}
                     className=" w-[13rem] h-11 px-3 py-2 rounded-md  ring-inset focus:ring-2 focus:ring-indigo-600"
                     required
@@ -311,19 +268,19 @@ function ProdutosAdd() {
                   <label className="block ml-1 text-sm font-medium leading-6 text-black">Nome</label>
                   <input
                     type="text"
-                    name="nomeRazao"
-                    value={formData.nomeRazao}
+                    name="nome"
+                    value={formsData.nome}
                     onChange={handleInputChange}
                     className=" w-[38rem] h-11 px-3 py-2 rounded-md  ring-inset focus:ring-2 focus:ring-indigo-600"
                     required
                   />
                 </div>
                 <div className="flex flex-col">
-                  <label className="block ml-1 text-sm font-medium leading-6 text-black">Grupos</label>
+                  <label className="block ml-1 text-sm font-medium leading-6 text-black">Grupo</label>
                   <input
                     type="text"
-                    name="nomeRazao"
-                    value={formData.nomeRazao}
+                    name="grupo"
+                    value={formsData.grupo}
                     onChange={handleInputChange}
                     className=" w-[13rem] h-11 px-3 py-2 rounded-md ring-inset focus:ring-2 focus:ring-indigo-600"
                     required
@@ -337,8 +294,8 @@ function ProdutosAdd() {
                 <label className="block ml-1 text-sm font-medium leading-6 text-black">Descrição</label>
                 <textarea
                         type="text"
-                        name="observacao"
-                        value={formData.observacao}
+                        name="descricao"
+                        value={formsData.descricao}
                         onChange={handleInputChange}
                         className="w-[66rem] h-[45px] resize-none px-3 py-2 rounded-md ring-inset focus:ring-2 focus:ring-indigo-600"
                     />
@@ -356,8 +313,8 @@ function ProdutosAdd() {
                   <label className="block ml-1 text-sm font-medium leading-6 text-black">Quantidade</label>
                   <input
                     type="text"
-                    name="cpfCnpj"
-                    value={docDigitado}
+                    name="quantidade"
+                    value={formsData.quantidade}
                     onChange={handleInputChange}
                     maxLength={documentoValue === 'CPF' ? 14 : 18}
                     className="w-[50.8rem] h-11 px-3 py-2 rounded-md ring-inset focus:ring-2 focus:ring-indigo-600 disabled:bg-gray-300"
@@ -368,7 +325,7 @@ function ProdutosAdd() {
                   <Menu as="div" className="flex rounded-md">
                             <div>
                               <MenuButton className="w-56 rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50">
-                                {formsData.un || 'Selecione a unidade'}
+                                {UnSelected || 'Selecione a unidade'}
                               </MenuButton>
                             </div>
                             <MenuItems
@@ -398,10 +355,9 @@ function ProdutosAdd() {
                   <label className="block ml-1 text-sm font-medium leading-6 text-black">Quantidade Bloqueada</label>
                   <input
                     type="text"
-                    name="fantasia"
-                    value={formData.fantasia}
+                    name="qtdBloqueada"
+                    value={formsData.qtdBloqueada}
                     onChange={handleInputChange}
-                    disabled={documentoValue === 'CPF'}
                     className="w-[21.3rem] h-11 px-3 py-2 rounded-md ring-inset focus:ring-2 focus:ring-indigo-600 disabled:bg-gray-300"
                   />
                 </div>
@@ -409,10 +365,9 @@ function ProdutosAdd() {
                   <label className="block ml-1 text-sm font-medium leading-6 text-black">Quantidade Disponível</label>
                   <input
                     type="text"
-                    name="fantasia"
-                    value={formData.fantasia}
+                    name="qtdDisponivel"
+                    value={formsData.qtdDisponivel}
                     onChange={handleInputChange}
-                    disabled={documentoValue === 'CPF'}
                     className="w-[21.3rem] h-11 px-3 py-2 rounded-md ring-inset focus:ring-2 focus:ring-indigo-600 disabled:bg-gray-300"
                   />
                 </div>
@@ -420,10 +375,9 @@ function ProdutosAdd() {
                   <label className="block ml-1 text-sm font-medium leading-6 text-black">Quantidade Ideal</label>
                   <input
                     type="text"
-                    name="fantasia"
-                    value={formData.fantasia}
+                    name="qtdIdeal"
+                    value={formsData.qtdIdeal}
                     onChange={handleInputChange}
-                    disabled={documentoValue === 'CPF'}
                     className="w-[21.3rem] h-11 px-3 py-2 rounded-md ring-inset focus:ring-2 focus:ring-indigo-600 disabled:bg-gray-300"
                   />
                 </div>
@@ -440,10 +394,9 @@ function ProdutosAdd() {
                   <label className="block ml-1 text-sm font-medium leading-6 text-black">Custo</label>
                   <input
                     type="text"
-                    name="fantasia"
-                    value={formData.fantasia}
+                    name="custo"
+                    value={formsData.custo}
                     onChange={handleInputChange}
-                    disabled={documentoValue === 'CPF'}
                     className="w-[32.5rem] h-11 px-3 py-2 rounded-md ring-inset focus:ring-2 focus:ring-indigo-600 disabled:bg-gray-300"
                   />
                 </div>
@@ -451,10 +404,9 @@ function ProdutosAdd() {
                   <label className="block ml-1 text-sm font-medium leading-6 text-black">Custo Medio</label>
                   <input
                     type="text"
-                    name="fantasia"
-                    value={formData.fantasia}
+                    name="custoMedio"
+                    value={formsData.custoMedio}
                     onChange={handleInputChange}
-                    disabled={documentoValue === 'CPF'}
                     className="w-[32.5rem] h-11 px-3 py-2 rounded-md ring-inset focus:ring-2 focus:ring-indigo-600 disabled:bg-gray-300"
                   />
                 </div>
@@ -466,10 +418,9 @@ function ProdutosAdd() {
                   <label className="block ml-1 text-sm font-medium leading-6 text-black">Preço de venda</label>
                   <input
                     type="text"
-                    name="fantasia"
-                    value={formData.fantasia}
+                    name="precoVenda"
+                    value={formsData.precoVenda}
                     onChange={handleInputChange}
-                    disabled={documentoValue === 'CPF'}
                     className="w-[32.5rem] h-11 px-3 py-2 rounded-md ring-inset focus:ring-2 focus:ring-indigo-600 disabled:bg-gray-300"
                   />
                 </div>
@@ -477,10 +428,9 @@ function ProdutosAdd() {
                   <label className="block ml-1 text-sm font-medium leading-6 text-black">Preço de Revenda</label>
                   <input
                     type="text"
-                    name="fantasia"
-                    value={formData.fantasia}
+                    name="precoRevenda"
+                    value={formsData.precoRevenda}
                     onChange={handleInputChange}
-                    disabled={documentoValue === 'CPF'}
                     className="w-[32.5rem] h-11 px-3 py-2 rounded-md ring-inset focus:ring-2 focus:ring-indigo-600 disabled:bg-gray-300"
                   />
                 </div>
@@ -497,7 +447,7 @@ function ProdutosAdd() {
                   <Menu as="div" className="flex rounded-md">
                             <div>
                               <MenuButton className="w-56 rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50">
-                                {formsData.un || 'Selecione a unidade'}
+                                {formsData.contrLote || 'Tem Lot?'}
                               </MenuButton>
                             </div>
                             <MenuItems
@@ -524,7 +474,7 @@ function ProdutosAdd() {
                   <Menu as="div" className="flex rounded-md">
                             <div>
                               <MenuButton className="w-56 rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50">
-                                {formsData.un || 'Selecione a unidade'}
+                                {formsData.contrSerial || 'Tem Serial'}
                               </MenuButton>
                             </div>
                             <MenuItems
@@ -551,7 +501,7 @@ function ProdutosAdd() {
                   <Menu as="div" className="flex rounded-md">
                             <div>
                               <MenuButton className="w-56 rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50">
-                                {formsData.un || 'Selecione a unidade'}
+                                {formsData.contrGrade || 'Tem Grade?'}
                               </MenuButton>
                             </div>
                             <MenuItems
@@ -586,8 +536,8 @@ function ProdutosAdd() {
                   <label className="block ml-1 text-sm font-medium leading-6 text-black">ncm</label>
                   <input
                     type="text"
-                    name="contato"
-                    value={formData.contato}
+                    name="ncm"
+                    value={formsData.ncm}
                     onChange={handleInputChange}
                     className="w-[44rem] px-3 py-2 rounded-md ring-inset focus:ring-2 focus:ring-indigo-600"
                   />
@@ -596,8 +546,8 @@ function ProdutosAdd() {
                   <label className="block ml-1 text-sm font-medium leading-6 text-black">cest</label>
                   <input
                     type="text"
-                    name="email"
-                    value={formData.email}
+                    name="cest"
+                    value={formsData.cest}
                     onChange={handleInputChange}
                     className="w-[21rem] px-3 py-2 rounded-md ring-inset focus:ring-2 focus:ring-indigo-600"
                   />
@@ -610,8 +560,8 @@ function ProdutosAdd() {
                   <label className="block ml-1 text-sm font-medium leading-6 text-black">Trib. Estadual</label>
                   <input
                     type="text"
-                    name="email"
-                    value={formData.email}
+                    name="tribEstadual"
+                    value={formsData.tribEstadual}
                     onChange={handleInputChange}
                     className="w-[66rem] px-3 py-2 rounded-md ring-inset focus:ring-2 focus:ring-indigo-600"
                   />
@@ -624,8 +574,8 @@ function ProdutosAdd() {
                   <label className="block ml-1 text-sm font-medium leading-6 text-black">Trib. Federal</label>
                   <input
                     type="text"
-                    name="email"
-                    value={formData.email}
+                    name="tribFederal"
+                    value={formsData.tribFederal}
                     onChange={handleInputChange}
                     className="w-[66rem] px-3 py-2 rounded-md ring-inset focus:ring-2 focus:ring-indigo-600"
                   />
