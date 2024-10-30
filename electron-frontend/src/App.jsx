@@ -15,6 +15,7 @@ import Empresas from './pages/Cadastros/Empresas';
 import EmpresasAdd from './pages/Cadastros/EmpresasAdd';
 import Fornecedores from './pages/Cadastros/Fornecedores';  
 import Produtos from './pages/Cadastros/Produtos';
+import ProdutosAdd from './pages/Cadastros/ProdutosAdd';
 import Serviços from './pages/Cadastros/Serviços';
 import Transportadoras from './pages/Cadastros/Transportadoras';
 import Vendedores from './pages/Cadastros/Vendedores';
@@ -63,6 +64,7 @@ function App() {
         <Route exact path="/cadastro/empresas/adicionar" element={<EmpresasAdd/>} />
         <Route exact path="/cadastro/fornecedores" element={<Fornecedores/>} />
         <Route exact path="/cadastro/produtos" element={<Produtos/>} />
+        <Route exact path="/cadastro/produtos/adicionar" element={<ProdutosAdd/>} />
         <Route exact path="/cadastro/servicos" element={<Serviços/>} />
         <Route exact path="/cadastro/transportadoras" element={<Transportadoras/>} />
         <Route exact path="/cadastro/vendedores" element={<Vendedores/>} />

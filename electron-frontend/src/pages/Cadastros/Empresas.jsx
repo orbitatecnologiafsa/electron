@@ -158,7 +158,7 @@ function Empresas() {
     'Ativo': 'ativo',
     'Data de Integração': 'dataCriacao'
   };
-
+  
   return (
     <div className="flex h-screen overflow-hidden">
       {/* Sidebar */}

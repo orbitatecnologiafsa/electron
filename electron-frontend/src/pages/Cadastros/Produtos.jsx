@@ -106,6 +106,11 @@ function Produtos() {
     },
   ];
 
+  {/* Redireciona para Cadastro de Clientes */}
+  const handleRedirect = () => {
+    navigate('/cadastro/produtos/adicionar');
+  };
+
   return (
     <div className="flex h-screen overflow-hidden">
       {/* Sidebar */}
@@ -142,9 +147,9 @@ function Produtos() {
                       <div className="flex-auto w-full">
                         <label htmlFor="input1" className="block text-sm font-medium leading-6 text-gray-900">Filtros</label>
                         <div className="flex rounded-md sm:max-w-md">
-                          <Menu as="div" className="flex rounded-md">
+                        <Menu as="div" className="flex rounded-md">
                             <div>
-                              <MenuButton className="w-44 rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50">
+                            <MenuButton className="w-44 rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50">
                                 {campoValue || 'Selecione um Campo'}
                               </MenuButton>
                             </div>
@@ -273,7 +278,8 @@ function Produtos() {
                 </div>
               </div>
               <div className="mr-10 mt-10 h-10">
-                <button className="w-auto float-end rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50">
+                <button className="w-auto float-end px-3 py-2 rounded-md bg-indigo-600 text-white hover:bg-indigo-700"
+                  onClick={handleRedirect}>
                   Cadastrar
                 </button>
               </div>
