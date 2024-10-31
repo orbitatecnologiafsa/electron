@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Sidebar from '../../partials/Sidebar';
 import { useNavigate } from 'react-router-dom';
 import Header from '../../partials/Header';
@@ -11,7 +11,59 @@ function Produtos() {
   const [campoValue, setCampoValue] = useState('Selecione um Campo');
   const [statusValue, setStatusValue] = useState('Status');
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [inputInfo, setInputInfo] = useState('');
+  const [filteredPosts, setFilteredPosts] = useState([]);
+  const [searchInfo, setSearchInfo] = useState('');
 
+  const sortedPosts = [...filteredPosts].sort((a, b) => {
+    const aValue = a[sortColumn];
+    const bValue = b[sortColumn];
+
+    if (typeof aValue === 'string' && typeof bValue === 'string') {
+      return sortDirection === 'asc' ? aValue.localeCompare(bValue) : bValue.localeCompare(aValue);
+    }
+    return sortDirection === 'asc' ? aValue - bValue : bValue - aValue;
+  });
+
+  const handleInputFilterChange = (e) => {
+    setInputInfo(e.target.value);
+  };
+
+  const handleSearchClick = (event) => {
+    event.preventDefault();
+    setSearchInfo(inputInfo);
+  };
+
+  {/* Sort da tabela */}
+  const handleSort = (column) => {
+    const direction = (sortColumn === column && sortDirection === 'asc') ? 'desc' : 'asc';
+    setSortColumn(column);
+    setSortDirection(direction);
+  };
+  
+
+  {/* Const API Clientes */}
+  const [posts, setPosts] = useState([]);
+  const [sortColumn, setSortColumn] = useState('id'); 
+
+  useEffect(() => {
+    if (campoValue === 'Todos') {
+      setFilteredPosts(posts);
+    } else if (searchInfo) {
+      const propertyName = campoValueMapping[campoValue];
+      const filteredData = posts.filter(data => {
+        const fieldValue = data[propertyName];
+        return fieldValue && fieldValue.toString().toLowerCase() === searchInfo.toLowerCase();
+      });
+    
+      setFilteredPosts(filteredData);
+    } else {
+      setFilteredPosts([]);
+    }
+  }, [searchInfo, posts, campoValue]);
+
+  const [sortDirection, setSortDirection] = useState('asc'); 
+  const navigate = useNavigate();
   const handleMenuItemClick = (value) => {
     setCampoValue(value);
   };
@@ -24,94 +76,39 @@ function Produtos() {
     setIsModalOpen(!isModalOpen);
   };
 
-  {/* Colunas da Tabela */}
+
+  {/* Colunas da tabela */}
   const tableColumns = [
-    '',
-    'Código',
-    'Barras',
-    'Nome',
-    'UN',
-    'Quantidade',
-    'Qtd Bloqueada',
-    'Qtd Disponível',
-    'Qtd Ideal',
-    'Preço Custo',
-    'Custo Médio',
-    'Preço Venda',
-    'Preço Revenda',
-    'Descrição',
-    'Contr. Lote',
-    'Contr. Serial',
-    'Contr. Grade',
-    'Grupo',
-    'NCM',
-    'CEST',
-    'Trib. Estadual',
-    'Trib. Federal',
-    'Referência',
-    'Status',
+    { label: '', key: 'action' },
+    { label: 'ID', key: 'id' },
+    { label: 'Barras', key: 'razaoSocial' },
+    { label: 'Nome', key: 'nomeFantasia' },
+    { label: 'UN', key: 'cpfCnpj' },
+    { label: 'Quantidade', key: 'matrizOuFilial' },
+    { label: 'Qtd. bloqueada', key: 'municipio' },
+    { label: 'Qtd. disponível', key: 'uf' },
+    { label: 'Qtd. ideal', key: 'telefone' },
+    { label: 'Preço custo', key: 'ativo' },
+    { label: 'Custo médio', key: 'dataCriacao' },
+    { label: 'Preço venda', key: 'dataCriacao' },
+    { label: 'Preço revenda', key: 'dataCriacao' },
+    { label: 'Descrição', key: 'dataCriacao' },
+    { label: 'Contr. lote', key: 'dataCriacao' },
+    { label: 'Contr. serial', key: 'dataCriacao' },
+    { label: 'Contr. Grade', key: 'dataCriacao' },
+    { label: 'Grupo', key: 'dataCriacao' },
+    { label: 'NCM', key: 'dataCriacao' },
+    { label: 'CEST', key: 'dataCriacao' },
+    { label: 'Trib. Estadual', key: 'dataCriacao' },
+    { label: 'Trib. Federal', key: 'dataCriacao' },
+    { label: 'Referência', key: 'dataCriacao' },
+    { label: 'Status', key: 'dataCriacao' },
   ];
 
-  {/* Dados da Tabela */}
-  const exampleData = [
-    {
-      index: "",
-      codigo: '001',
-      barras: '7891234567890',
-      nome: 'Produto A',
-      un: 'kg',
-      quantidade: 100,
-      qtdBloqueada: 10,
-      qtdDisponivel: 90,
-      qtdIdeal: 120,
-      precoCusto: 10.00,
-      custoMedio: 10.50,
-      precoVenda: 15.00,
-      precoRevenda: 20.00,
-      descricao: 'Descrição do Produto A',
-      contrLote: 'Sim',
-      contrSerial: 'Não',
-      contrGrade: 'Não',
-      grupo: 'Grupo A',
-      ncm: '1234.56.78',
-      cest: '12.345.67',
-      tribEstadual: 'ICMS',
-      tribFederal: 'PIS/COFINS',
-      referencia: 'REF001',
-      status: 'Ativo',
-    },
-    {
-      codigo: '002',
-      barras: '7891234567891',
-      nome: 'Produto B',
-      un: 'un',
-      quantidade: 200,
-      qtdBloqueada: 20,
-      qtdDisponivel: 180,
-      qtdIdeal: 250,
-      precoCusto: 5.00,
-      custoMedio: 5.50,
-      precoVenda: 8.00,
-      precoRevenda: 12.00,
-      descricao: 'Descrição do Produto B',
-      contrLote: 'Não',
-      contrSerial: 'Sim',
-      contrGrade: 'Não',
-      grupo: 'Grupo B',
-      ncm: '2345.67.89',
-      cest: '23.456.78',
-      tribEstadual: 'ICMS',
-      tribFederal: 'PIS/COFINS',
-      referencia: 'REF002',
-      status: 'Ativo',
-    },
-  ];
-
-  {/* Redireciona para Cadastro de Clientes */}
+  {/* Redireciona para Cadastro de Produtos */}
   const handleRedirect = () => {
     navigate('/cadastro/produtos/adicionar');
   };
-  const navigate = useNavigate();
 
   return (
     <div className="flex h-screen overflow-hidden">
@@ -207,47 +204,54 @@ function Produtos() {
                   </div>
 
                   {/* Tabela */}
-                  <div className="overflow-x-auto mt-5">
+                  <div className="overflow-x-auto overflow-y-auto mt-5">
                     <div className="max-h-[24rem] overflow-y-auto">
                       <table className="min-w-full max-w-full divide-y divide-gray-200">
                         <thead className="bg-gray-100">
                           <tr>
                             {tableColumns.map((column, index) => (
-                              <th key={column} className="px-6 py-3 text-center text-sm font-medium text-gray-700">
-                                {index === 0 ? column : <>{column} <FontAwesomeIcon icon={faSort} /></>}
+                              <th key={index} className="px-6 py-3 text-center text-sm font-medium text-gray-700">
+                                <div className="flex items-center justify-center cursor-pointer" onClick={() => handleSort(column.key)}>
+                                  <span className="mr-1">{column.label}</span>
+                                  {index !== 0 && <FontAwesomeIcon icon={faSort} />}
+                                </div>
                               </th>
                             ))}
                           </tr>
                         </thead>
-                        <tbody className="bg-white divide-y divide-gray-200 text-center">
-                          {exampleData.map((data, index) => (
-                            <tr key={index}>
-                              <td className="px-4 py-4 whitespace-nowrap text-sm text-gray-700">
-                                <FontAwesomeIcon icon={faMagnifyingGlass} />
+                        <tbody className="bg-white divide-y divide-gray-200">
+                          {sortedPosts.map((data) => (
+                            <tr key={data.id}>
+                              <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700 text-center">
+                                <FontAwesomeIcon icon={faMagnifyingGlass} className="cursor-pointer" />
                               </td>
-                              <td className="px-14 py-4 whitespace-nowrap text-sm text-gray-700">{data.codigo}</td>
-                              <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700">{data.barras}</td>
-                              <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700">{data.nome}</td>
-                              <td className="px-10 py-4 whitespace-nowrap text-sm text-gray-700">{data.un}</td>
-                              <td className="px-14 py-4 whitespace-nowrap text-sm text-gray-700">{data.quantidade}</td>
-                              <td className="px-20 py-4 whitespace-nowrap text-sm text-gray-700">{data.qtdBloqueada}</td>
-                              <td className="px-20 py-4 whitespace-nowrap text-sm text-gray-700">{data.qtdDisponivel}</td>
-                              <td className="px-14 py-4 whitespace-nowrap text-sm text-gray-700">{data.qtdIdeal}</td>
-                              <td className="px-14 py-4 whitespace-nowrap text-sm text-gray-700">{data.precoCusto.toFixed(2)}</td>
-                              <td className="px-14 py-4 whitespace-nowrap text-sm text-gray-700">{data.custoMedio.toFixed(2)}</td>
-                              <td className="px-14 py-4 whitespace-nowrap text-sm text-gray-700">{data.precoVenda.toFixed(2)}</td>
-                              <td className="px-20 py-4 whitespace-nowrap text-sm text-gray-700">{data.precoRevenda.toFixed(2)}</td>
-                              <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700">{data.descricao}</td>
-                              <td className="px-14 py-4 whitespace-nowrap text-sm text-gray-700">{data.contrLote}</td>
-                              <td className="px-20 py-4 whitespace-nowrap text-sm text-gray-700">{data.contrSerial}</td>
-                              <td className="px-20 py-4 whitespace-nowrap text-sm text-gray-700">{data.contrGrade}</td>
-                              <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700">{data.grupo}</td>
-                              <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700">{data.ncm}</td>
-                              <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700">{data.cest}</td>
-                              <td className="px-20 py-4 whitespace-nowrap text-sm text-gray-700">{data.tribEstadual}</td>
-                              <td className="px-20 py-4 whitespace-nowrap text-sm text-gray-700">{data.tribFederal}</td>
-                              <td className="px-14 py-4 whitespace-nowrap text-sm text-gray-700">{data.referencia}</td>
-                              <td className="px-14 py-4 whitespace-nowrap text-sm text-gray-700">{data.status}</td>
+                              <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700 text-center">{data.id}</td>
+                              <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700 text-center">{data.Barras}</td>
+                              <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700 text-center">{data.Nome}</td>
+                              <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700 text-center">{data.un}</td>
+                              <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700 text-center">{data.Quantidade}</td>
+                              <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700 text-center">{data.Quantidade}</td>
+                              <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700 text-center">{data.Quantidade}</td>
+                              <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700 text-center">{data.Quantidade}</td>
+                              <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700 text-center">{data.Preço}</td>
+                              <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700 text-center">{data.Preço}</td>
+                              <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700 text-center">{data.Preço}</td>
+                              <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700 text-center">{data.Preço}</td>
+                              <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700 text-center">{data.Descrição}</td>
+                              <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700 text-center">{data.Contr}</td>
+                              <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700 text-center">{data.Contr}</td>
+                              <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700 text-center">{data.Contr}</td>
+                              <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700 text-center">{data.Grupo}</td>
+                              <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700 text-center">{data.telefone}</td>
+                              <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700 text-center">{data.ncm}</td>
+                              <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700 text-center">{data.cest}</td>
+                              <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700 text-center">{data.Trib}</td>
+                              <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700 text-center">{data.Trib}</td>
+                              <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700 text-center">{data.Referência}</td>
+                              <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700 text-center">{data.Status}</td>
+                              <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700 text-center">
+                                <FontAwesomeIcon icon={faPenToSquare} className="cursor-pointer" />
+                              </td>
                             </tr>
                           ))}
                         </tbody>

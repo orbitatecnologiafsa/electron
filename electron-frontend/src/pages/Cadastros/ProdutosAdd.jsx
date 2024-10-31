@@ -2,27 +2,17 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Sidebar from '../../partials/Sidebar';
 import Header from '../../partials/Header';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faImage } from '@fortawesome/free-solid-svg-icons';
 import axios from 'axios';
 import { Menu, MenuButton, MenuItems, MenuItem } from '@headlessui/react';
-import Produtos from './Produtos';
-import Button from 'react-bootstrap/Button';
-import Form from 'react-bootstrap/Form';
-import InputGroup from 'react-bootstrap/InputGroup';
+
 
 function ProdutosAdd() {
 
   const [docDigitado, setDocDigitado] = useState('');
 
   const [documentoValue, setDocumentoValue] = useState('');
-  const [isDocumentoSelected, setIsDocumentoSelected] = useState(false);
-  const [tipoCliente, setTipoCliente] = useState('-');
   const [cep, setCep] = useState('');
   const [UnSelected, setUnSelected] = useState("");
-  const [loteSelected, setLoteSelected] = useState("");
-  const [serialSelected, setSerialSelected] = useState("");
-  const [gradeSelected, setGradeSelected] = useState("");
 
   const [formsData, setFormsData] = useState({
     index: "",
@@ -75,20 +65,9 @@ function ProdutosAdd() {
     revenda: false,
   });
 
-  const handleMenuItemClick = (item, index) => {
-    if (index == "UN"){
-      setUnSelected(item);
-      formsData.un = (item);
-    }else if( index == "LOTE"){
-      setLoteSelected(item);
-      formsData.contrLote = (item);
-    }else if( index == "SERIAL"){
-      setSerialSelected(item);
-      formsData.contrSerial = (item);
-    }else if( index == "GRADE"){
-      setGradeSelected(item);
-      formsData.contrGrade = (item);
-    }
+  const handleMenuItemClick = (item) => {
+    setUnSelected(item);
+    formsData.un = (item);
   };
 
 
@@ -128,84 +107,6 @@ function ProdutosAdd() {
     }
   };
 
-
-  {/* Pegando dados da API ao digitar o CEP */}
-  const getDadosEnderecoCEP = async (cepDigitado) => {
-    try {
-        const responseCEP = await axios.get(`https://viacep.com.br/ws/${cepDigitado}/json/`);
-        if (responseCEP.data.erro) {
-            throw new Error('CEP não encontrado.');
-        }
-        setFormData((prevData) => ({
-            ...prevData,
-            logradouro: responseCEP.data.logradouro,
-            bairro: responseCEP.data.bairro,
-            municipio: responseCEP.data.localidade,
-            uf: responseCEP.data.uf
-        }));
-        setError(null);
-    } catch (error) {
-        setError('Erro ao buscar CEP: ' + error.message);
-        setFormData((prevData) => ({
-            ...prevData,
-            logradouro: '',
-            bairro: '',
-            municipio: '',
-            uf: ''
-        }));
-    }
-  };
-
-  {/* Pegando dados da API ao digitar o CNPJ */}
-  const getDadosCNPJ = async (cnpjDigitado) => {
-    try {
-        const cnpjFormatted = cnpjDigitado.replace(/\D/g, '');
-
-        const responseCNPJ = await axios.get(`https://publica.cnpj.ws/cnpj/${cnpjFormatted}`);
-        console.log('Resposta CNPJ:', responseCNPJ.data);
-
-        if (responseCNPJ.data.erro) {
-            throw new Error('CNPJ não encontrado.');
-        }
-
-        setFormData((prevData) => ({
-            ...prevData,
-            fantasia: responseCNPJ.data.nome_fantasia || '',
-            nomeRazao: responseCNPJ.data.razao_social || '',
-        }));
-
-        const cepObtido = responseCNPJ.data.cep || '';
-        setCep(cepObtido);
-
-        await getDadosEnderecoCEP(cepObtido);
-
-        setError(null);
-    } catch (error) {
-        setError('Erro ao buscar CNPJ: ' + error.message);
-        setFormData((prevData) => ({
-            ...prevData,
-            fantasia: '',
-            nomeRazao: '',
-        }));
-        setCep('');
-    }
-  };
-
-  const formatarCPF = (cpf) => {
-    return cpf.replace(/(\d{3})(\d)/, "$1.$2")
-              .replace(/(\d{3})(\d)/, "$1.$2")
-              .replace(/(\d)(\d{2})$/, "$1-$2");
-  };
-
-  const formatarCNPJ = (cnpj) => {
-    return cnpj.replace(/(\d{2})(\d)/, "$1.$2")
-               .replace(/(\d{3})(\d)/, "$1.$2")
-               .replace(/(\d{3})(\d)/, "$1/$2")
-               .replace(/(\d)(\d{2})$/, "$1-$2");
-  };
-
-
-
   {/* Redireciona para Empresas */}
   const handleRedirect = () => {
     navigate('/cadastro/produtos');
@@ -215,7 +116,6 @@ function ProdutosAdd() {
   const handleInputChange = (e) => {
     const { name, value } = e.target;
 
-    // Atualiza o estado normalmente
     setFormsData((prevData) => ({ ...prevData, [name]: value }));
 };
 
@@ -231,9 +131,20 @@ function ProdutosAdd() {
         <div className="relative flex flex-col flex-1 overflow-y-auto overflow-x-hidden">
           <Header sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} />
           <div className="flex justify-center w-full">
-            <form onSubmit={handleSubmit} className="space-y-5 mx-[2rem] max-w-full h-[85rem]">
+            <form onSubmit={handleSubmit} className="space-y-5 mx-[2rem] max-w-full  h-[85rem]">
               <h3 className="text-lg font-semibold justify-center text-center mb-4 mt-4 ml-1">Cadastro de Produto</h3>
-              
+
+                <div className="flex items-center">
+                  <input
+                    type="checkbox"
+                    name="ativo"
+                    checked={formData.ativo}
+                    onChange={() => setFormData({ ...formData, ativo: !formData.ativo })}
+                    className="mr-2 rounded"
+                  />
+                  <label className="text-base">Ativo</label>
+                </div>
+
               {/* Dados do produto */}
               <h2 style={{ color: '#5E16ED', fontSize: '170%', fontWeight: 'bold' }}>
                 Dados
@@ -242,7 +153,7 @@ function ProdutosAdd() {
 
               <div className="flex flex-col md:flex-row gap-4">
                 <div className="flex flex-col">
-                <label className="block ml-1 text-sm font-medium leading-6 text-black">Codigo de Barras</label>
+                <label className="block ml-1 text-sm font-medium leading-6 text-black">Código de barras</label>
                   <input
                     type="text"
                     name="codigoBarras"
@@ -312,8 +223,8 @@ function ProdutosAdd() {
                   <label className="block ml-1 text-sm font-medium leading-6 text-black">Unidade de Medida</label>
                   <Menu as="div" className="flex rounded-md">
                             <div>
-                              <MenuButton className="w-56 rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50 h-11">
-                                {formsData.un || 'Selecione a unidade'}
+                              <MenuButton className="w-56 h-11 rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50">
+                                {UnSelected || 'Selecione a unidade'}
                               </MenuButton>
                             </div>
                             <MenuItems
@@ -325,7 +236,7 @@ function ProdutosAdd() {
                                   <MenuItem key={item}>
                                     <a
                                       className="block px-4 py-2 text-sm text-gray-700 data-[focus]:bg-gray-100 data-[focus]:text-gray-900"
-                                      onClick={() => handleMenuItemClick(item, "UN")}
+                                      onClick={() => handleMenuItemClick(item)}
                                     >
                                       {item}
                                     </a>
@@ -340,7 +251,7 @@ function ProdutosAdd() {
               {/* Aréa do Qauntidade 2*/}
               <div className="flex flex-col md:flex-row gap-4">
               <div className="flex flex-col">
-                  <label className="block ml-1 text-sm font-medium leading-6 text-black">Quantidade Bloqueada</label>
+                  <label className="block ml-1 text-sm font-medium leading-6 text-black">Quantidade bloqueada</label>
                   <input
                     type="text"
                     name="qtdBloqueada"
@@ -350,7 +261,7 @@ function ProdutosAdd() {
                   />
                 </div>
                 <div className="flex flex-col">
-                  <label className="block ml-1 text-sm font-medium leading-6 text-black">Quantidade Disponível</label>
+                  <label className="block ml-1 text-sm font-medium leading-6 text-black">Quantidade disponível</label>
                   <input
                     type="text"
                     name="qtdDisponivel"
@@ -360,7 +271,7 @@ function ProdutosAdd() {
                   />
                 </div>
                 <div className="flex flex-col">
-                  <label className="block ml-1 text-sm font-medium leading-6 text-black">Quantidade Ideal</label>
+                  <label className="block ml-1 text-sm font-medium leading-6 text-black">Quantidade ideal</label>
                   <input
                     type="text"
                     name="qtdIdeal"
@@ -389,7 +300,7 @@ function ProdutosAdd() {
                   />
                 </div>
                 <div className="flex flex-col">
-                  <label className="block ml-1 text-sm font-medium leading-6 text-black">Custo Medio</label>
+                  <label className="block ml-1 text-sm font-medium leading-6 text-black">Custo médio</label>
                   <input
                     type="text"
                     name="custoMedio"
@@ -413,7 +324,7 @@ function ProdutosAdd() {
                   />
                 </div>
                 <div className="flex flex-col">
-                  <label className="block ml-1 text-sm font-medium leading-6 text-black">Preço de Revenda</label>
+                  <label className="block ml-1 text-sm font-medium leading-6 text-black">Preço de revenda</label>
                   <input
                     type="text"
                     name="precoRevenda"
@@ -434,8 +345,8 @@ function ProdutosAdd() {
                   <label className="block ml-1 text-sm font-medium leading-6 text-black">Contr. Lote</label>
                   <Menu as="div" className="flex rounded-md">
                             <div>
-                              <MenuButton className="w-56 rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50 h-11">
-                                {formsData.contrLote || 'Tem Lot?'}
+                              <MenuButton className="w-56 h-11 rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50">
+                                {formsData.contrLote || 'Tem Lote?'}
                               </MenuButton>
                             </div>
                             <MenuItems
@@ -447,7 +358,7 @@ function ProdutosAdd() {
                                   <MenuItem key={item}>
                                     <a
                                       className="block px-4 py-2 text-sm text-gray-700 data-[focus]:bg-gray-100 data-[focus]:text-gray-900"
-                                      onClick={() => handleMenuItemClick(item, "LOTE")}
+                                      onClick={() => handleMenuItemClick(item)}
                                     >
                                       {item}
                                     </a>
@@ -461,7 +372,7 @@ function ProdutosAdd() {
                   <label className="block ml-1 text-sm font-medium leading-6 text-black">Contr. Serial</label>
                   <Menu as="div" className="flex rounded-md">
                             <div>
-                              <MenuButton className="w-56 rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50 h-11">
+                              <MenuButton className="w-56 h-11 rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50">
                                 {formsData.contrSerial || 'Tem Serial?'}
                               </MenuButton>
                             </div>
@@ -474,7 +385,7 @@ function ProdutosAdd() {
                                   <MenuItem key={item}>
                                     <a
                                       className="block px-4 py-2 text-sm text-gray-700 data-[focus]:bg-gray-100 data-[focus]:text-gray-900"
-                                      onClick={() => handleMenuItemClick(item,"SERIAL")}
+                                      onClick={() => handleMenuItemClick(item)}
                                     >
                                       {item}
                                     </a>
@@ -488,7 +399,7 @@ function ProdutosAdd() {
                   <label className="block ml-1 text-sm font-medium leading-6 text-black">Contr. Grade</label>
                   <Menu as="div" className="flex rounded-md">
                             <div>
-                              <MenuButton className="w-56 rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50 h-11">
+                              <MenuButton className="w-56 h-11 rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50">
                                 {formsData.contrGrade || 'Tem Grade?'}
                               </MenuButton>
                             </div>
@@ -501,7 +412,7 @@ function ProdutosAdd() {
                                   <MenuItem key={item}>
                                     <a
                                       className="block px-4 py-2 text-sm text-gray-700 data-[focus]:bg-gray-100 data-[focus]:text-gray-900"
-                                      onClick={() => handleMenuItemClick(item,"GRADE")}
+                                      onClick={() => handleMenuItemClick(item)}
                                     >
                                       {item}
                                     </a>
@@ -521,7 +432,7 @@ function ProdutosAdd() {
               {/* Contato do Cliente */}
               <div className="flex flex-col md:flex-row gap-4">
                 <div className="flex flex-col">
-                  <label className="block ml-1 text-sm font-medium leading-6 text-black">ncm</label>
+                  <label className="block ml-1 text-sm font-medium leading-6 text-black">NCM</label>
                   <input
                     type="text"
                     name="ncm"
@@ -531,7 +442,7 @@ function ProdutosAdd() {
                   />
                 </div>
                 <div className="flex flex-col">
-                  <label className="block ml-1 text-sm font-medium leading-6 text-black">cest</label>
+                  <label className="block ml-1 text-sm font-medium leading-6 text-black">CEST</label>
                   <input
                     type="text"
                     name="cest"
@@ -569,7 +480,6 @@ function ProdutosAdd() {
                   />
                 </div>
               </div>
-
               <div className="flex justify-end gap-4">
                 <button type="submit" className="h-[3rem] w-40 px-4 py-2 rounded-md bg-indigo-600 text-white hover:bg-indigo-700">
                   Cadastrar
