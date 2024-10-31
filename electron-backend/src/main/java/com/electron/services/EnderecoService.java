@@ -25,11 +25,6 @@ public class EnderecoService {
                 .orElseThrow(() -> new NotFoundException("Endereço não encontrado"));
     }
 
-//    public List<Endereco> listarPorPessoa(Long pessoaId) {
-////        return enderecoRepository.findByEnderecoFkPessoas(pessoaId);
-//        return;
-//    }
-
     public void criar(Endereco endereco) {
         enderecoRepository.save(endereco);
     }
@@ -38,14 +33,15 @@ public class EnderecoService {
         Endereco enderecoObj = listarPorId(id);
 
         enderecoObj.setTipoEndereco(endereco.getTipoEndereco());
-//        enderecoObj.setEnderecoFkPessoas(endereco.getEnderecoFkPessoas());
         enderecoObj.setCep(endereco.getCep());
         enderecoObj.setLogradouro(endereco.getLogradouro());
         enderecoObj.setNumero(endereco.getNumero());
         enderecoObj.setBairro(endereco.getBairro());
         enderecoObj.setComplemento(endereco.getComplemento());
         enderecoObj.setTelefone(endereco.getTelefone());
-//        enderecoObj.setEnderecoFkMunicipios(endereco.getEnderecoFkMunicipios());
+
+        enderecoObj.setPessoa(endereco.getPessoa());
+        enderecoObj.setMunicipio(endereco.getMunicipio());
 
         enderecoRepository.save(enderecoObj);
     }

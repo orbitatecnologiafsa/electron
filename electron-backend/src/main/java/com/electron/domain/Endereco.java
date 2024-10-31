@@ -25,7 +25,7 @@ public class Endereco {
     @Column(name = "endereco_cep", nullable = false, length = 10)
     private String cep;
 
-    @Column(name = "endereco_logradoudo", nullable = false)
+    @Column(name = "endereco_logradouro", nullable = false)
     private String logradouro;
 
     @Column(name = "endereco_numero", nullable = false, length = 10)
@@ -41,11 +41,11 @@ public class Endereco {
     private String telefone;
 
     @ManyToOne
-    @JoinColumn(name = "endereco_fk_pessoas", insertable = false, updatable = false, nullable = false)
+    @JoinColumn(name = "endereco_fk_pessoas", nullable = false)
     private Pessoa pessoa;
 
     @ManyToOne
-    @JoinColumn(name = "endereco_fk_municipios", insertable = false, updatable = false)
+    @JoinColumn(name = "endereco_fk_municipios")
     private Municipio municipio;
 
 }

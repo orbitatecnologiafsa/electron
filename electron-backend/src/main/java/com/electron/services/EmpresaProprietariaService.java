@@ -32,7 +32,8 @@ public class EmpresaProprietariaService {
     public void atualizar(Long id, EmpresaProprietaria empresaProprietaria) {
         EmpresaProprietaria empresaObj = listarPorId(id);
 
-//        empresaObj.setT(empresaProprietaria.getTipo());
+        empresaObj.setTipoUnidade(empresaProprietaria.getTipoUnidade());
+        empresaObj.setTipoPessoa(empresaProprietaria.getTipoPessoa());
         empresaObj.setCpfCnpj(empresaProprietaria.getCpfCnpj());
         empresaObj.setVersao(empresaProprietaria.getVersao());
         empresaObj.setRegimeTributario(empresaProprietaria.getRegimeTributario());
