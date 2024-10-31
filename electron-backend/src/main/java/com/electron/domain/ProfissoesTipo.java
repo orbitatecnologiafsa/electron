@@ -6,20 +6,16 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Entity
-@Table(name = "servico_atividade")
+@Table(name = "profissoes_tipo")
 @Data
-@AllArgsConstructor
 @NoArgsConstructor
-public class ServicoAtividade {
-
+@AllArgsConstructor
+public class ProfissoesTipo {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "servico_ativiade_id")
+    @Column(name = "profissoes_tipo_id")
     private Long id;
 
-    @Column(name = "servico_atividade_codigo", length = 10)
-    private String codigo;
-
-    @Column(name = "servico_atividade_nome", columnDefinition = "TEXT")
+    @Column(name = "profissoes_tipo_nome", nullable = false, unique = true, length = 50)
     private String nome;
 }

@@ -37,9 +37,6 @@ public class DispositivoService {
         Dispositivo dispositivoExistente = dispositivoRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException("Dispositivo não encontrado!"));
 
-        // Atualiza os campos necessários
-
-//  TODO arrumar isso      dispositivoExistente.set(dispositivo.getDispositivoFkEmpresa());
         dispositivoExistente.setDispositivoTipo(dispositivo.getDispositivoTipo());
         dispositivoExistente.setDispositivoMarca(dispositivo.getDispositivoMarca());
         dispositivoExistente.setDispositivoModelo(dispositivo.getDispositivoModelo());
@@ -51,6 +48,7 @@ public class DispositivoService {
 
         return dispositivoRepository.save(dispositivoExistente);
     }
+
 
     public void deletar(Long id) {
         if (dispositivoRepository.findById(id).isPresent()) {

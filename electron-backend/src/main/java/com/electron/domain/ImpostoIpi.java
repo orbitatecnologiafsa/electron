@@ -18,22 +18,23 @@ public class ImpostoIpi {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private int codigo;
+    @ManyToOne
+    @JoinColumn(name = "tributo_ipi_fk_codigo_enquadramento")
+    private CodigoEnquadramentoIpi codigoEnquadramentoIpi;
 
-    private String codigoNome;
+    @ManyToOne
+    @JoinColumn(name = "tributo_ipi_fk_cst_ipi")
+    private ImpostoCstIpi impostoCstIpi;
 
-    //cst ipi int ???? sla
+    @Column(name = "tributo_ipi_percentual_basecalculo_ipi", precision = 10, scale = 2)
+    private BigDecimal percentualBaseCalculoIpi;
 
-    @Column(precision = 10, scale = 2)
-    private BigDecimal alipercentualBasealculoIpiquota;
-
-    @Column(precision = 10, scale = 2)
+    @Column(name = "tributo_ipi_percentual_ipi", precision = 10, scale = 2)
     private BigDecimal percentualIpi;
 
-    @Column(precision = 10, scale = 2)
+    @Column(name = "tributo_ipi_valor_unitario", precision = 10, scale = 2)
     private BigDecimal ipiValorUnitario;
 
+    @Column(name = "tributo_ipi_observacoes")
     private String ipiObservacoes;
-
-    //FOREIGN KEY (imposto_ipi_fk_cst_ipi) REFERENCES imposto_cst_ipi(imposto_cst_ipi_id)
 }

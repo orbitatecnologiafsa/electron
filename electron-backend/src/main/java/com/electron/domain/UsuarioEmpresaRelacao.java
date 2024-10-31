@@ -1,16 +1,7 @@
 package com.electron.domain;
 
 import com.electron.domain.enums.TipoAcesso;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -26,12 +17,6 @@ public class UsuarioEmpresaRelacao {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "usuario_empresa_relacao_id")
     private Long id;
-
-    @Column(name = "relacao_fk_usuario_empresa")
-    private Long usuarioEmpresaId;
-
-    @Column(name = "relacao_fk_empresa", nullable = false)
-    private Long empresaId;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "relacao_tipo_acesso", nullable = false)

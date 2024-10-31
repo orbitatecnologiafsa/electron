@@ -22,57 +22,60 @@ public class TributacaoEstadual {
     @Column(name = "tributacao_estadual_nome", nullable = false)
     private String nome;
 
-    @Column(name = "tributacao_estadual_aliquota")
-    private BigDecimal aliquota;
+    @Column(name = "tributacao_estadual_contribuinte")
+    private final Boolean contribuinte = false;
 
-    @Column(name = "tributacao_estadual_UF_origem")
-    private Integer ufOrigem;
+    @Column(name = "tributacao_estadual_nao_contribuinte")
+    private final Boolean naoContribuinte = false;
 
-    @Column(name = "tributacao_estadual_UF_destino")
-    private Integer ufDestino;
+    @Column(name = "tributacao_estadual_isento")
+    private final Boolean isento = false;
 
-    @Column(name = "tributacao_estadual_percentual_basecalculo_ICMS")
+    @ManyToOne
+    @JoinColumn(name = "tributacao_estadual_fk_UF_origem", insertable = false, updatable = false)
+    private Estado origem;
+
+    @ManyToOne
+    @JoinColumn(name = "tributacao_estadual_fk_UF_origem", insertable = false, updatable = false)
+    private Estado destino;
+
+    @Column(name = "tributacao_estadual_percentual_basecalculo_icms", precision = 10, scale = 2)
     private BigDecimal percentualBaseCalculoIcms;
 
-    @Column(name = "tributacao_estadual_percentual_basecalculo_ICMSST")
+    @Column(name = "tributacao_estadual_percentual_basecalculo_icms_st", precision = 10, scale = 2)
     private BigDecimal percentualBaseCalculoIcmsSt;
 
-    @Column(name = "tributacao_estadual_percentual_mva_pauta")
+    @Column(name = "tributacao_estadual_percentual_mva_pauta", precision = 10, scale = 2)
     private BigDecimal percentualMvaPauta;
 
     @ManyToOne
     @JoinColumn(name = "tributacao_estadual_fk_cfop")
     private ImpostoCfop cfop;
 
-    @Column(name = "tributacao_estadual_percentual_icms")
+    @Column(name = "tributacao_estadual_percentual_icms", precision = 10, scale = 2)
     private BigDecimal percentualIcms;
 
-    @Column(name = "tributacao_estadual_percentual_ICMS_aplicado_destinatario")
+    @Column(name = "tributacao_estadual_percentual_icms_aplicado_destinatario", precision = 10, scale = 2)
     private BigDecimal percentualIcmsAplicadoDestinatario;
 
-    @Column(name = "tributacao_estadual_percentual_diferimento")
+    @Column(name = "tributacao_estadual_percentual_diferimento", precision = 10, scale = 2)
     private BigDecimal percentualDiferimento;
 
-    @Column(name = "tributacao_estadual_contribuinte", columnDefinition = "BOOLEAN DEFAULT FALSE")
-    private final Boolean contribuinte = false;
-
-    @Column(name = "tributacao_estadual_nao_contribuinte", columnDefinition = "BOOLEAN DEFAULT FALSE")
-    private final Boolean naoContribuinte = false;
-
-    @Column(name = "tributacao_estadual_isento", columnDefinition = "BOOLEAN DEFAULT FALSE")
-    private final Boolean isento = false;
+    @ManyToOne
+    @JoinColumn(name = "tributacao_estadual_fk_cst")
+    private TributoCst cst;
 
     @ManyToOne
-    @JoinColumn(name = "tributacao_estadual_fk_cst_csosn")
-    private ImpostoCstCsosn cstCsosn;
+    @JoinColumn(name = "tributacao_estadual_fk_csosn")
+    private TributoCsosn csosn;
 
     @ManyToOne
-    @JoinColumn(name = "tributacao_estadual_fk_modalidadecalculo_ICMS_ST")
-    private ImpostoIcmsSt modalidadeCalculoIcmsSt;
+    @JoinColumn(name = "tributacao_estadual_fk_modalidadecalculo_icms_ST")
+    private ModalidadeDeCalculoIcmsSt modalidadeCalculoIcmsSt;
 
-    @Column(name = "tributacao_estadual_percentual_fcpobreza")
+    @Column(name = "tributacao_estadual_percentual_fcpobreza", precision = 10, scale = 2)
     private BigDecimal percentualFcpobreza;
 
-    @Column(name = "tributacao_estadual_descricao")
-    private String descricao;
+    @Column(name = "tributacao_estadual_observacoes", columnDefinition = "TEXT")
+    private String observacoes;
 }
