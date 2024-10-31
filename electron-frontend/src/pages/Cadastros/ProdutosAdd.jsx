@@ -65,10 +65,21 @@ function ProdutosAdd() {
     revenda: false,
   });
 
-  const handleMenuItemClick = (item) => {
-    setUnSelected(item);
-    formsData.un = (item);
-  };
+  const handleMenuItemClick = (item, index) => {
+    if (index == "UN"){
+      setUnSelected(item);
+      formsData.un = (item);
+    }else if( index == "LOTE"){
+      setLoteSelected(item);
+      formsData.contrLote = (item);
+    }else if( index == "SERIAL"){
+      setSerialSelected(item);
+      formsData.contrSerial = (item);
+    }else if( index == "GRADE"){
+      setGradeSelected(item);
+      formsData.contrGrade = (item);
+    }
+  }
 
 
   const [error, setError] = useState(null);
