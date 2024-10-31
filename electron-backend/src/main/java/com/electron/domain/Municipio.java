@@ -16,7 +16,7 @@ public class Municipio {
     @Column(name = "municipio_id")
     private Long id;
 
-    @Column(name = "municipios_nome", nullable = false, length = 255)
+    @Column(name = "municipios_nome", nullable = false)
     private String nome;
 
     @ManyToOne

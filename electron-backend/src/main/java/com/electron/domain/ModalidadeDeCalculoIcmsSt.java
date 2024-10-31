@@ -10,16 +10,16 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class ImpostoIcmsSt {
+public class ModalidadeDeCalculoIcmsSt {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "modalidadecalculo_icms_st_id")
     private Long id;
 
-    @Column(name = "modalidadecalculo_icms_st_nome")
+    @Column(name = "modalidadecalculo_icms_st_nome", nullable = false)
     private String nome;
 
-    @Column(name = "modalidadecalculo_icms_st_descricao")
+    @Column(name = "modalidadecalculo_icms_st_descricao", columnDefinition = "TEXT")
     private String descricao;
 }

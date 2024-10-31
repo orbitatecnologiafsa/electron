@@ -15,40 +15,37 @@ public class Endereco {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long enderecoId;
+    @Column(name = "endereco_id")
+    private Long id;
 
     @Enumerated(EnumType.STRING)
-    @Column(nullable = false)
+    @Column(name = "endereco_tipo", nullable = false)
     private TipoEndereco tipoEndereco;
 
-    @Column(name = "endereco_fk_pessoas", nullable = false)
-    private Long enderecoFkPessoas;
-
-    @Column(nullable = false)
+    @Column(name = "endereco_cep", nullable = false, length = 10)
     private String cep;
 
-    @Column(nullable = false)
+    @Column(name = "endereco_logradouro", nullable = false)
     private String logradouro;
 
-    @Column(nullable = false)
+    @Column(name = "endereco_numero", nullable = false, length = 10)
     private String numero;
 
-    @Column(nullable = false)
+    @Column(name = "endereco_bairro", nullable = false, length = 100)
     private String bairro;
 
+    @Column(name = "endereco_complemento")
     private String complemento;
 
+    @Column(name = "endereco_telefone", length = 15)
     private String telefone;
 
-    @Column(name = "endereco_fk_municipios")
-    private Long enderecoFkMunicipios;
-
     @ManyToOne
-    @JoinColumn(name = "endereco_fk_pessoas", insertable = false, updatable = false)
+    @JoinColumn(name = "endereco_fk_pessoas", nullable = false)
     private Pessoa pessoa;
 
     @ManyToOne
-    @JoinColumn(name = "endereco_fk_municipios", insertable = false, updatable = false)
+    @JoinColumn(name = "endereco_fk_municipios")
     private Municipio municipio;
 
 }
