@@ -24,6 +24,29 @@ function Empresas() {
 
   {/* Sort da Tabela */}
   const [sortDirection, setSortDirection] = useState('asc'); 
+  const [formData, setFormData] = useState({
+      nomeRazao: '',
+      fantasia: '',
+      documento: '',
+      cep: '',
+      municipio: '',
+      uf: '',
+      bairro: '',
+      logradouro: '',
+      numero: '',
+      complemento: '',
+      cpfCnpj: '',
+      pfOuPj: '',
+      email: '',
+      telefone: '',
+      celular: '',
+      contato: '',
+      rgInscricaoEstadual: '',
+      inscricaoEstadualMunicipal: '',
+      observacao: '',
+      ativo: true,
+      revenda: false,
+    });
 
   const [inputInfo, setInputInfo] = useState('');
   const [filteredPosts, setFilteredPosts] = useState([]);
@@ -50,7 +73,7 @@ function Empresas() {
   const getPosts = async () => {
     try {
       {/* URL API */}
-      const response = await axios.get("http://localhost:8080/produtos");
+      const response = await axios.get("http://localhost:8080/empresas-proprietarias/");
       console.log(response.data);
       setPosts(response.data);
     } catch (error) {

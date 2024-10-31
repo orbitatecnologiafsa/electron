@@ -2,10 +2,7 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Sidebar from '../../partials/Sidebar';
 import Header from '../../partials/Header';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faImage } from '@fortawesome/free-solid-svg-icons';
 import axios from 'axios';
-import { Menu, MenuButton, MenuItems, MenuItem } from '@headlessui/react';
 
 function EmpresasAdd() {
 
@@ -436,7 +433,7 @@ function EmpresasAdd() {
                       </div>
                     </div>
                     <div className="flex flex-col md:flex-row gap-4 max-w-[30rem]">
-                    <div>
+                      <div>
                           <label className="block ml-1 text-sm font-medium leading-6 text-gray-900">Telefone</label>
                           <input
                             type="text"
@@ -456,20 +453,18 @@ function EmpresasAdd() {
                             className="w-[16rem] h-11 px-3 py-2 rounded-md ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-indigo-600"
                           />
                         </div>
+                      </div>
                     </div>
+                    <div className="flex flex-col max-w-fit relative left-[4rem]">
+                    <label className="block ml-1 text-sm font-medium leading-6 text-gray-900">Observação</label>
+                      <textarea
+                        type="text"
+                        name="observacao"
+                        value={formData.observacao}
+                        onChange={handleInputChange}
+                        className="w-[32rem] h-[128px] resize-none px-3 py-2 rounded-md ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-indigo-600"
+                      />
                     </div>
-                      <div>
-                    </div>
-                  </div>
-                  <div className="absolute bottom-[168px] right-[19rem]">
-                  <label className="block ml-1 text-sm font-medium leading-6 text-gray-900">Observação</label>
-                  <textarea
-                    type="text"
-                    name="observacao"
-                    value={formData.observacao}
-                    onChange={handleInputChange}
-                    className="w-[32rem] h-[128px] resize-none px-3 py-2 rounded-md ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-indigo-600"
-                  />
                   </div>
               <div className="flex justify-end gap-4">
                 <button type="submit" className="h-[3rem] w-40 px-4 py-2 rounded-md bg-indigo-600 text-white hover:bg-indigo-700">
