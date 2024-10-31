@@ -23,11 +23,11 @@ public class UsuarioEmpresaRelacao {
     private TipoAcesso tipoAcesso;
 
     @ManyToOne
-    @JoinColumn(name = "usuario_id")
+    @JoinColumn(name = "relacao_fk_usuario_empresa")
     private UsuarioEmpresa usuarioEmpresa;
 
     @ManyToOne
-    @JoinColumn(name = "empresa_id")
+    @JoinColumn(name = "relacao_fk_empresa")
     private EmpresaProprietaria empresaProprietaria;
 
 }

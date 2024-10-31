@@ -4,6 +4,7 @@ import com.electron.domain.enums.RegimeTributario;
 import com.electron.domain.enums.TipoPessoa;
 import com.electron.domain.enums.TipoUnidade;
 import com.electron.domain.enums.VersaoEmpresa;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -97,6 +98,7 @@ public class EmpresaProprietaria {
     private String complemento;
 
     @ManyToOne
+    @JsonIgnore
     @JoinColumn(name = "empresa_fk_municipios", nullable = false)
     private Municipio municipio;
 

@@ -50,7 +50,7 @@ public class TributacaoEstadual {
 
     @ManyToOne
     @JoinColumn(name = "tributacao_estadual_fk_cfop")
-    private ImpostoCfop cfop;
+    private TributoCfop cfop;
 
     @Column(name = "tributacao_estadual_percentual_icms", precision = 10, scale = 2)
     private BigDecimal percentualIcms;

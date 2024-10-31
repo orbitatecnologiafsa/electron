@@ -2,6 +2,7 @@ package com.electron.domain;
 
 import com.electron.domain.enums.PagamentoAceito;
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -10,6 +11,7 @@ import java.time.LocalDate;
 @Entity
 @Table(name = "pdv_empresa")
 @Data
+@AllArgsConstructor
 @NoArgsConstructor
 public class PdvEmpresa {
 
