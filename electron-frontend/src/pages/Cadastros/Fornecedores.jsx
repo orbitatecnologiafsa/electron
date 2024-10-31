@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import Sidebar from '../../partials/Sidebar';
+import { useNavigate } from 'react-router-dom';
 import Header from '../../partials/Header';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faDolly, faSort, faCircleInfo, faMagnifyingGlass, faPenToSquare } from '@fortawesome/free-solid-svg-icons';
@@ -61,11 +62,11 @@ function Clientes() {
     setIsModalLegendaOpen(!isModalLegendaOpen);
   };
 
-  const handleModalCadastroToggle = (event) => {
-    event.preventDefault();
-    setIsModalCadastroOpen(!isModalCadastroOpen);
+  const handleRedirect = () => {
+    navigate('/cadastro/fornecedores/adicionar');
   };
-
+  const navigate = useNavigate();
+  
   {/* Consumindo API Fornecedores */}
   const getPosts = async () => {
     try {
@@ -495,7 +496,7 @@ function Clientes() {
               {/* Botão cadastrar novo cliente */}
               <div className="mr-10 mt-10 h-10">
                 <button className="w-auto float-end px-3 py-2 rounded-md bg-indigo-600 text-white hover:bg-indigo-700"
-                  onClick={handleModalCadastroToggle}>
+                  onClick={handleRedirect}>
                   Cadastrar
                 </button>
               </div>

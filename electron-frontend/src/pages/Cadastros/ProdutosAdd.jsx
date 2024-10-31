@@ -20,6 +20,9 @@ function ProdutosAdd() {
   const [tipoCliente, setTipoCliente] = useState('-');
   const [cep, setCep] = useState('');
   const [UnSelected, setUnSelected] = useState("");
+  const [loteSelected, setLoteSelected] = useState("");
+  const [serialSelected, setSerialSelected] = useState("");
+  const [gradeSelected, setGradeSelected] = useState("");
 
   const [formsData, setFormsData] = useState({
     index: "",
@@ -72,9 +75,20 @@ function ProdutosAdd() {
     revenda: false,
   });
 
-  const handleMenuItemClick = (item) => {
-    setUnSelected(item);
-    formsData.un = (item);
+  const handleMenuItemClick = (item, index) => {
+    if (index == "UN"){
+      setUnSelected(item);
+      formsData.un = (item);
+    }else if( index == "LOTE"){
+      setLoteSelected(item);
+      formsData.contrLote = (item);
+    }else if( index == "SERIAL"){
+      setSerialSelected(item);
+      formsData.contrSerial = (item);
+    }else if( index == "GRADE"){
+      setGradeSelected(item);
+      formsData.contrGrade = (item);
+    }
   };
 
 
@@ -217,35 +231,9 @@ function ProdutosAdd() {
         <div className="relative flex flex-col flex-1 overflow-y-auto overflow-x-hidden">
           <Header sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} />
           <div className="flex justify-center w-full">
-            <form onSubmit={handleSubmit} className="space-y-5 mx-[2rem] max-w-full">
+            <form onSubmit={handleSubmit} className="space-y-5 mx-[2rem] max-w-full h-[85rem]">
               <h3 className="text-lg font-semibold justify-center text-center mb-4 mt-4 ml-1">Cadastro de Produto</h3>
-
-                <div className="flex justify-between">
-                    <div className="flex gap-4 mt-2 mr-3">
-                        <div className="flex items-center">
-                            <label className="text-base">---</label>
-                        </div>
-                        <div className="flex items-center">
-                            <label className="text-base">---</label>
-                        </div>
-                    
-                </div>
-
-                {/* Ativo e Revenda */}
-                <div className="flex gap-4 mt-2 mr-3">
-                  <div className="flex items-center">
-                    <input
-                      type="checkbox"
-                      name="ativo"
-                      checked={formData.ativo}
-                      onChange={() => setFormData({ ...formData, ativo: !formData.ativo })}
-                      className="mr-2 rounded"
-                    />
-                    <label className="text-base">Ativo</label>
-                  </div>
-                </div>
-              </div>
-
+              
               {/* Dados do produto */}
               <h2 style={{ color: '#5E16ED', fontSize: '170%', fontWeight: 'bold' }}>
                 Dados
@@ -324,8 +312,8 @@ function ProdutosAdd() {
                   <label className="block ml-1 text-sm font-medium leading-6 text-black">Unidade de Medida</label>
                   <Menu as="div" className="flex rounded-md">
                             <div>
-                              <MenuButton className="w-56 rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50">
-                                {UnSelected || 'Selecione a unidade'}
+                              <MenuButton className="w-56 rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50 h-11">
+                                {formsData.un || 'Selecione a unidade'}
                               </MenuButton>
                             </div>
                             <MenuItems
@@ -337,7 +325,7 @@ function ProdutosAdd() {
                                   <MenuItem key={item}>
                                     <a
                                       className="block px-4 py-2 text-sm text-gray-700 data-[focus]:bg-gray-100 data-[focus]:text-gray-900"
-                                      onClick={() => handleMenuItemClick(item)}
+                                      onClick={() => handleMenuItemClick(item, "UN")}
                                     >
                                       {item}
                                     </a>
@@ -446,7 +434,7 @@ function ProdutosAdd() {
                   <label className="block ml-1 text-sm font-medium leading-6 text-black">Contr. Lote</label>
                   <Menu as="div" className="flex rounded-md">
                             <div>
-                              <MenuButton className="w-56 rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50">
+                              <MenuButton className="w-56 rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50 h-11">
                                 {formsData.contrLote || 'Tem Lot?'}
                               </MenuButton>
                             </div>
@@ -459,7 +447,7 @@ function ProdutosAdd() {
                                   <MenuItem key={item}>
                                     <a
                                       className="block px-4 py-2 text-sm text-gray-700 data-[focus]:bg-gray-100 data-[focus]:text-gray-900"
-                                      onClick={() => handleMenuItemClick(item)}
+                                      onClick={() => handleMenuItemClick(item, "LOTE")}
                                     >
                                       {item}
                                     </a>
@@ -473,8 +461,8 @@ function ProdutosAdd() {
                   <label className="block ml-1 text-sm font-medium leading-6 text-black">Contr. Serial</label>
                   <Menu as="div" className="flex rounded-md">
                             <div>
-                              <MenuButton className="w-56 rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50">
-                                {formsData.contrSerial || 'Tem Serial'}
+                              <MenuButton className="w-56 rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50 h-11">
+                                {formsData.contrSerial || 'Tem Serial?'}
                               </MenuButton>
                             </div>
                             <MenuItems
@@ -486,7 +474,7 @@ function ProdutosAdd() {
                                   <MenuItem key={item}>
                                     <a
                                       className="block px-4 py-2 text-sm text-gray-700 data-[focus]:bg-gray-100 data-[focus]:text-gray-900"
-                                      onClick={() => handleMenuItemClick(item)}
+                                      onClick={() => handleMenuItemClick(item,"SERIAL")}
                                     >
                                       {item}
                                     </a>
@@ -500,7 +488,7 @@ function ProdutosAdd() {
                   <label className="block ml-1 text-sm font-medium leading-6 text-black">Contr. Grade</label>
                   <Menu as="div" className="flex rounded-md">
                             <div>
-                              <MenuButton className="w-56 rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50">
+                              <MenuButton className="w-56 rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50 h-11">
                                 {formsData.contrGrade || 'Tem Grade?'}
                               </MenuButton>
                             </div>
@@ -513,7 +501,7 @@ function ProdutosAdd() {
                                   <MenuItem key={item}>
                                     <a
                                       className="block px-4 py-2 text-sm text-gray-700 data-[focus]:bg-gray-100 data-[focus]:text-gray-900"
-                                      onClick={() => handleMenuItemClick(item)}
+                                      onClick={() => handleMenuItemClick(item,"GRADE")}
                                     >
                                       {item}
                                     </a>

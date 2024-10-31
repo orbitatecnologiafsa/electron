@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import Sidebar from '../../partials/Sidebar';
+import { useNavigate } from 'react-router-dom';
 import Header from '../../partials/Header';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faMagnifyingGlass, faSort } from '@fortawesome/free-solid-svg-icons';
@@ -110,6 +111,7 @@ function Produtos() {
   const handleRedirect = () => {
     navigate('/cadastro/produtos/adicionar');
   };
+  const navigate = useNavigate();
 
   return (
     <div className="flex h-screen overflow-hidden">
