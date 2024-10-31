@@ -39,10 +39,6 @@ public class Vendedor {
     @Column(name = "vendedor_base_calculo")
     private BaseCalculo baseCalculo;
 
-    @ManyToOne
-    @JoinColumn(name = "vendedor_fk_empresa", referencedColumnName = "empresa_id", nullable = false)
-    private EmpresaProprietaria empresa;
-
     @Column(name = "vendedor_observacoes", columnDefinition = "TEXT")
     private String observacoes;
 

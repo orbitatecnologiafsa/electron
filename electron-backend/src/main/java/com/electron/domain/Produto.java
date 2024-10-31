@@ -103,7 +103,7 @@ public class Produto {
     // Tributação
     @ManyToOne
     @JoinColumn(name = "produtos_fk_cest_ncm")
-    private ImpostoCestNcm codigoCestNcm;
+    private TributoCest codigoCestNcm;
 
     @ManyToOne
     @JoinColumn(name = "produtos_fk_tributacao_estadual")

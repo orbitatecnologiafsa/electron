@@ -39,7 +39,6 @@ public class VendedorService {
                     vendedor.setComissao(vendedorAtualizado.getComissao());
                     vendedor.setTipoComissao(vendedorAtualizado.getTipoComissao());
                     vendedor.setBaseCalculo(vendedorAtualizado.getBaseCalculo());
-                    vendedor.setEmpresa(vendedorAtualizado.getEmpresa());
                     vendedor.setObservacoes(vendedorAtualizado.getObservacoes());
                     return vendedorRepository.save(vendedor);
                 })

@@ -12,10 +12,11 @@ import java.math.BigDecimal;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class ImpostoIpi {
+public class TributoIpi {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "tributo_ipi_id")
     private Long id;
 
     @ManyToOne
@@ -24,17 +25,17 @@ public class ImpostoIpi {
 
     @ManyToOne
     @JoinColumn(name = "tributo_ipi_fk_cst_ipi")
-    private ImpostoCstIpi impostoCstIpi;
+    private CstIpi cstIpi;
 
-    @Column(name = "tributo_ipi_percentual_basecalculo_ipi", precision = 10, scale = 2)
+    @Column(name = "tributo_ipi_percentual_basecalculo_ipi", precision = 10, scale = 4)
     private BigDecimal percentualBaseCalculoIpi;
 
-    @Column(name = "tributo_ipi_percentual_ipi", precision = 10, scale = 2)
+    @Column(name = "tributo_ipi_percentual_ipi", precision = 10, scale = 4)
     private BigDecimal percentualIpi;
 
-    @Column(name = "tributo_ipi_valor_unitario", precision = 10, scale = 2)
-    private BigDecimal ipiValorUnitario;
+    @Column(name = "tributo_ipi_valor_unitario", precision = 10, scale = 4)
+    private BigDecimal valorUnitario;
 
-    @Column(name = "tributo_ipi_observacoes")
-    private String ipiObservacoes;
+    @Column(name = "tributo_ipi_observacoes", columnDefinition = "TEXT")
+    private String observacoes;
 }

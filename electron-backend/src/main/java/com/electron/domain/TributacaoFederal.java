@@ -5,8 +5,6 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.math.BigDecimal;
-
 @Entity
 @Table(name = "tributacao_federal")
 @Data
@@ -16,14 +14,39 @@ public class TributacaoFederal {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "tributacao_federal_id")
     private Long id;
+
+    @Column(name = "tributacao_federal_nome")
     private String nome;
 
-    @Column(precision = 10, scale = 2)
-    private BigDecimal aliquota;
+    @Column(name = "tributacao_federal_descricao", columnDefinition = "TEXT")
+    private String descricao;
 
-    //(imposto_ipi_id)
-    @OneToOne
-    private ImpostoIpi impostoIpi;
+    @ManyToOne
+    @JoinColumn(name = "tributacao_federal_fk_tributo_ipi")
+    private TributoIpi tributoIpi;
 
+    @ManyToOne
+    @JoinColumn(name = "tributacao_federal_fk_tributo_pis")
+    private TributoPis tributoPis;
+
+    @ManyToOne
+    @JoinColumn(name = "tributacao_federal_fk_tributo_cofins")
+    private TributoConfins tributoConfins;
+
+    @ManyToOne
+    @JoinColumn(name = "tributacao_federal_fk_tributo_ir")
+    private TributoIr tributoIr;
+
+    @ManyToOne
+    @JoinColumn(name = "tributacao_federal_fk_tributo_csll")
+    private TributoCsll tributoCsll;
+
+    @ManyToOne
+    @JoinColumn(name = "tributacao_federal_fk_previdencia_social")
+    private PrevidenciaSocial previdenciaSocial;
+
+    @Column(name = "tributacao_federal_observacoes", columnDefinition = "TEXT")
+    private String observacoes;
 }

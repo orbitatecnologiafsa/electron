@@ -12,21 +12,19 @@ import java.math.BigDecimal;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class ImpostoCsll {
+public class TributoCsll {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "tributo_csll_id")
     private Long id;
 
-    @Column(name = "percentual_basecalculo_csll", precision = 10, scale = 2)
+    @Column(name = "tributo_csll_percentual_basecalculo_csll", precision = 10, scale = 2)
     private BigDecimal percentualBaseCalculoCsll;
 
-    @Column(name = "percentual_csll", precision = 10, scale = 2)
+    @Column(name = "tributo_csll_percentual_csll", precision = 10, scale = 2)
     private BigDecimal percentualCsll;
 
-    @Column(name = "imposto_retencao_csll")
-    private Boolean impostoRetencaoCsll = false;
-
-    @Column(columnDefinition = "TEXT")
+    @Column(name = "tributo_csll_observacoes",columnDefinition = "TEXT")
     private String observacoes;
 }

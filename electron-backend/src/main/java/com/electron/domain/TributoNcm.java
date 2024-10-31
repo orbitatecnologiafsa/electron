@@ -6,23 +6,21 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Entity
-@Table(name = "imposto_cfop")
+@Table(name = "tributo_ncm")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class ImpostoCfop {
+public class TributoNcm {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "imposto_cfop_id")
+    @Column(name = "tributo_ncm_id")
     private Long id;
 
-    @Column(name = "imposto_cfop_codigo", nullable = false, unique = true, length = 10)
+    @Column(name = "tributo_ncm_codigo",unique = true, nullable = false, length = 8)
     private String codigo;
 
-    @Column(name = "imposto_cfop_nome")
-    private String nome;
-
-    @Column(name = "imposto_cfop_descricao")
+    @Column(name = "tributo_ncm_descricao", columnDefinition = "TEXT")
     private String descricao;
+
 }
