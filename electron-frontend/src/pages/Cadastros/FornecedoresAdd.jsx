@@ -19,11 +19,12 @@ function FornecesoresAdd() {
   const [isDocumentoSelected, setIsDocumentoSelected] = useState(false);
   const [tipoCliente, setTipoCliente] = useState('-');
   const [cep, setCep] = useState('');
-  const [cepCnpj, setCepCnpj] = useState('CPF');
+  const [cepCnpj, setCepCnpj] = useState('');
 
   const [formsData, setFormsData] = useState({
     index: "",
     cpf_cnpj: '',
+    ativo: true,
     nome_razao: '',
     fantasia: '',
     rg_inscricao_estadual: '',
@@ -45,13 +46,12 @@ function FornecesoresAdd() {
 
 
   const handleMenuItemClick = (item) => {
-    setCepCnpj(item);
-    formsData.cpf_cnpj = (item);
     if(item === 'Fisica'){
         setCepCnpj('CPF');
     }else if(item === 'Juridica'){
         setCepCnpj('CNPJ');
     }
+    formsData.cpf_cnpj = (item);
   };
 
 
@@ -155,7 +155,7 @@ function FornecesoresAdd() {
 
               <div className="flex flex-col md:flex-row gap-4 justify-between">
                 <div className="flex flex-col">
-                <label className="block ml-1 text-sm font-medium leading-6 text-black">{cepCnpj}</label>
+                <label className="block ml-1 text-sm font-medium leading-6 text-black">{ cepCnpj ? cepCnpj : 'CPF'}</label>
                   <input
                     type="text"
                     name="cpf/cnpj"
@@ -191,6 +191,16 @@ function FornecesoresAdd() {
                               </div>
                             </MenuItems>
                    </Menu>
+                </div>
+                <div className="flex items-center">
+                    <input
+                      type="checkbox"
+                      name="ativo"
+                      checked={formsData.ativo}
+                      onChange={() => formsData.ativo ? setFormsData({ ...formsData, ativo: false }) : setFormsData({ ...formsData, ativo: true })}
+                      className="mr-2 rounded"
+                    />
+                    <label className="text-base">Ativo</label>
                 </div>
               </div>
 
