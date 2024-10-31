@@ -42,7 +42,7 @@ public class CstCofins {
     private String naturezaReceita;
 
     @Column(name = "cst_cofins_ativo")
-    private final Boolean ativo = true;
+    private Boolean ativo = true;
 
     @Column(name = "cst_cofins_observacoes", columnDefinition = "TEXT")
     private String observacoes;

@@ -18,5 +18,4 @@ public class Estado {
 
     @Column(name = "estados_nome", nullable = false, length = 100)
     private String nome;
-
 }

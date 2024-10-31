@@ -11,15 +11,17 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class TributoCst {
-
-    @Column(name = "tributo_cst_ativo")
-    private final Boolean ativo = true;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "tributo_cst_id")
     private Long id;
+
+    @Column(name = "tributo_cst_ativo")
+    private Boolean ativo = true;
+
     @Column(name = "tributo_cst_codigo", nullable = false, unique = true, length = 10)
     private String codigo;
+
     @Column(name = "tributo_cst_csosn_tipo")
     private String tipo;
 
