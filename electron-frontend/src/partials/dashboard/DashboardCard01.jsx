@@ -3,7 +3,6 @@ import { Link } from 'react-router-dom';
 import LineChart from '../../charts/LineChart01';
 import { chartAreaGradient } from '../../charts/ChartjsConfig';
 import EditMenu from '../../components/DropdownEditMenu';
-import DollarPrice from './APIS/DollarPrice';
 
 // Import utilities
 import { tailwindConfig, hexToRGB } from '../../utils/Utils';
@@ -105,7 +104,7 @@ function DashboardCard01() {
           </EditMenu>
         </header>
         <div className="flex items-start">
-          <DollarPrice/>
+          <div className="text-3xl font-bold text-gray-800 dark:text-white">$17,780</div>
           <div className="text-sm font-medium text-green-700 px-1.5 bg-green-500/20 rounded-full">+49%</div>
         </div>
       </div>

@@ -9,6 +9,7 @@ import DashboardCard02 from '../../partials/dashboard/DashboardCard02';
 import DashboardCard03 from '../../partials/dashboard/DashboardCard03';
 import DashboardCard04 from '../../partials/dashboard/DashboardCard04';
 import DashboardCard05 from '../../partials/dashboard/DashboardCard05';
+import DashboardCard05Sete from '../../partials/dashboard/Sete';
 import DashboardCard06 from '../../partials/dashboard/DashboardCard06';
 import DashboardCard07 from '../../partials/dashboard/DashboardCard07';
 import DashboardCard08 from '../../partials/dashboard/DashboardCard08';
@@ -21,7 +22,21 @@ import DashboardCard13 from '../../partials/dashboard/DashboardCard13';
 function Dashboard() {
 
   const [sidebarOpen, setSidebarOpen] = useState(false);
-
+  const conteudo4= [
+    { nome: "Item 1", valor: 10 },
+    { nome: "Item 2", valor: 20 },
+    { nome: "Item 3", valor: 30 }
+  ];
+  const conteudo5= [
+    { data: "23-05-2022", valor: 10 },
+    { data: "24-05-2022", valor: 20 },
+    { data: "25-05-2022", valor: 30 },
+    { data: "26-05-2022", valor: 33 },
+    { data: "27-05-2022", valor: 54 },
+    { data: "28-05-2022", valor: 23 },
+    { data: "29-05-2022", valor: 12 },
+  ];
+  
   return (
     <div className="flex h-screen overflow-hidden">
 
@@ -61,20 +76,18 @@ function Dashboard() {
             {/* Cards */}
             <div className="grid grid-cols-12 gap-6">
 
-              {/* Line chart (Acme Plus) */}
-              <DashboardCard01 />
               {/* Line chart (Acme Advanced) */}
               <DashboardCard02 />
               {/* Line chart (Acme Professional) */}
               <DashboardCard03 />
-              {/* Bar chart (Direct vs Indirect) */}
-              <DashboardCard04 />
-              {/* Line chart (Real Time Value) */}
-              <DashboardCard05 />
+              {/* Formas de pagamento */}
+              <DashboardCard04 itens={conteudo4}/>
+              {/* Vendas dos últimos 7 dias*/}
+              <DashboardCard05Sete titulo="Vendas dos primeiros 7 dias" itens={conteudo5}/>
               {/* Doughnut chart (Top Countries) */}
               <DashboardCard06 />
               {/* Top produtos*/}
-              <DashboardCard07 />
+              <DashboardCard07/>
               {/* Line chart (Sales Over Time) */}
               <DashboardCard08 />
               {/* Stacked bar chart (Sales VS Refunds) */}

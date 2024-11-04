@@ -50,6 +50,7 @@ import Estoque2 from './pages/Permissoes/Estoque2';
 function App() {
 
   const location = useLocation();
+  
 
   useEffect(() => {
     document.querySelector('html').style.scrollBehavior = 'auto'
