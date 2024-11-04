@@ -10,9 +10,6 @@ function TransportadorasAdd() {
   const [docDigitado, setDocDigitado] = useState('');
 
   const [documentoValue, setDocumentoValue] = useState('');
-  const [isDocumentoSelected, setIsDocumentoSelected] = useState(false);
-  const [tipoCliente, setTipoCliente] = useState('-');
-  const [cep, setCep] = useState('');
   const [cepCnpj, setCepCnpj] = useState('');
   const [cepUfv, setUfv] = useState('');
   const [cepUf, setUf] = useState('');
@@ -152,7 +149,7 @@ function TransportadorasAdd() {
         <div className="relative flex flex-col flex-1 overflow-y-auto overflow-x-hidden">
           <Header sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} />
           <div className="flex justify-center w-full">
-            <form onSubmit={handleSubmit} className="space-y-5 mx-[2rem] max-w-full h-[70rem]">
+            <form onSubmit={handleSubmit} className="space-y-5 mx-[2rem] max-w-full h-[80rem]">
               <h3 className="text-lg font-semibold justify-center text-center mb-4 mt-4 ml-1">Cadastro de Transportadora</h3>
               
               {/* Dados do Fornecedor */}
@@ -433,9 +430,11 @@ function TransportadorasAdd() {
                 <button type="submit" className="h-[3rem] w-40 px-4 py-2 rounded-md bg-indigo-600 text-white hover:bg-indigo-700">
                   Cadastrar
                 </button>
+
                 <button type="button" className="h-[3rem] w-[10rem] rounded-mdbg-white px-4 py-2 text-sm font-semibold text-gray-900 shadow-sm rounded-md ring-1 ring-inset ring-gray-300 hover:bg-gray-50">
                   Copiar
                 </button>
+                
                 <button type="button" onClick={handleRedirect} className="h-[3rem] w-[10rem] rounded-mdbg-white px-4 py-2 text-sm font-semibold text-gray-900 shadow-sm rounded-md ring-1 ring-inset ring-gray-300 hover:bg-gray-50">
                   Voltar
                 </button>

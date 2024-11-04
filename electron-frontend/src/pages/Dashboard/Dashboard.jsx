@@ -83,7 +83,7 @@ function Dashboard() {
               {/* Formas de pagamento */}
               <DashboardCard04 itens={conteudo4}/>
               {/* Vendas dos últimos 7 dias*/}
-              <DashboardCard05Sete titulo="Vendas dos primeiros 7 dias" itens={conteudo5}/>
+              <DashboardCard05Sete titulo="Vendas dos últimos 7 dias" itens={conteudo5}/>
               {/* Doughnut chart (Top Countries) */}
               <DashboardCard06 />
               {/* Top produtos*/}
