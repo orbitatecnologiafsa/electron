@@ -19,6 +19,7 @@ import Produtos from './pages/Cadastros/Produtos';
 import ProdutosAdd from './pages/Cadastros/ProdutosAdd';
 import Serviços from './pages/Cadastros/Serviços';
 import Transportadoras from './pages/Cadastros/Transportadoras';
+import TransportadorasAdd from './pages/Cadastros/TransportadoraAdd';
 import Vendedores from './pages/Cadastros/Vendedores';
 // Import pages Entradas
 import Pedidos from './pages/Entradas/Pedidos';
@@ -69,6 +70,7 @@ function App() {
         <Route exact path="/cadastro/produtos/adicionar" element={<ProdutosAdd/>} />
         <Route exact path="/cadastro/servicos" element={<Serviços/>} />
         <Route exact path="/cadastro/transportadoras" element={<Transportadoras/>} />
+        <Route exact path="/cadastro/transportadoras/adicionar" element={<TransportadorasAdd/>} />
         <Route exact path="/cadastro/vendedores" element={<Vendedores/>} />
         <Route exact path="/entradas/pedidos" element={<Pedidos/>} />
         <Route exact path="/entradas/NotaEntrada" element={<NotaEntrada/>} />

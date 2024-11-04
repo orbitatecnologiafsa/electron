@@ -4,7 +4,7 @@ function DashboardCard07() {
   return (
     <div className="col-span-full xl:col-span-8 bg-white dark:bg-gray-800 shadow-sm rounded-xl">
       <header className="px-5 py-4 border-b border-gray-100 dark:border-gray-700/60">
-        <h2 className="font-semibold text-gray-800 dark:text-gray-100">Top Channels</h2>
+        <h2 className="font-semibold text-gray-800 dark:text-gray-100">Ranking de produtos</h2>
       </header>
       <div className="p-3">
         {/* Table */}
@@ -14,19 +14,13 @@ function DashboardCard07() {
             <thead className="text-xs uppercase text-gray-400 dark:text-gray-500 bg-gray-50 dark:bg-gray-700 dark:bg-opacity-50 rounded-sm">
               <tr>
                 <th className="p-2">
-                  <div className="font-semibold text-left">Source</div>
+                  <div className="font-semibold text-left">Produto</div>
                 </th>
                 <th className="p-2">
-                  <div className="font-semibold text-center">Visitors</div>
+                  <div className="font-semibold text-center">Quant. Vendas</div>
                 </th>
                 <th className="p-2">
-                  <div className="font-semibold text-center">Revenues</div>
-                </th>
-                <th className="p-2">
-                  <div className="font-semibold text-center">Sales</div>
-                </th>
-                <th className="p-2">
-                  <div className="font-semibold text-center">Conversion</div>
+                  <div className="font-semibold text-center">Lucro</div>
                 </th>
               </tr>
             </thead>

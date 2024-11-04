@@ -73,7 +73,7 @@ function Dashboard() {
               <DashboardCard05 />
               {/* Doughnut chart (Top Countries) */}
               <DashboardCard06 />
-              {/* Table (Top Channels) */}
+              {/* Top produtos*/}
               <DashboardCard07 />
               {/* Line chart (Sales Over Time) */}
               <DashboardCard08 />

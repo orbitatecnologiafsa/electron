@@ -2,17 +2,10 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Sidebar from '../../partials/Sidebar';
 import Header from '../../partials/Header';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faImage } from '@fortawesome/free-solid-svg-icons';
 import axios from 'axios';
-import { Menu, MenuButton, MenuItems, MenuItem } from '@headlessui/react';
-import DropDrow from '../../components/DropDown';
-import Fornecedores from './Fornecedores';
-import Button from 'react-bootstrap/Button';
-import Form from 'react-bootstrap/Form';
-import InputGroup from 'react-bootstrap/InputGroup';
+import DropDown from '../../components/DropDown';
 
-function FornecesoresAdd() {
+function TransportadorasAdd() {
 
   const [docDigitado, setDocDigitado] = useState('');
 
@@ -21,6 +14,8 @@ function FornecesoresAdd() {
   const [tipoCliente, setTipoCliente] = useState('-');
   const [cep, setCep] = useState('');
   const [cepCnpj, setCepCnpj] = useState('');
+  const [cepUfv, setUfv] = useState('');
+  const [cepUf, setUf] = useState('');
 
   const [formsData, setFormsData] = useState({
     index: "",
@@ -42,16 +37,29 @@ function FornecesoresAdd() {
     telefone: '',
     email: '',
     observacao: '',
+    placa: '',
+    ufv: '',
+    antt:'',
   });
-
-
-  const handleMenuItemClick = (item) => {
-    if(item === 'Fisica'){
-        setCepCnpj('CPF');
-    }else if(item === 'Juridica'){
-        setCepCnpj('CNPJ');
+  
+  const handleMenuItemClick = (item, tipo) => {
+    if(tipo === 'Pessoa'){
+        if(item === 'Fisica'){
+            setCepCnpj('CPF');
+        }else if(item === 'Juridica'){
+            setCepCnpj('CNPJ');
+        }
+        formsData.cpf_cnpj = (item);
+    }else if(tipo === 'UFV'){
+        formsData.ufv = (item);
+        setUfv(item);
+    }else if(tipo === 'UF'){
+        formsData.uf = (item);
+        setUf(item);
     }
-    formsData.cpf_cnpj = (item);
+    console.log(formsData.cpf_cnpj);
+    console.log(formsData.ufv);
+    console.log(formsData.uf);
   };
 
 
@@ -121,7 +129,7 @@ function FornecesoresAdd() {
 
   {/* Redireciona para Empresas */}
   const handleRedirect = () => {
-    navigate('/cadastro/fornecedores');
+    navigate('/cadastro/transportadoras');
   };
   const navigate = useNavigate();
 
@@ -145,7 +153,7 @@ function FornecesoresAdd() {
           <Header sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} />
           <div className="flex justify-center w-full">
             <form onSubmit={handleSubmit} className="space-y-5 mx-[2rem] max-w-full h-[70rem]">
-              <h3 className="text-lg font-semibold justify-center text-center mb-4 mt-4 ml-1">Cadastro de Fornecedor</h3>
+              <h3 className="text-lg font-semibold justify-center text-center mb-4 mt-4 ml-1">Cadastro de Transportadora</h3>
               
               {/* Dados do Fornecedor */}
               <h2 style={{ color: '#5E16ED', fontSize: '170%', fontWeight: 'bold' }}>
@@ -166,31 +174,8 @@ function FornecesoresAdd() {
                   />
                 </div>
                 <div className="flex flex-col">
-                  <label className="block ml-1 text-sm font-medium leading-6 text-black">Tipo de Fornecedor</label>
-                  <Menu as="div" className="flex rounded-md">
-                            <div>
-                              <MenuButton className="w-56 rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50 h-11">
-                                {formsData.cpf_cnpj || 'Tipo de Fornecedor'}
-                              </MenuButton>
-                            </div>
-                            <MenuItems
-                              transition
-                              className="absolute z-10 mt-10 w-56 origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 transition focus:outline-none data-[closed]:scale-95 data-[closed]:transform data-[closed]:opacity-0 data-[enter]:duration-100 data-[leave]:duration-75 data-[enter]:ease-out data-[leave]:ease-in"
-                            >
-                              <div className="py-1">
-                                {["Fisica", "Juridica"].map(item => (
-                                  <MenuItem key={item}>
-                                    <a
-                                      className="block px-4 py-2 text-sm text-gray-700 data-[focus]:bg-gray-100 data-[focus]:text-gray-900"
-                                      onClick={() => handleMenuItemClick(item)}
-                                    >
-                                      {item}
-                                    </a>
-                                  </MenuItem>
-                                ))}
-                              </div>
-                            </MenuItems>
-                   </Menu>
+                    <DropDown labelDrop={"Tipo de Fornecedor"} ValorBtn={formsData.cpf_cnpj} listItens={['Fisica', 'Juridica']} onSelect={(item) => handleMenuItemClick(item, "Pessoa")} />
+
                 </div>
                 <div className="flex items-center">
                     <input
@@ -323,7 +308,7 @@ function FornecesoresAdd() {
                     name="cep"
                     value={formsData.cepCnpj}
                     onChange={handleInputChange}
-                    className="w-[21.3rem] h-11 px-3 py-2 rounded-md ring-inset focus:ring-2 focus:ring-indigo-600 disabled:bg-gray-300"
+                    className="w-[25rem] h-11 px-3 py-2 rounded-md ring-inset focus:ring-2 focus:ring-indigo-600 disabled:bg-gray-300"
                   />
                 </div>
                 <div className="flex flex-col">
@@ -333,9 +318,16 @@ function FornecesoresAdd() {
                     name="logradouro"
                     value={formsData.logradouro}
                     onChange={handleInputChange}
-                    className="w-[21.3rem] h-11 px-3 py-2 rounded-md ring-inset focus:ring-2 focus:ring-indigo-600 disabled:bg-gray-300"
+                    className="w-[25rem] h-11 px-3 py-2 rounded-md ring-inset focus:ring-2 focus:ring-indigo-600 disabled:bg-gray-300"
                   />
                 </div>
+                <div className="flex flex-col">
+                    <DropDown labelDrop="UF" ValorBtn={cepUf} listItens={["US", "MX", "BA"]} onSelect={(item) => handleMenuItemClick(item,'UF')} />
+                </div>
+              </div>
+
+              <div className="flex flex-col md:flex-row gap-4 justify-between">
+
                 <div className="flex flex-col">
                   <label className="block ml-1 text-sm font-medium leading-6 text-black">Numero</label>
                   <input
@@ -343,22 +335,10 @@ function FornecesoresAdd() {
                     name="numero"
                     value={formsData.numero}
                     onChange={handleInputChange}
-                    className="w-[21.3rem] h-11 px-3 py-2 rounded-md ring-inset focus:ring-2 focus:ring-indigo-600 disabled:bg-gray-300"
-                  />
-                </div>
-              </div>
-
-              <div className="flex flex-col md:flex-row gap-4">
-                <div className="flex flex-col">
-                  <label className="block ml-1 text-sm font-medium leading-6 text-black">UF</label>
-                  <input
-                    type="text"
-                    name="uf"
-                    value={formsData.uf}
-                    onChange={handleInputChange}
                     className="w-[32.5rem] h-11 px-3 py-2 rounded-md ring-inset focus:ring-2 focus:ring-indigo-600 disabled:bg-gray-300"
                   />
                 </div>
+
                 <div className="flex flex-col">
                   <label className="block ml-1 text-sm font-medium leading-6 text-black">Municipio</label>
                   <input
@@ -394,6 +374,47 @@ function FornecesoresAdd() {
                 </div>
               </div>
 
+              {/*Dados do veículo*/}
+              <h2 style={{ color: '#5E16ED', fontSize: '170%', fontWeight: 'bold' }}>
+                Veículo
+                <hr style={{ border: '1px solid #5E16ED' }} />
+              </h2>
+
+              {/* Aréa do veículo*/}
+              <div className="flex flex-col md:flex-row gap-4 ">
+                <div className="flex flex-col">
+                  <label className="block ml-1 text-sm font-medium leading-6 text-black">Placa</label>
+                  <input
+                    type="text"
+                    name="Placa"
+                    value={formsData.placa}
+                    onChange={handleInputChange}
+                    className="w-[10rem] h-11 px-3 py-2 rounded-md ring-inset focus:ring-2 focus:ring-indigo-600 disabled:bg-gray-300"
+                  />
+                </div>
+                
+                <div className="flex flex-col">
+                  <label className="block ml-1 text-sm font-medium leading-6 text-black">ANTT</label>
+                  <input
+                    type="text"
+                    name="antt"
+                    value={formsData.antt}
+                    onChange={handleInputChange}
+                    className="w-[10rem] h-11 px-3 py-2 rounded-md ring-inset focus:ring-2 focus:ring-indigo-600 disabled:bg-gray-300"
+                  />
+                </div>
+
+                <div className="flex flex-col ">
+                    <DropDown labelDrop="UF" ValorBtn={cepUfv} listItens={["US", "MX", "BA"]} onSelect={(item) => handleMenuItemClick(item,'UFV')}/>
+                </div>
+
+                <div className="flex flex-col ">
+                    <button type="submit" className="h-[3rem] w-40 px-4 py-2 rounded-md bg-indigo-600 text-white hover:bg-indigo-700 ">
+                        Adicionar
+                    </button>
+                </div>
+              </div>
+
               {/*Observação*/}
               <div className="flex flex-col md:flex-row gap-4">
               <div className="flex flex-col">
@@ -426,4 +447,4 @@ function FornecesoresAdd() {
     );
   }
 
-export default FornecesoresAdd;
+export default TransportadorasAdd;
