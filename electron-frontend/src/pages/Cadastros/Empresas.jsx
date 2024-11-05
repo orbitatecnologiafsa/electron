@@ -16,7 +16,7 @@ function Empresas() {
   {/* Const de modal */}
   const [isModalLegendaOpen, setIsModalLegendaOpen] = useState(false);
 
-  {/* Const API Clientes */}
+  {/* Const API Empresas */}
   const [posts, setPosts] = useState([]);
   const [sortColumn, setSortColumn] = useState('id'); 
 

@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
+import axios from 'axios';
 import Sidebar from '../../partials/Sidebar';
 import Header from '../../partials/Header';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -10,6 +11,133 @@ function Vendedores() {
   const [campoValue, setCampoValue] = useState('Selecione um Campo');
   const [isModalOpen, setIsModalOpen] = useState(false);
 
+  {/* Const API Vendedores */}
+  const [posts, setPosts] = useState([]);
+  const [sortColumn, setSortColumn] = useState('id'); 
+
+
+  {/* Sort da Tabela */}
+  const [sortDirection, setSortDirection] = useState('asc'); 
+  const [formData, setFormData] = useState({
+      nomeRazao: '',
+      fantasia: '',
+      documento: '',
+      cep: '',
+      municipio: '',
+      uf: '',
+      bairro: '',
+      logradouro: '',
+      numero: '',
+      complemento: '',
+      cpfCnpj: '',
+      pfOuPj: '',
+      email: '',
+      telefone: '',
+      celular: '',
+      contato: '',
+      rgInscricaoEstadual: '',
+      inscricaoEstadualMunicipal: '',
+      observacao: '',
+      ativo: true,
+      revenda: false,
+    });
+
+  const [inputInfo, setInputInfo] = useState('');
+  const [filteredPosts, setFilteredPosts] = useState([]);
+  const [searchInfo, setSearchInfo] = useState('');
+
+
+  {/* Consumindo API Vendedores */}
+  const getPosts = async () => {
+    try {
+      {/* URL API */}
+      const response = await axios.get("http://localhost:8080/empresas-proprietarias/");
+      console.log(response.data);
+      setPosts(response.data);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+
+  useEffect(() => {
+    getPosts();
+  }, []);
+
+  useEffect(() => {
+    if (campoValue === 'Todos') {
+      setFilteredPosts(posts);
+    } else if (searchInfo) {
+      const propertyName = campoValueMapping[campoValue];
+      const filteredData = posts.filter(data => {
+        const fieldValue = data[propertyName];
+        return fieldValue && fieldValue.toString().toLowerCase() === searchInfo.toLowerCase();
+      });
+    
+      setFilteredPosts(filteredData);
+    } else {
+      setFilteredPosts([]);
+    }
+  }, [searchInfo, posts, campoValue]);
+  
+  const handleInputFilterChange = (e) => {
+    setInputInfo(e.target.value);
+  };
+  
+  const handleSearchClick = (event) => {
+    event.preventDefault();
+    setSearchInfo(inputInfo);
+  };
+
+
+  {/* Sort da tabela */}
+  const handleSort = (column) => {
+    const direction = (sortColumn === column && sortDirection === 'asc') ? 'desc' : 'asc';
+    setSortColumn(column);
+    setSortDirection(direction);
+  };
+
+  const sortedPosts = [...filteredPosts].sort((a, b) => {
+    const aValue = a[sortColumn];
+    const bValue = b[sortColumn];
+
+    if (typeof aValue === 'string' && typeof bValue === 'string') {
+      return sortDirection === 'asc' ? aValue.localeCompare(bValue) : bValue.localeCompare(aValue);
+    }
+    return sortDirection === 'asc' ? aValue - bValue : bValue - aValue;
+  });
+
+  {/* Colunas da tabela */}
+  const tableColumns = [
+    { label: '', key: 'action' },
+    { label: 'ID', key: 'id' },
+    { label: 'Razão Social', key: 'razaoSocial' },
+    { label: 'Nome Fantasia', key: 'nomeFantasia' },
+    { label: 'CNPJ', key: 'cpfCnpj' },
+    { label: 'Matriz / Filial', key: 'matrizOuFilial' },
+    { label: 'Município', key: 'municipio' },
+    { label: 'UF', key: 'uf' },
+    { label: 'Telefone', key: 'telefone' },
+    { label: 'Ativo', key: 'ativo' },
+    { label: 'Data de Integração', key: 'dataCriacao' },
+  ];
+
+  {/*Filtro*/}
+  const campoValueMapping = {
+    'Todos': null,
+    'ID': 'id',
+    'Razão Social': 'razaoSocial',
+    'Nome Fantasia': 'nomeFantasia',
+    'CNPJ': 'cpfCnpj',
+    'Matriz / Filial': 'matrizOuFilial',
+    'Município': 'municipio',
+    'UF': 'uf',
+    'Telefone': 'telefone',
+    'Ativo': 'ativo',
+    'Data de Integração': 'dataCriacao'
+  };
+
+
   const handleMenuItemClick = (value) => {
     setCampoValue(value);
   };
@@ -17,40 +145,6 @@ function Vendedores() {
   const handleModalToggle = () => {
     setIsModalOpen(!isModalOpen);
   };
-
-  {/* Colunas da Tabela */}
-  const tableColumns = [
-    '',
-    'Documento',
-    'Nome',
-    'Fantasia',
-    'Contato',
-    'Município',
-    'UF',
-    'Telefone',
-    'Celular',
-    'Ativo',
-    'Última compra',
-    'Data de Nascimento',
-  ];
-
-  {/* Dados da tabela */}
-  const exampleData = [
-    {
-      index: "",
-      documento: '123456789',
-      nome: 'João Silva',
-      fantasia: 'Silva Comércio',
-      contato: 'Contato 1',
-      municipio: 'São Paulo',
-      uf: 'SP',
-      telefone: '+55 11 98765-4321',
-      celular: '+55 11 91234-5678',
-      ativo: 'Sim',
-      ultimaCompra: '01/10/2023',
-      dataNascimento: '01/01/2000',
-    },
-  ];
 
   return (
     <div className="flex h-screen overflow-hidden">
@@ -134,29 +228,34 @@ function Vendedores() {
                         <thead className="bg-gray-100">
                           <tr>
                             {tableColumns.map((column, index) => (
-                              <th key={column} className="px-6 py-3 text-center text-sm font-medium text-gray-700">
-                                {index === 0 ? column : <>{column} <FontAwesomeIcon icon={faSort} /></>}
+                              <th key={index} className="px-6 py-3 text-center text-sm font-medium text-gray-700">
+                                <div className="flex items-center justify-center cursor-pointer" onClick={() => handleSort(column.key)}>
+                                  <span className="mr-1">{column.label}</span>
+                                  {index !== 0 && <FontAwesomeIcon icon={faSort} />}
+                                </div>
                               </th>
                             ))}
                           </tr>
                         </thead>
-                        <tbody className="bg-white divide-y divide-gray-200 text-center">
-                          {exampleData.map((data, index) => (
-                            <tr key={index}>
-                              <td className="px-4 py-4 whitespace-nowrap text-sm text-gray-700">
-                                <FontAwesomeIcon icon={faMagnifyingGlass} />
+                        <tbody className="bg-white divide-y divide-gray-200">
+                          {sortedPosts.map((data) => (
+                            <tr key={data.id}>
+                              <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700 text-center">
+                                <FontAwesomeIcon icon={faMagnifyingGlass} className="cursor-pointer" />
                               </td>
-                              <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700">{data.documento}</td>
-                              <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700">{data.nome}</td>
-                              <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700">{data.fantasia}</td>
-                              <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700">{data.contato}</td>
-                              <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700">{data.municipio}</td>
-                              <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700">{data.uf}</td>
-                              <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700">{data.telefone}</td>
-                              <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700">{data.celular}</td>
-                              <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700">{data.ativo}</td>
-                              <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700">{data.ultimaCompra}</td>
-                              <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700">{data.dataNascimento}</td>
+                              <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700 text-center">{data.id}</td>
+                              <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700 text-center">{data.razaoSocial}</td>
+                              <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700 text-center">{data.nomeFantasia}</td>
+                              <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700 text-center">{data.cpfCnpj}</td>
+                              <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700 text-center">{data.matrizOuFilial}</td>
+                              <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700 text-center">{data.municipio}</td>
+                              <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700 text-center">{data.uf}</td>
+                              <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700 text-center">{data.telefone}</td>
+                              <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700 text-center">{data.ativo ? 'Sim' : 'Não'}</td>
+                              <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700 text-center">{data.dataCriacao}</td>
+                              <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700 text-center">
+                                <FontAwesomeIcon icon={faPenToSquare} className="cursor-pointer" />
+                              </td>
                             </tr>
                           ))}
                         </tbody>

@@ -5,6 +5,7 @@ import com.electron.services.exceptions.NotFoundException;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
@@ -28,4 +29,12 @@ public class ControllerExceptionHandler {
         return ResponseEntity.status(status).body(err);
     }
 
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    public ResponseEntity<String> handleValidationExceptions(MethodArgumentNotValidException ex) {
+        StringBuilder errors = new StringBuilder();
+        ex.getBindingResult().getFieldErrors().forEach(error ->
+            errors.append(error.getField()).append(": ").append(error.getDefaultMessage()).append("\n")
+        );
+        return new ResponseEntity<>(errors.toString(), HttpStatus.BAD_REQUEST);
+    }
 }

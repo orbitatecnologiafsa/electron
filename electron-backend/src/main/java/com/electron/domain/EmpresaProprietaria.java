@@ -13,6 +13,8 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import java.time.LocalDate;
 import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.Pattern;
+
 @Entity
 @Table(name = "empresa_proprietaria")
 @Data
@@ -78,6 +80,7 @@ public class EmpresaProprietaria {
     @Column(name = "empresa_contato", length = 60)
     private String contato;
 
+    @Pattern(regexp = "^\\(?\\d{2}\\)? ?\\d{4,5}-?\\d{4}$", message = "Telefone deve ser no formato (XX) XXXX-XXXX ou (XX) XXXXX-XXXX")
     @Column(name = "empresa_telefone", length = 15)
     private String telefone;
 
