@@ -80,6 +80,7 @@ public class EmpresaProprietaria {
 
     @Column(name = "empresa_telefone", length = 15)
     private String telefone;
+
     @Email(message = "Email inválido")
     @Column(name = "empresa_email", unique = true)
     private String email;
