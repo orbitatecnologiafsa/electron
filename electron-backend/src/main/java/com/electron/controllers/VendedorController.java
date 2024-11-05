@@ -19,47 +19,34 @@ public class VendedorController {
         this.vendedorService = vendedorService;
     }
 
-    // Listar todos os vendedores
     @GetMapping
     public ResponseEntity<List<Vendedor>> listarTodos() {
         List<Vendedor> vendedores = vendedorService.listarTodos();
         return ResponseEntity.ok(vendedores);
     }
 
-    // Buscar vendedor por ID
     @GetMapping("/{id}")
     public ResponseEntity<Vendedor> buscarPorId(@PathVariable Long id) {
-        Optional<Vendedor> vendedor = vendedorService.buscarPorId(id);
-        return vendedor.map(ResponseEntity::ok)
-                .orElse(ResponseEntity.notFound().build());
+        Vendedor vendedor = vendedorService.buscarPorId(id);
+        return ResponseEntity.ok(vendedor);
     }
 
-    // Criar um novo vendedor
     @PostMapping
     public ResponseEntity<Vendedor> criar(@RequestBody Vendedor vendedor) {
         Vendedor novoVendedor = vendedorService.salvar(vendedor);
         return ResponseEntity.status(HttpStatus.CREATED).body(novoVendedor);
     }
 
-    // Atualizar um vendedor existente
     @PutMapping("/{id}")
     public ResponseEntity<Vendedor> atualizar(@PathVariable Long id, @RequestBody Vendedor vendedorAtualizado) {
-        try {
-            Vendedor vendedorAtualizadoResult = vendedorService.atualizar(id, vendedorAtualizado);
-            return ResponseEntity.ok(vendedorAtualizadoResult);
-        } catch (RuntimeException e) {
-            return ResponseEntity.notFound().build();
-        }
+        Vendedor vendedorAtualizadoResult = vendedorService.atualizar(id, vendedorAtualizado);
+        return ResponseEntity.ok(vendedorAtualizadoResult);
     }
 
-    // Excluir um vendedor por ID
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> excluir(@PathVariable Long id) {
-        try {
             vendedorService.excluir(id);
             return ResponseEntity.noContent().build();
-        } catch (RuntimeException e) {
-            return ResponseEntity.notFound().build();
-        }
     }
+
 }

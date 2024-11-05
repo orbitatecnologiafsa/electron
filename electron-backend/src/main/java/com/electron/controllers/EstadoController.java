@@ -14,7 +14,6 @@ public class EstadoController {
 
     private final EstadoService estadoService;
 
-    @Autowired
     public EstadoController(EstadoService estadoService) {
         this.estadoService = estadoService;
     }
@@ -29,7 +28,6 @@ public class EstadoController {
         Estado estado = estadoService.listarPorId(id);
         return ResponseEntity.ok(estado);
     }
-
 
     @PostMapping
     public Estado criar(@RequestBody Estado estado) {

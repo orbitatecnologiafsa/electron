@@ -4,14 +4,15 @@ import com.electron.domain.enums.RegimeTributario;
 import com.electron.domain.enums.TipoPessoa;
 import com.electron.domain.enums.TipoUnidade;
 import com.electron.domain.enums.VersaoEmpresa;
+import com.electron.validation.ValidCpfCnpj;
+import com.electron.validation.ValidCep;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
 import java.time.LocalDate;
-
+import jakarta.validation.constraints.Email;
 @Entity
 @Table(name = "empresa_proprietaria")
 @Data
@@ -32,6 +33,7 @@ public class EmpresaProprietaria {
     @Column(name = "empresa_tipo_pessoa", nullable = false)
     private TipoPessoa tipoPessoa;
 
+    @ValidCpfCnpj
     @Column(name = "empresa_cpf_cnpj", nullable = false, unique = true, length = 18)
     private String cpfCnpj;
 
@@ -78,10 +80,11 @@ public class EmpresaProprietaria {
 
     @Column(name = "empresa_telefone", length = 15)
     private String telefone;
-
+    @Email(message = "Email inválido")
     @Column(name = "empresa_email", unique = true)
     private String email;
 
+    @ValidCep
     @Column(name = "empresa_cep", nullable = false, length = 10)
     private String cep;
 
@@ -98,7 +101,7 @@ public class EmpresaProprietaria {
     private String complemento;
 
     @ManyToOne
-    @JsonIgnore
+   // @JsonIgnore
     @JoinColumn(name = "empresa_fk_municipios", nullable = false)
     private Municipio municipio;
 

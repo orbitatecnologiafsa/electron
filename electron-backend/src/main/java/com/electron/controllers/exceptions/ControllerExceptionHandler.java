@@ -1,5 +1,6 @@
 package com.electron.controllers.exceptions;
 
+import com.electron.services.exceptions.AlreadyExistException;
 import com.electron.services.exceptions.NotFoundException;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.http.HttpStatus;
@@ -18,4 +19,13 @@ public class ControllerExceptionHandler {
         StandardError err = new StandardError(Instant.now(), status.value(), error, e.getMessage(), request.getRequestURI());
         return ResponseEntity.status(status).body(err);
     }
+
+    @ExceptionHandler(AlreadyExistException.class)
+    public ResponseEntity<StandardError> resourceAlreadyExists(AlreadyExistException e, HttpServletRequest request) {
+        String error = "Resource already exists";
+        HttpStatus status = HttpStatus.CONFLICT;
+        StandardError err = new StandardError(Instant.now(), status.value(), error, e.getMessage(), request.getRequestURI());
+        return ResponseEntity.status(status).body(err);
+    }
+
 }
