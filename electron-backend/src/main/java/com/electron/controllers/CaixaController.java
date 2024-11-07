@@ -1,6 +1,7 @@
 package com.electron.controllers;
 
 import com.electron.domain.Caixa;
+import com.electron.domain.dtos.CaixaDTO;
 import com.electron.services.CaixaService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -29,8 +30,8 @@ public class CaixaController {
     }
 
     @PostMapping
-    public ResponseEntity<Void> criar(@RequestBody Caixa caixa) {
-        caixaService.criar(caixa);
+    public ResponseEntity<Void> criar(@RequestBody CaixaDTO caixaDTO) {
+        caixaService.criar(caixaDTO.toCaixa());
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
 

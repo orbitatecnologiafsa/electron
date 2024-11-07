@@ -1,6 +1,7 @@
 package com.electron.controllers;
 
 import com.electron.domain.Produto;
+import com.electron.domain.dtos.ProdutoDTO;
 import com.electron.services.ProdutoService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -33,8 +34,8 @@ public class ProdutoController {
 
     // Criar novo produto
     @PostMapping
-    public ResponseEntity<Produto> criar(@RequestBody Produto produto) {
-        Produto novoProduto = produtoService.salvar(produto);
+    public ResponseEntity<Produto> criar(@RequestBody ProdutoDTO produtoDTO) {
+        Produto novoProduto = produtoService.salvar(produtoDTO.toProduto());
         return ResponseEntity.status(HttpStatus.CREATED).body(novoProduto);
     }
 

@@ -1,6 +1,7 @@
 package com.electron.controllers;
 
 import com.electron.domain.Dispositivo;
+import com.electron.domain.dtos.DispositivoDTO;
 import com.electron.services.DispositivoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -30,8 +31,8 @@ public class DispositivoController {
     }
 
     @PostMapping
-    public Dispositivo criar(@RequestBody Dispositivo dispositivo) {
-        return dispositivoService.criar(dispositivo);
+    public Dispositivo criar(@RequestBody DispositivoDTO dispositivoDTO) {
+        return dispositivoService.criar(dispositivoDTO.toDispositivo());
     }
 
     @PutMapping("/{id}")

@@ -1,6 +1,7 @@
 package com.electron.controllers;
 
 import com.electron.domain.OutrasInformacoes;
+import com.electron.domain.dtos.OutrasInformacoesDTO;
 import com.electron.services.OutrasInformacoesService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -29,8 +30,8 @@ public class OutrasInformacoesController {
     }
 
     @PostMapping
-    public ResponseEntity<Void> criar(@RequestBody OutrasInformacoes outrasInformacoes) {
-        outrasInformacoesService.criar(outrasInformacoes);
+    public ResponseEntity<Void> criar(@RequestBody OutrasInformacoesDTO outrasInformacoesDTO) {
+        outrasInformacoesService.criar(outrasInformacoesDTO.toOutrasInformacoes());
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
 

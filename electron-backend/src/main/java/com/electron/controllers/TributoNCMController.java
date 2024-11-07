@@ -12,7 +12,7 @@ import java.util.List;
 @RequestMapping("/tributo-ncm")
 public class TributoNCMController {
 
-      private final TributoNCMService tributoNCMService;
+    private final TributoNCMService tributoNCMService;
 
     public TributoNCMController(TributoNCMService tributoNCMService) {
         this.tributoNCMService = tributoNCMService;
@@ -47,5 +47,4 @@ public class TributoNCMController {
         tributoNCMService.deletar(id);
         return ResponseEntity.noContent().build();
     }
-
 }
