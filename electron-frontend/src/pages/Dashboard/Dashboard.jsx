@@ -36,6 +36,41 @@ function Dashboard() {
     { data: "28-05-2022", valor: 23 },
     { data: "29-05-2022", valor: 12 },
   ];
+
+  const conteudo6 = [
+    { data: "01-05-2022", valor: 15 },
+    { data: "02-05-2022", valor: 18 },
+    { data: "03-05-2022", valor: 22 },
+    { data: "04-05-2022", valor: 25 },
+    { data: "05-05-2022", valor: 30 },
+    { data: "06-05-2022", valor: 35 },
+    { data: "07-05-2022", valor: 40 },
+    { data: "08-05-2022", valor: 45 },
+    { data: "09-05-2022", valor: 50 },
+    { data: "10-05-2022", valor: 55 },
+    { data: "11-05-2022", valor: 60 },
+    { data: "12-05-2022", valor: 65 },
+    { data: "13-05-2022", valor: 70 },
+    { data: "14-05-2022", valor: 5 },
+    { data: "15-05-2022", valor: 8 },
+    { data: "16-05-2022", valor: 85 },
+    { data: "17-05-2022", valor: 9 },
+    { data: "18-05-2022", valor: 95 },
+    { data: "19-05-2022", valor: 0 },
+    { data: "20-05-2022", valor: 105 },
+    { data: "21-05-2022", valor: 10 },
+    { data: "22-05-2022", valor: 115 },
+    { data: "23-05-2022", valor: 20 },
+    { data: "24-05-2022", valor: 125 },
+    { data: "25-05-2022", valor: 130 },
+    { data: "26-05-2022", valor: 135 },
+    { data: "27-05-2022", valor: 14 },
+    { data: "28-05-2022", valor: 15 },
+    { data: "29-05-2022", valor: 160 },
+    { data: "30-05-2022", valor: 155 },
+    { data: "31-05-2022", valor: 120 },
+];
+
   
   return (
     <div className="flex h-screen overflow-hidden">
@@ -83,7 +118,9 @@ function Dashboard() {
               {/* Formas de pagamento */}
               <DashboardCard04 itens={conteudo4}/>
               {/* Vendas dos últimos 7 dias*/}
-              <DashboardCard05Sete titulo="Vendas dos últimos 7 dias" itens={conteudo5}/>
+              <DashboardCard05Sete titulo="Vendas dos últimos 7 dias" itens={conteudo5} graficoTipo = 'bar' />
+              {/* Vendas dos últimos 30 dias*/}
+              <DashboardCard05Sete titulo="Vendas dos últimos 30 dias" itens={conteudo6} graficoTipo = 'line' />
               {/* Doughnut chart (Top Countries) */}
               <DashboardCard06 />
               {/* Top produtos*/}

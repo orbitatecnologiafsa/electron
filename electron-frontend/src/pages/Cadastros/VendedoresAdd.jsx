@@ -1,3 +1,4 @@
+import Datepicker from '../../components/Datepicker';
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Sidebar from '../../partials/Sidebar';
@@ -5,17 +6,28 @@ import Header from '../../partials/Header';
 import axios from 'axios';
 import DropDown from '../../components/DropDown';
 
-function TransportadorasAdd() {
-
+const VendedoresAdd = () => {
+    
   const [docDigitado, setDocDigitado] = useState('');
 
   const [documentoValue, setDocumentoValue] = useState('');
   const [cepCnpj, setCepCnpj] = useState('');
-  const [cepUfv, setUfv] = useState('');
+  const [tipoDrop, setTipoDrop] = useState('');
+  const [baseCal, setBaseCal] = useState('');
   const [cepUf, setUf] = useState('');
 
+  const dropTipoComissao = [
+    'Total da venda',
+    'Parcela Recebida',
+  ];
+
+  const dropBaseCalculo = [
+    'Total Líquido (Total + Impostos)',
+    'Total Bruto (Preço * Quantidade)',
+    'Total (Total Bruto - Descontos + Acréscimos)',
+  ];
+
   const [formsData, setFormsData] = useState({
-    index: "",
     cpf_cnpj: '',
     ativo: true,
     nome_razao: '',
@@ -26,17 +38,19 @@ function TransportadorasAdd() {
     cep: '',
     logradouro: '',
     numero: '',
-    uf: '',
-    município: '',
     bairro: '',
+    município: '',
+    uf: '',
     complemento: '',
-    celular: '',
     telefone: '',
+    celular: '',
     email: '',
+    nascimento: '',
+    desconto: '',
+    comissao:'',
+    tipoComissao:'',
+    baseCalculo:'',
     observacao: '',
-    placa: '',
-    ufv: '',
-    antt:'',
   });
   
   const handleMenuItemClick = (item, tipo) => {
@@ -47,19 +61,29 @@ function TransportadorasAdd() {
             setCepCnpj('CNPJ');
         }
         formsData.cpf_cnpj = (item);
-    }else if(tipo === 'UFV'){
-        formsData.ufv = (item);
-        setUfv(item);
+    }else if(tipo === 'TipoComissao'){
+        formsData.tipoComissao = (item);
+        setTipoDrop(item);
     }else if(tipo === 'UF'){
         formsData.uf = (item);
         setUf(item);
+    }else if(tipo == "BaseCal"){
+        if(item === 'Total Líquido (Total + Impostos)'){
+            setBaseCal('Total Líquido');
+        }else if(item === 'Total Bruto (Preço * Quantidade)'){
+            setBaseCal('Total Bruto');
+        }else if(item === 'Total (Total Bruto - Descontos + Acréscimos)'){
+            setBaseCal('Total');
+        }
+        formsData.baseCalculo = (item);
     }
-    console.log(formsData.cpf_cnpj);
-    console.log(formsData.ufv);
-    console.log(formsData.uf);
   };
 
-  
+  const handleDateChange = (dates) => {
+    formsData.nascimento = dates[0].toLocaleDateString('pt-BR');
+    console.log("Data selecionada:", formsData.nascimento);
+  };
+
   const [error, setError] = useState(null);
 
 
@@ -126,8 +150,9 @@ function TransportadorasAdd() {
 
   {/* Redireciona para Empresas */}
   const handleRedirect = () => {
-    navigate('/cadastro/transportadoras');
+    navigate('/cadastro/vendedores');
   };
+
   const navigate = useNavigate();
 
   const handleInputChange = (e) => {
@@ -150,7 +175,7 @@ function TransportadorasAdd() {
           <Header sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} />
           <div className="flex justify-center w-full">
             <form onSubmit={handleSubmit} className="space-y-5 mx-[2rem] max-w-full h-[80rem]">
-              <h3 className="text-lg font-semibold justify-center text-center mb-4 mt-4 ml-1">Cadastro de Transportadora</h3>
+              <h3 className="text-lg font-semibold justify-center text-center mb-4 mt-4 ml-1">Cadastro de Vendedores</h3>
               
               {/* Dados do Fornecedor */}
               <h2 style={{ color: '#5E16ED', fontSize: '170%', fontWeight: 'bold' }}>
@@ -170,10 +195,7 @@ function TransportadorasAdd() {
                     required
                   />
                 </div>
-                <div className="flex flex-col">
-                    <DropDown labelDrop={"Tipo de Fornecedor"} title= 'Selecione a UF' ValorBtn={formsData.cpf_cnpj} listItens={['Fisica', 'Juridica']} onSelect={(item) => handleMenuItemClick(item, "Pessoa")} />
 
-                </div>
                 <div className="flex items-center">
                     <input
                       type="checkbox"
@@ -196,8 +218,7 @@ function TransportadorasAdd() {
                     name="nome/RazaoSocial"
                     value={formsData.nome_razao}
                     onChange={handleInputChange}
-                    className=" w-[32.5rem] h-11 px-3 py-2 rounded-md  ring-inset focus:ring-2 focus:ring-indigo-600"
-                    required
+                    className=" w-[23rem] h-11 px-3 py-2 rounded-md  ring-inset focus:ring-2 focus:ring-indigo-600"
                   />
                 </div>
                 <div className="flex flex-col">
@@ -207,13 +228,27 @@ function TransportadorasAdd() {
                     name="grupo"
                     value={formsData.fantasia}
                     onChange={handleInputChange}
-                    className=" w-[32.5rem] h-11 px-3 py-2 rounded-md ring-inset focus:ring-2 focus:ring-indigo-600"
-                    required
+                    className=" w-[23rem] h-11 px-3 py-2 rounded-md ring-inset focus:ring-2 focus:ring-indigo-600"
                   />
                 </div>
+                <div className="flex flex-col">
+                    <label className="block ml-1 text-sm font-medium leading-6 text-black">Data de nascimento</label>
+                    <Datepicker align="center" onDateChange={handleDateChange}/>
+                </div>
               </div>
+
               {/* Aréa da Registro*/}
               <div className="flex flex-col md:flex-row gap-4">
+                <div className="flex flex-col">
+                  <label className="block ml-1 text-sm font-medium leading-6 text-black">RG- Registro Geral</label>
+                  <input
+                    type="text"
+                    name="inscricao_estadual_municipal"
+                    value={formsData.inscricao_estadual_municipal}
+                    onChange={handleInputChange}
+                    className="w-[32.5rem] h-11 px-3 py-2 rounded-md ring-inset focus:ring-2 focus:ring-indigo-600 disabled:bg-gray-300"
+                  />
+                </div>
                 <div className="flex flex-col">
                   <label className="block ml-1 text-sm font-medium leading-6 text-black">IE - Inscrição Estadual</label>
                   <input
@@ -225,18 +260,7 @@ function TransportadorasAdd() {
                     className="w-[32.5rem] h-11 px-3 py-2 rounded-md ring-inset focus:ring-2 focus:ring-indigo-600 disabled:bg-gray-300"
                   />
                 </div>
-                <div className="flex flex-col">
-                  <label className="block ml-1 text-sm font-medium leading-6 text-black">IEM - Inscricão Estadual Municipais</label>
-                  <input
-                    type="text"
-                    name="inscricao_estadual_municipal"
-                    value={formsData.inscricao_estadual_municipal}
-                    onChange={handleInputChange}
-                    className="w-[32.5rem] h-11 px-3 py-2 rounded-md ring-inset focus:ring-2 focus:ring-indigo-600 disabled:bg-gray-300"
-                  />
-                </div>
               </div>
-
 
               <h2 style={{ color: '#5E16ED', fontSize: '170%', fontWeight: 'bold' }}>
                 Contato
@@ -373,42 +397,40 @@ function TransportadorasAdd() {
 
               {/*Dados do veículo*/}
               <h2 style={{ color: '#5E16ED', fontSize: '170%', fontWeight: 'bold' }}>
-                Veículo
+                Valores
                 <hr style={{ border: '1px solid #5E16ED' }} />
               </h2>
 
               {/* Aréa do veículo*/}
-              <div className="flex flex-col md:flex-row gap-4 ">
+              <div className="flex flex-col md:flex-row gap-4 justify-between ">
                 <div className="flex flex-col">
-                  <label className="block ml-1 text-sm font-medium leading-6 text-black">Placa</label>
+                  <label className="block ml-1 text-sm font-medium leading-6 text-black">Desconto(%)</label>
                   <input
                     type="text"
                     name="Placa"
-                    value={formsData.placa}
+                    value={formsData.desconto}
                     onChange={handleInputChange}
-                    className="w-[10rem] h-11 px-3 py-2 rounded-md ring-inset focus:ring-2 focus:ring-indigo-600 disabled:bg-gray-300"
+                    className="w-[15rem] h-11 px-3 py-2 rounded-md ring-inset focus:ring-2 focus:ring-indigo-600 disabled:bg-gray-300"
                   />
                 </div>
                 
                 <div className="flex flex-col">
-                  <label className="block ml-1 text-sm font-medium leading-6 text-black">ANTT</label>
+                  <label className="block ml-1 text-sm font-medium leading-6 text-black">Comissão(%)</label>
                   <input
                     type="text"
                     name="antt"
                     value={formsData.antt}
                     onChange={handleInputChange}
-                    className="w-[10rem] h-11 px-3 py-2 rounded-md ring-inset focus:ring-2 focus:ring-indigo-600 disabled:bg-gray-300"
+                    className="w-[15rem] h-11 px-3 py-2 rounded-md ring-inset focus:ring-2 focus:ring-indigo-600 disabled:bg-gray-300"
                   />
                 </div>
 
                 <div className="flex flex-col ">
-                    <DropDown labelDrop="UF" title= 'Selecione a UF' ValorBtn={cepUfv} listItens={["US", "MX", "BA"]} onSelect={(item) => handleMenuItemClick(item,'UFV')}/>
+                    <DropDown labelDrop="Tipo de Comissão" title='Selecione o tipo de comissão' ValorBtn={tipoDrop} listItens={dropTipoComissao} onSelect={(item) => handleMenuItemClick(item,'TipoComissao')}/>
                 </div>
 
                 <div className="flex flex-col ">
-                    <button type="submit" className="h-[3rem] w-40 px-4 py-2 rounded-md bg-indigo-600 text-white hover:bg-indigo-700 ">
-                        Adicionar
-                    </button>
+                <DropDown labelDrop="Base de Calculo" title="Selecione a base de calculo" ValorBtn={baseCal} listItens={dropBaseCalculo} onSelect={(item) => handleMenuItemClick(item,'BaseCal')}/>
                 </div>
               </div>
 
@@ -444,6 +466,6 @@ function TransportadorasAdd() {
         </div>
       </div>
     );
-  }
+}
 
-export default TransportadorasAdd;
+export default VendedoresAdd;

@@ -6,7 +6,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faImage } from '@fortawesome/free-solid-svg-icons';
 import axios from 'axios';
 import { Menu, MenuButton, MenuItems, MenuItem } from '@headlessui/react';
-import DropDrow from '../../components/DropDown';
+import DropDown from '../../components/DropDown';
 import Fornecedores from './Fornecedores';
 import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
