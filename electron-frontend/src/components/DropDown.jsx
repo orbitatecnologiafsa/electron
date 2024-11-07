@@ -1,19 +1,23 @@
-//DropDown.jsz
 import React, { useCallback } from 'react';
 import { Menu, MenuButton, MenuItems, MenuItem } from '@headlessui/react';
 
-function DropDonw({ labelDrop, ValorBtn, listItens = [], onSelect }) {
+function DropDown({ labelDrop, ValorBtn, title, listItens = [], onSelect }) {
     const handleSelect = useCallback((item) => {
         onSelect(item, 'UFV');
     }, [onSelect]);
+
+    // Determina a largura do botão com base no valor de ValorBtn
+    const buttonWidth = title === 'Status' ? 'w-44' : 'w-56';
 
     return (
         <div className="flex flex-col">
             <label className="block ml-1 text-sm font-medium leading-6 text-black">{labelDrop}</label>
             <Menu as="div" className="flex rounded-md">
                 <div>
-                    <MenuButton className="w-56 rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50 h-11">
-                        {ValorBtn || 'Selecione a UF'}
+                    <MenuButton 
+                        className={`truncate rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50 h-11 overflow-hidden ${buttonWidth}`}
+                    >
+                        {ValorBtn || title}
                     </MenuButton>
                 </div>
                 <MenuItems
@@ -38,4 +42,4 @@ function DropDonw({ labelDrop, ValorBtn, listItens = [], onSelect }) {
     );
 }
 
-export default DropDonw;
+export default DropDown;

@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import Sidebar from '../../partials/Sidebar';
 import Header from '../../partials/Header';
+import { useNavigate } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faUserTie, faSort, faCircleInfo, faMagnifyingGlass } from '@fortawesome/free-solid-svg-icons';
 import { Menu, MenuButton, MenuItems, MenuItem } from '@headlessui/react';
@@ -15,6 +16,7 @@ function Vendedores() {
   const [posts, setPosts] = useState([]);
   const [sortColumn, setSortColumn] = useState('id'); 
 
+  const navigate = useNavigate();
 
   {/* Sort da Tabela */}
   const [sortDirection, setSortDirection] = useState('asc'); 
@@ -46,6 +48,9 @@ function Vendedores() {
   const [filteredPosts, setFilteredPosts] = useState([]);
   const [searchInfo, setSearchInfo] = useState('');
 
+  const handleRedirect = () => {
+    navigate('/cadastro/vendedores/adicionar');
+  };
 
   {/* Consumindo API Vendedores */}
   const getPosts = async () => {
@@ -294,7 +299,8 @@ function Vendedores() {
                 </div>
               </div>
               <div className="mr-10 mt-10 h-10">
-                <button className="w-auto float-end rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50">
+                <button className="w-auto float-end px-3 py-2 rounded-md bg-indigo-600 text-white hover:bg-indigo-700"
+                  onClick={handleRedirect}>
                   Cadastrar
                 </button>
               </div>
