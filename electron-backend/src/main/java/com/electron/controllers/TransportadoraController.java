@@ -1,6 +1,7 @@
 package com.electron.controllers;
 
 import com.electron.domain.Transportadora;
+import com.electron.domain.dtos.TransportadoraDTO;
 import com.electron.services.TransportadoraService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -34,8 +35,8 @@ public class TransportadoraController {
 
     // Criar nova transportadora
     @PostMapping
-    public ResponseEntity<Transportadora> criar(@RequestBody Transportadora transportadora) {
-        Transportadora novaTransportadora = transportadoraService.salvar(transportadora);
+    public ResponseEntity<Transportadora> criar(@RequestBody TransportadoraDTO transportadoraDTO) {
+        Transportadora novaTransportadora = transportadoraService.salvar(transportadoraDTO.toTransportadora());
         return ResponseEntity.status(HttpStatus.CREATED).body(novaTransportadora);
     }
 

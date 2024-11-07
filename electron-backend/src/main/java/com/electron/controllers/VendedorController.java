@@ -1,6 +1,7 @@
 package com.electron.controllers;
 
 import com.electron.domain.Vendedor;
+import com.electron.domain.dtos.VendedorDTO;
 import com.electron.services.VendedorService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -32,8 +33,8 @@ public class VendedorController {
     }
 
     @PostMapping
-    public ResponseEntity<Vendedor> criar(@RequestBody Vendedor vendedor) {
-        Vendedor novoVendedor = vendedorService.salvar(vendedor);
+    public ResponseEntity<Vendedor> criar(@RequestBody VendedorDTO vendedorDTO) {
+        Vendedor novoVendedor = vendedorService.salvar(vendedorDTO.toVendedor());
         return ResponseEntity.status(HttpStatus.CREATED).body(novoVendedor);
     }
 
@@ -45,8 +46,7 @@ public class VendedorController {
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> excluir(@PathVariable Long id) {
-            vendedorService.excluir(id);
-            return ResponseEntity.noContent().build();
+        vendedorService.excluir(id);
+        return ResponseEntity.noContent().build();
     }
-
 }

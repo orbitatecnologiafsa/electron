@@ -1,6 +1,7 @@
 package com.electron.controllers;
 
 import com.electron.domain.Estado;
+import com.electron.domain.dtos.EstadoDTO;
 import com.electron.services.EstadoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -30,8 +31,8 @@ public class EstadoController {
     }
 
     @PostMapping
-    public Estado criar(@RequestBody Estado estado) {
-        return estadoService.criar(estado);
+    public Estado criar(@RequestBody EstadoDTO estadoDTO) {
+        return estadoService.criar(estadoDTO.toEstado());
     }
 
     @PutMapping("/{id}")

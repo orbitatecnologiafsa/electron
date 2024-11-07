@@ -1,6 +1,7 @@
 package com.electron.controllers;
 
 import com.electron.domain.Endereco;
+import com.electron.domain.dtos.EnderecoDTO;
 import com.electron.services.EnderecoService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -34,8 +35,8 @@ public class EnderecoController {
 //    }
 
     @PostMapping
-    public ResponseEntity<Void> criar(@RequestBody Endereco endereco) {
-        enderecoService.criar(endereco);
+    public ResponseEntity<Void> criar(@RequestBody EnderecoDTO enderecoDTO) {
+        enderecoService.criar(enderecoDTO.toEndereco());
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
 

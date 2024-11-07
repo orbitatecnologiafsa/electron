@@ -1,6 +1,7 @@
 package com.electron.controllers;
 
 import com.electron.domain.Municipio;
+import com.electron.domain.dtos.MunicipioDTO;
 import com.electron.services.MunicipioService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -31,8 +32,8 @@ public class MunicipioController {
     }
 
     @PostMapping
-    public Municipio criar(@RequestBody Municipio municipio) {
-        return municipioService.criar(municipio);
+    public Municipio criar(@RequestBody MunicipioDTO municipioDTO) {
+        return municipioService.criar(municipioDTO.toMunicipio());
     }
 
     @PutMapping("/{id}")
