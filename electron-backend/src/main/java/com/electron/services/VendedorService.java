@@ -35,16 +35,13 @@ public class VendedorService {
 
     // Salvar um novo vendedor com validações de unicidade em Pessoa
     public Vendedor salvar(Vendedor vendedor) {
-        validarPessoaUnicidade(vendedor.getPessoa());
         return vendedorRepository.save(vendedor);
     }
 
     // Atualizar um vendedor existente com validações de unicidade em Pessoa
     public Vendedor atualizar(Long id, Vendedor vendedorAtualizado) {
         Vendedor vendedorExistente = buscarPorId(id); // Lança exceção se não encontrar
-        validarPessoaUnicidade(vendedorAtualizado.getPessoa());
 
-        vendedorExistente.setPessoa(vendedorAtualizado.getPessoa());
         vendedorExistente.setDesconto(vendedorAtualizado.getDesconto());
         vendedorExistente.setComissao(vendedorAtualizado.getComissao());
         vendedorExistente.setTipoComissao(vendedorAtualizado.getTipoComissao());
