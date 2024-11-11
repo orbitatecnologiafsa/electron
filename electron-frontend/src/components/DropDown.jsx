@@ -11,7 +11,7 @@ function DropDown({ labelDrop, ValorBtn, title, listItens = [], onSelect }) {
 
     return (
         <div className="flex flex-col">
-            <label className="block ml-1 text-sm font-medium leading-6 text-black">{labelDrop}</label>
+            <label className="block text-sm font-medium leading-6 text-black">{labelDrop}</label>
             <Menu as="div" className="flex rounded-md">
                 <div>
                     <MenuButton 
@@ -22,7 +22,7 @@ function DropDown({ labelDrop, ValorBtn, title, listItens = [], onSelect }) {
                 </div>
                 <MenuItems
                     transition
-                    className="absolute z-10 mt-2 w-56 max-h-60 overflow-auto origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 transition focus:outline-none"
+                    className="absolute z-10 mt-11 w-56 max-h-60 overflow-auto origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 transition focus:outline-none"
                 >
                     <div className="py-1">
                         {listItens.map(item => (

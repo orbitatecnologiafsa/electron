@@ -24,7 +24,7 @@ function Transportadoras() {
     setIsModalOpen(!isModalOpen);
   };
 
-  {/* Const API Clientes */}
+  {/* Const API Transportadoras */}
   const [posts, setPosts] = useState([]);
   const [sortColumn, setSortColumn] = useState('id'); 
 
@@ -60,11 +60,11 @@ function Transportadoras() {
   const [searchInfo, setSearchInfo] = useState('');
 
 
-  {/* Consumindo API Empresas */}
+  {/* Consumindo API Transportadoras */}
   const getPosts = async () => {
     try {
       {/* URL API */}
-      const response = await axios.get("http://localhost:8080/empresas-proprietarias/");
+      const response = await axios.get("http://localhost:8080/transportadoras");
       console.log(response.data);
       setPosts(response.data);
     } catch (error) {
@@ -119,13 +119,15 @@ function Transportadoras() {
   const tableColumns = [
     { label: '', key: 'action' },
     { label: 'ID', key: 'id' },
-    { label: 'Razão Social', key: 'razaoSocial' },
-    { label: 'Nome Fantasia', key: 'nomeFantasia' },
-    { label: 'CNPJ', key: 'cpfCnpj' },
-    { label: 'Matriz / Filial', key: 'matrizOuFilial' },
+    { label: 'Documento', key: 'cpfCnpj' },
+    { label: 'Nome', key: 'nomeExibicao' },
+    { label: 'Fantasia', key: 'nomeFantasia' },
+    { label: 'Matriz / Filial', key: 'tipoUnidade' },
+    { label: 'Contato', key: 'contato' },
     { label: 'Município', key: 'municipio' },
-    { label: 'UF', key: 'uf' },
+    { label: 'Estado', key: 'estado' },
     { label: 'Telefone', key: 'telefone' },
+    { label: 'Celular', key: 'celular' },
     { label: 'Ativo', key: 'ativo' },
     { label: 'Data de Integração', key: 'dataCriacao' },
   ];
@@ -134,13 +136,15 @@ function Transportadoras() {
   const campoValueMapping = {
     'Todos': null,
     'ID': 'id',
-    'Razão Social': 'razaoSocial',
-    'Nome Fantasia': 'nomeFantasia',
-    'CNPJ': 'cpfCnpj',
-    'Matriz / Filial': 'matrizOuFilial',
+    'Nome': 'nomeExibicao',
+    'Fantasia': 'nomeFantasia',
+    'Documento': 'cpfCnpj',
+    'Matriz / Filial': 'tipoUnidade',
+    'Contato': 'contato',
     'Município': 'municipio',
-    'UF': 'uf',
+    'Estado': 'estado',
     'Telefone': 'telefone',
+    'Celular': 'celular',
     'Ativo': 'ativo',
     'Data de Integração': 'dataCriacao'
   };
@@ -164,7 +168,7 @@ function Transportadoras() {
               <div className="mt-10 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-4 mr-10">
                 <div className="sm:col-span-4">
                   <div className="mt-2 flex">
-                    {/* Busca do Fornecedor */}
+                    {/* Busca da Transportadora */}
                     <div className="flex-initial w-full">
                       <label htmlFor="input1" className="block text-sm font-medium leading-6 text-gray-900">Descrição</label>
                       <div className="flex rounded-md shadow-sm ring-1 ring-inset ring-gray-300 focus-within:ring-2 focus-within:ring-inset focus-within:ring-indigo-600 sm:max-w-md">
@@ -192,7 +196,7 @@ function Transportadoras() {
                               className="absolute z-10 mt-10 w-56 origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 transition focus:outline-none data-[closed]:scale-95 data-[closed]:transform data-[closed]:opacity-0 data-[enter]:duration-100 data-[leave]:duration-75 data-[enter]:ease-out data-[leave]:ease-in"
                             >
                               <div className="py-1">
-                                {['Todos', 'Documento', 'Nome', 'Fantasia', 'Contato', 'Município', 'UF', 'Telefone', 'Celular', 'Última compra', 'Data de nascimento', 'Incompleto'].map(item => (
+                                {['Todos', 'ID', 'Nome', 'Fantasia', 'Documento', 'Matriz / Filial', 'Contato', 'Município', 'Estado', 'Telefone', 'Celular', 'Ativo'].map(item => (
                                   <MenuItem key={item}>
                                     <a
                                       className="block px-4 py-2 text-sm text-gray-700 data-[focus]:bg-gray-100 data-[focus]:text-gray-900"
@@ -243,13 +247,15 @@ function Transportadoras() {
                                 <FontAwesomeIcon icon={faMagnifyingGlass} className="cursor-pointer" />
                               </td>
                               <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700 text-center">{data.id}</td>
-                              <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700 text-center">{data.razaoSocial}</td>
-                              <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700 text-center">{data.nomeFantasia}</td>
                               <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700 text-center">{data.cpfCnpj}</td>
-                              <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700 text-center">{data.matrizOuFilial}</td>
+                              <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700 text-center">{data.empresa?.nomeExibicao}</td>
+                              <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700 text-center">{data.fantasia}</td>
+                              <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700 text-center">{data.tipoUnidade}</td>
+                              <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700 text-center">{data.contato}</td>
                               <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700 text-center">{data.municipio}</td>
-                              <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700 text-center">{data.uf}</td>
+                              <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700 text-center">{data.estado}</td>
                               <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700 text-center">{data.telefone}</td>
+                              <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700 text-center">{data.celular}</td>
                               <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700 text-center">{data.ativo ? 'Sim' : 'Não'}</td>
                               <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700 text-center">{data.dataCriacao}</td>
                               <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700 text-center">

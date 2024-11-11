@@ -94,8 +94,8 @@ function Sidebar({
             </svg>
           </button>
           {/* Logo */}
-          <NavLink end to="/" className="block">
-            <img src={logo} alt="Electron Logo" />
+          <NavLink end to="/" className="block flex justify-center">
+            <img src={logo} alt="Electron Logo" className="w-[50%] h-auto"/>
           </NavLink>
         </div>
 
@@ -335,7 +335,7 @@ function Sidebar({
                         }}
                       >
                         <div className="flex items-center justify-between">
-                          <div className="flex items-center ml-1">
+                          <div className="flex items-center">
                             <FontAwesomeIcon icon={faCircleRight} />
                             <span className="text-sm font-medium ml-4 lg:opacity-0 lg:sidebar-expanded:opacity-100 2xl:opacity-100 duration-200">
                               Entradas

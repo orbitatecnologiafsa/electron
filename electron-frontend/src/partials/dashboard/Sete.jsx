@@ -13,8 +13,17 @@ function DashboardCard05Sete({ titulo, itens = [], graficoTipo = 'bar' }) {
     return `${day} ${monthNames[parseInt(month) - 1]}`;
   };
 
+  {/* Calcula os dias em relação a data atual */}
+  const calculateDaysAgo = (dateString) => {
+    const [day, month, year] = dateString.split('-');
+    const date = new Date(`${year}-${month}-${day}`);
+    const currentDate = new Date();
+    const diffTime = currentDate - date;
+    return Math.floor(diffTime / (1000 * 60 * 60 * 24));
+  };
+
   const data = {
-    labels: itens.map((item) => formatDate(item.data)),
+    labels: itens.map((item) => `${calculateDaysAgo(item.data)} dias`),
     datasets: [
       {
         label: 'Vendas',
@@ -33,14 +42,22 @@ function DashboardCard05Sete({ titulo, itens = [], graficoTipo = 'bar' }) {
         grid: {
           display: false,
         },
+        title: {
+          display: true,
+          text: 'Dias desde a data atual',
+        },
       },
       y: {
         beginAtZero: true,
+        title: {
+          display: true,
+          text: 'Valor de Vendas',
+        },
       },
     },
   };
 
-  // Renderiza o gráfico correto com base no parâmetro "graficoTipo"
+
   const renderChart = () => {
     switch (graficoTipo) {
       case 'line':

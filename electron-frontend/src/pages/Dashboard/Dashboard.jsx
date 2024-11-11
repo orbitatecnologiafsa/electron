@@ -38,7 +38,7 @@ function Dashboard() {
   ];
 
   const conteudo6 = [
-    { data: "01-05-2022", valor: 15 },
+    { data: "01-05-2024", valor: 15 },
     { data: "02-05-2022", valor: 18 },
     { data: "03-05-2022", valor: 22 },
     { data: "04-05-2022", valor: 25 },
@@ -110,11 +110,6 @@ function Dashboard() {
 
             {/* Cards */}
             <div className="grid grid-cols-12 gap-6">
-
-              {/* Line chart (Acme Advanced) */}
-              <DashboardCard02 />
-              {/* Line chart (Acme Professional) */}
-              <DashboardCard03 />
               {/* Formas de pagamento */}
               <DashboardCard04 itens={conteudo4}/>
               {/* Vendas dos últimos 7 dias*/}

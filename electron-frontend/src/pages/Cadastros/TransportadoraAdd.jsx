@@ -170,11 +170,11 @@ function TransportadorasAdd() {
                     required
                   />
                 </div>
-                <div className="flex flex-col">
+                <div className="flex flex-col mr-4">
                     <DropDown labelDrop={"Tipo de Fornecedor"} title= 'Selecione a UF' ValorBtn={formsData.cpf_cnpj} listItens={['Fisica', 'Juridica']} onSelect={(item) => handleMenuItemClick(item, "Pessoa")} />
 
                 </div>
-                <div className="flex items-center">
+                <div className="flex items-center mt-5">
                     <input
                       type="checkbox"
                       name="ativo"
@@ -406,7 +406,7 @@ function TransportadorasAdd() {
                 </div>
 
                 <div className="flex flex-col ">
-                    <button type="submit" className="h-[3rem] w-40 px-4 py-2 rounded-md bg-indigo-600 text-white hover:bg-indigo-700 ">
+                    <button type="submit" className="h-11 w-40 mt-6 px-4 py-2 rounded-md bg-indigo-600 text-white hover:bg-indigo-700 ">
                         Adicionar
                     </button>
                 </div>
