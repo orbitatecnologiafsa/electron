@@ -30,8 +30,8 @@ public class EmpresaProprietariaController {
     }
 
     @PostMapping
-    public ResponseEntity<Void> criar(@RequestBody EmpresaProprietariaDTO empresaProprietariaDTO) {
-        empresaProprietariaService.criar(empresaProprietariaDTO.toEmpresaProprietaria());
+    public ResponseEntity<Void> criar(@RequestBody EmpresaProprietaria empresaProprietaria) {
+        empresaProprietariaService.criar(empresaProprietaria);
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
 

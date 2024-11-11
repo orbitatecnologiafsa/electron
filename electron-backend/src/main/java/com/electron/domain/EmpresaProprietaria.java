@@ -12,6 +12,8 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import java.time.LocalDate;
+import java.util.List;
+
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.Pattern;
 
@@ -121,4 +123,7 @@ public class EmpresaProprietaria {
     @Column(name = "empresa_observacoes", columnDefinition = "TEXT")
     private String observacoes;
 
+    @OneToMany(mappedBy = "empresaProprietaria")
+    @Column(name = "empresa_caixas")
+    private List<Caixa> caixas;
 }

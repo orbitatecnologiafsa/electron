@@ -72,12 +72,12 @@ public class EmpresaProprietariaDTO {
 
     private String observacoes;
 
-    public EmpresaProprietaria toEmpresaProprietaria() {
-        return new EmpresaProprietaria(
-                null, tipoUnidade, tipoPessoa, cpfCnpj, versao, regimeTributario, cnae, razaoSocial, numeroFilial,
-                digitoVerificador, ativo, nomeFantasia, nomeExibicao, naturezaJuridica, inscricaoEstadual,
-                inscricaoMunicipal, contato, telefone, email, cep, logradouro, numero, bairro, complemento, municipio,
-                chaveAcesso, dataCriacao, descricaoAtividades, observacoes
-        );
-    }
+//    public EmpresaProprietaria toEmpresaProprietaria() {
+//        return new EmpresaProprietaria(
+//                null, tipoUnidade, tipoPessoa, cpfCnpj, versao, regimeTributario, cnae, razaoSocial, numeroFilial,
+//                digitoVerificador, ativo, nomeFantasia, nomeExibicao, naturezaJuridica, inscricaoEstadual,
+//                inscricaoMunicipal, contato, telefone, email, cep, logradouro, numero, bairro, complemento, municipio,
+//                chaveAcesso, dataCriacao, descricaoAtividades, observacoes
+//        );
+//    }
 }
