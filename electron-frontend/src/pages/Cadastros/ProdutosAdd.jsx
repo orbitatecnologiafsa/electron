@@ -19,50 +19,20 @@ function ProdutosAdd() {
     codigo: '',
     barras: '',
     nome: '',
-    un: '',
     quantidade: '',
     qtdBloqueada: '',
     qtdDisponivel: '',
-    qtdIdeal: '',
     precoCusto: '',
     custoMedio: '',
     precoVenda: '',
     precoRevenda: '',
     descricao: '',
-    contrLote: '',
-    contrSerial: '',
-    contrGrade: '',
     grupo: '',
     ncm: '',
     cest: '',
     tribEstadual: '',
     tribFederal: '',
     referencia: '',
-    status: '',
-  });
-
-  const [formData, setFormData] = useState({
-    nomeRazao: '',
-    fantasia: '',
-    documento: '',
-    cep: '',
-    municipio: '',
-    uf: '',
-    bairro: '',
-    logradouro: '',
-    numero: '',
-    complemento: '',
-    cpfCnpj: '',
-    pfOuPj: '',
-    email: '',
-    telefone: '',
-    celular: '',
-    contato: '',
-    rgInscricaoEstadual: '',
-    inscricaoEstadualMunicipal: '',
-    observacao: '',
-    ativo: true,
-    revenda: false,
   });
 
   const handleMenuItemClick = (item, index) => {
@@ -90,28 +60,26 @@ function ProdutosAdd() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-        const response = await axios.post("http://localhost:8080/empresas-proprietarias/", formData);
+        const response = await axios.post("http://localhost:8080/produtos", formsData);
         setFormsData({
-            tipo: '',
-            razaoSocial: '',
-            nomeFantasia: '',
-            cpfCnpj: '',
-            cep: '',
-            nomeExibicao: '',
-            municipio: '',
-            uf: '',
-            bairro: '',
-            logradouro: '',
-            numero: '',
-            complemento: '',
-            email: '',
-            telefone: '',
-            celular: '',
-            contato: '',
-            rgInscricaoEstadual: '',
-            inscricaoEstadualMunicipal: '',
-            observacao: '',
-            ativo: true,
+          index: "",
+          codigo: '',
+          barras: '',
+          nome: '',
+          quantidade: '',
+          qtdBloqueada: '',
+          qtdDisponivel: '',
+          precoCusto: '',
+          custoMedio: '',
+          precoVenda: '',
+          precoRevenda: '',
+          descricao: '',
+          grupo: '',
+          ncm: '',
+          cest: '',
+          tribEstadual: '',
+          tribFederal: '',
+          referencia: '',
         });
     } catch (error) {
         console.error('Erro ao cadastrar empresa:', error.response ? error.response.data : error.message);
@@ -149,8 +117,8 @@ function ProdutosAdd() {
                   <input
                     type="checkbox"
                     name="ativo"
-                    checked={formData.ativo}
-                    onChange={() => setFormData({ ...formData, ativo: !formData.ativo })}
+                    checked={formsData.ativo}
+                    onChange={() => setFormsData({ ...formsData, ativo: !formsData.ativo })}
                     className="mr-2 rounded"
                   />
                   <label className="text-base">Ativo</label>
@@ -281,16 +249,6 @@ function ProdutosAdd() {
                     className="w-[21.3rem] h-11 px-3 py-2 rounded-md ring-inset focus:ring-2 focus:ring-indigo-600 disabled:bg-gray-300"
                   />
                 </div>
-                <div className="flex flex-col">
-                  <label className="block ml-1 text-sm font-medium leading-6 text-black">Quantidade ideal</label>
-                  <input
-                    type="text"
-                    name="qtdIdeal"
-                    value={formsData.qtdIdeal}
-                    onChange={handleInputChange}
-                    className="w-[21.3rem] h-11 px-3 py-2 rounded-md ring-inset focus:ring-2 focus:ring-indigo-600 disabled:bg-gray-300"
-                  />
-                </div>
               </div>
 
               <h2 style={{ color: '#5E16ED', fontSize: '170%', fontWeight: 'bold' }}>
@@ -343,95 +301,6 @@ function ProdutosAdd() {
                     onChange={handleInputChange}
                     className="w-[32.5rem] h-11 px-3 py-2 rounded-md ring-inset focus:ring-2 focus:ring-indigo-600 disabled:bg-gray-300"
                   />
-                </div>
-              </div>
-
-              <h2 style={{ color: '#5E16ED', fontSize: '170%', fontWeight: 'bold' }}>
-                Contr.
-                <hr style={{ border: '1px solid #5E16ED' }} />
-              </h2>
-              {/* Aréa de Contr*/}
-              <div className="flex flex-col md:flex-row gap-4">
-                <div className="flex flex-col">
-                  <label className="block ml-1 text-sm font-medium leading-6 text-black">Contr. Lote</label>
-                  <Menu as="div" className="flex rounded-md">
-                            <div>
-                              <MenuButton className="w-56 h-11 rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50">
-                                {formsData.contrLote || 'Tem Lote?'}
-                              </MenuButton>
-                            </div>
-                            <MenuItems
-                              transition
-                              className="absolute z-10 mt-10 w-56 origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 transition focus:outline-none data-[closed]:scale-95 data-[closed]:transform data-[closed]:opacity-0 data-[enter]:duration-100 data-[leave]:duration-75 data-[enter]:ease-out data-[leave]:ease-in"
-                            >
-                              <div className="py-1">
-                                {["Sim", "Não"].map(item => (
-                                  <MenuItem key={item}>
-                                    <a
-                                      className="block px-4 py-2 text-sm text-gray-700 data-[focus]:bg-gray-100 data-[focus]:text-gray-900"
-                                      onClick={() => handleMenuItemClick(item)}
-                                    >
-                                      {item}
-                                    </a>
-                                  </MenuItem>
-                                ))}
-                              </div>
-                            </MenuItems>
-                   </Menu>
-                </div>
-                <div className="flex flex-col">
-                  <label className="block ml-1 text-sm font-medium leading-6 text-black">Contr. Serial</label>
-                  <Menu as="div" className="flex rounded-md">
-                            <div>
-                              <MenuButton className="w-56 h-11 rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50">
-                                {formsData.contrSerial || 'Tem Serial?'}
-                              </MenuButton>
-                            </div>
-                            <MenuItems
-                              transition
-                              className="absolute z-10 mt-10 w-56 origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 transition focus:outline-none data-[closed]:scale-95 data-[closed]:transform data-[closed]:opacity-0 data-[enter]:duration-100 data-[leave]:duration-75 data-[enter]:ease-out data-[leave]:ease-in"
-                            >
-                              <div className="py-1">
-                                {["Sim", "Não"].map(item => (
-                                  <MenuItem key={item}>
-                                    <a
-                                      className="block px-4 py-2 text-sm text-gray-700 data-[focus]:bg-gray-100 data-[focus]:text-gray-900"
-                                      onClick={() => handleMenuItemClick(item)}
-                                    >
-                                      {item}
-                                    </a>
-                                  </MenuItem>
-                                ))}
-                              </div>
-                            </MenuItems>
-                   </Menu>
-                </div>
-                <div className="flex flex-col">
-                  <label className="block ml-1 text-sm font-medium leading-6 text-black">Contr. Grade</label>
-                  <Menu as="div" className="flex rounded-md">
-                            <div>
-                              <MenuButton className="w-56 h-11 rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50">
-                                {formsData.contrGrade || 'Tem Grade?'}
-                              </MenuButton>
-                            </div>
-                            <MenuItems
-                              transition
-                              className="absolute z-10 mt-10 w-56 origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 transition focus:outline-none data-[closed]:scale-95 data-[closed]:transform data-[closed]:opacity-0 data-[enter]:duration-100 data-[leave]:duration-75 data-[enter]:ease-out data-[leave]:ease-in"
-                            >
-                              <div className="py-1">
-                                {["Sim", "Não"].map(item => (
-                                  <MenuItem key={item}>
-                                    <a
-                                      className="block px-4 py-2 text-sm text-gray-700 data-[focus]:bg-gray-100 data-[focus]:text-gray-900"
-                                      onClick={() => handleMenuItemClick(item)}
-                                    >
-                                      {item}
-                                    </a>
-                                  </MenuItem>
-                                ))}
-                              </div>
-                            </MenuItems>
-                   </Menu>
                 </div>
               </div>
 

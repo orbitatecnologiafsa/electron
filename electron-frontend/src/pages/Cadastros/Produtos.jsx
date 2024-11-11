@@ -4,13 +4,11 @@ import { useNavigate } from 'react-router-dom';
 import Header from '../../partials/Header';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faMagnifyingGlass, faSort } from '@fortawesome/free-solid-svg-icons';
-import { Menu, MenuButton, MenuItems, MenuItem } from '@headlessui/react';
 import DropDown from '../../components/DropDown';
 
 function Produtos() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [campoValue, setCampoValue] = useState('Selecione um Campo');
-  const [statusValue, setStatusValue] = useState('Status');
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [inputInfo, setInputInfo] = useState('');
   const [filteredPosts, setFilteredPosts] = useState([]);
@@ -77,34 +75,100 @@ function Produtos() {
     setIsModalOpen(!isModalOpen);
   };
 
+  const getPosts = async () => {
+    try {
+      {/* URL API */}
+      const response = await axios.get("http://localhost:8080/produtos");
+      console.log(response.data);
+      setPosts(response.data);
+    } catch (error) {
+      console.error("Erro ao buscar dados: ", error);
+    }
+    
+  };
+
+
+  useEffect(() => {
+    getPosts();
+  }, []);
+
+  useEffect(() => {
+    if (campoValue === 'Todos') {
+      setFilteredPosts(posts);
+      console.log("Aqui os posts: ", posts);
+    } else if (searchInfo) {
+      console.log("searchInfo:", searchInfo);
+      const propertyName = campoValueMapping[campoValue];
+  
+      console.log("propertyName:", propertyName);
+  
+      const filteredData = posts.filter(data => {
+        let fieldValue;
+  
+        // Se o campo selecionado for "UF", acesse o estado dentro de municipio
+        if (campoValue === 'UF') {
+          fieldValue = data.municipio?.estado?.nome;
+        } else {
+          fieldValue = data[propertyName];
+        }
+  
+        return fieldValue && fieldValue.toString().toLowerCase().includes(searchInfo.toLowerCase());
+      });
+  
+      setFilteredPosts(filteredData);
+      console.log(filteredData);
+    } else {
+      setFilteredPosts([]);
+    }
+  }, [searchInfo, posts, campoValue]);
+  
 
   {/* Colunas da tabela */}
   const tableColumns = [
     { label: '', key: 'action' },
     { label: 'ID', key: 'id' },
-    { label: 'Barras', key: 'razaoSocial' },
-    { label: 'Nome', key: 'nomeFantasia' },
-    { label: 'UN', key: 'cpfCnpj' },
-    { label: 'Quantidade', key: 'matrizOuFilial' },
-    { label: 'Qtd. bloqueada', key: 'municipio' },
-    { label: 'Qtd. disponível', key: 'uf' },
-    { label: 'Qtd. ideal', key: 'telefone' },
-    { label: 'Preço custo', key: 'ativo' },
-    { label: 'Custo médio', key: 'dataCriacao' },
-    { label: 'Preço venda', key: 'dataCriacao' },
-    { label: 'Preço revenda', key: 'dataCriacao' },
-    { label: 'Descrição', key: 'dataCriacao' },
-    { label: 'Contr. lote', key: 'dataCriacao' },
-    { label: 'Contr. serial', key: 'dataCriacao' },
-    { label: 'Contr. Grade', key: 'dataCriacao' },
-    { label: 'Grupo', key: 'dataCriacao' },
-    { label: 'NCM', key: 'dataCriacao' },
-    { label: 'CEST', key: 'dataCriacao' },
-    { label: 'Trib. Estadual', key: 'dataCriacao' },
-    { label: 'Trib. Federal', key: 'dataCriacao' },
-    { label: 'Referência', key: 'dataCriacao' },
-    { label: 'Status', key: 'dataCriacao' },
+    { label: 'Barras', key: 'barras' },
+    { label: 'Nome', key: 'nome' },
+    { label: 'Quantidade', key: 'quantidadeEmbalagem' },
+    { label: 'Qtd. bloqueada', key: 'bloqueado' },
+    { label: 'Qtd. disponível', key: 'disponivel' },
+    { label: 'Preço custo', key: 'precoCusto' },
+    { label: 'Custo médio', key: 'precoCustoMedio' },
+    { label: 'Preço venda', key: 'precoVenda' },
+    { label: 'Preço revenda', key: 'precoRevenda' },
+    { label: 'Descrição', key: 'descricao' },
+    { label: 'Grupo', key: 'grupoProdServ' },
+    { label: 'NCM', key: 'codigoCestNcm' },
+    { label: 'CEST', key: 'codigoCestNcm' },
+    { label: 'Trib. Estadual', key: 'tributacaoEstadual' },
+    { label: 'Trib. Federal', key: 'tributacaoFederal' },
+    { label: 'Referência', key: 'referencia' },
+    { label: 'Unidade', key: 'unidadeEmbalagem' },
   ];
+
+  {/*Filtro*/}
+  const campoValueMapping = {
+    'Todos': null,
+    'ID': 'id',
+    'Barras': 'barras',
+    'Nome': 'nome',
+    'Grupo': 'grupoProdServ',
+    'NCM': 'codigoCestNcm',
+    'Município': 'municipio',
+    'CEST': 'estado',
+    'Tributação Estadual': 'tributacaoEstadual',
+    'Tributação Federal': 'tributacaoFederal',
+    'Referência': 'ativo',
+    'Localização': 'ativo',
+    'Unidade': 'unidadeEmbalagem',
+    'Preço Rev.': 'precoRevenda',
+    'Preço Venda': 'precoVenda',
+    'Custo médio': 'precoCustoMedio',
+    'Preço Custo': 'precoCusto',
+    'Quantidade': 'quantidadeEmbalagem',
+    'Qtd. disponível': 'disponivel',
+    'Qtd. bloqueada': 'bloqueado',
+  };
 
   {/* Redireciona para Cadastro de Produtos */}
   const handleRedirect = () => {
@@ -147,10 +211,12 @@ function Produtos() {
                       <div className="flex-auto w-full justify-between">
                         <label htmlFor="input1" className="block text-sm font-medium leading-6 text-gray-900">Filtros</label>
                         <div className="flex rounded-md sm:max-w-md">
-                          <DropDown title={"Selecione um Campo"} ValorBtn={campoValue} listItens={['Todos', 'Código', 'Barras', 'Nome', 'Descrição', 'Grupo', 'NCM', 'CEST', 'Tributação Estadual', 'Tributação Federal', 'Referência', 'Localização', 'Unidade']} onSelect={(item) => handleMenuItemClick(item)}/>
-                          {/* Botão de status */}
-                          <DropDown title={"Status"} ValorBtn={statusValue} listItens={['Ativo', 'Inativo', 'Todos']} onSelect={(item) => handleStatusItemClick(item)}/>
-                          <button className="w-32 ml-4 rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50">
+                          <DropDown title={"Selecione um Campo"} ValorBtn={campoValue} listItens={['Todos','ID','Barras','Nome','Grupo','NCM','Município', 'CEST','Tributação Estadual','Tributação Federal', 'Referência','Localização', 'Unidade','Preço Rev.','Preço Venda','Custo médio', 'Preço Custo','Quantidade','Qtd. disponível', 'Qtd. bloqueada']} onSelect={(item) => handleMenuItemClick(item)}/>
+                          <button
+                            type="button"
+                            className="w-44 ml-4 rounded-md bg-indigo-600 text-white hover:bg-indigo-700"
+                            onClick={handleSearchClick}
+                          >
                             Pesquisar
                           </button>
                         </div>
@@ -196,7 +262,7 @@ function Produtos() {
                               <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700 text-center">{data.Contr}</td>
                               <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700 text-center">{data.Contr}</td>
                               <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700 text-center">{data.Contr}</td>
-                              <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700 text-center">{data.Grupo}</td>
+                              <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700 text-center">{data.Grupo?.nome}</td>
                               <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700 text-center">{data.telefone}</td>
                               <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700 text-center">{data.ncm}</td>
                               <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700 text-center">{data.cest}</td>

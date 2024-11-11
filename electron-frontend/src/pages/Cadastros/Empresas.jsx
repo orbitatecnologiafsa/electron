@@ -73,12 +73,13 @@ function Empresas() {
   const getPosts = async () => {
     try {
       {/* URL API */}
-      const response = await axios.get("http://localhost:8080/empresas-proprietarias/");
+      const response = await axios.get("http://localhost:8080/empresas-proprietarias");
       console.log(response.data);
       setPosts(response.data);
     } catch (error) {
-      console.log(error);
+      console.error("Erro ao buscar dados: ", error);
     }
+    
   };
 
 
@@ -89,14 +90,28 @@ function Empresas() {
   useEffect(() => {
     if (campoValue === 'Todos') {
       setFilteredPosts(posts);
+      console.log("Aqui os posts: ", posts);
     } else if (searchInfo) {
+      console.log("searchInfo:", searchInfo);
       const propertyName = campoValueMapping[campoValue];
+  
+      console.log("propertyName:", propertyName);
+  
       const filteredData = posts.filter(data => {
-        const fieldValue = data[propertyName];
-        return fieldValue && fieldValue.toString().toLowerCase() === searchInfo.toLowerCase();
+        let fieldValue;
+  
+        // Se o campo selecionado for "UF", acesse o estado dentro de municipio
+        if (campoValue === 'UF') {
+          fieldValue = data.municipio?.estado?.nome;
+        } else {
+          fieldValue = data[propertyName];
+        }
+  
+        return fieldValue && fieldValue.toString().toLowerCase().includes(searchInfo.toLowerCase());
       });
-    
+  
       setFilteredPosts(filteredData);
+      console.log(filteredData);
     } else {
       setFilteredPosts([]);
     }
@@ -108,8 +123,15 @@ function Empresas() {
   
   const handleSearchClick = (event) => {
     event.preventDefault();
-    setSearchInfo(inputInfo);
-  };
+    if (campoValue) {
+      console.log("campoValue:",campoValue);
+        setSearchInfo(inputInfo);
+    } else {
+        setFilteredPosts(posts);
+    }
+    console.log("InputInfo: ",inputInfo);
+    console.log("Seache: ",searchInfo);
+};
 
 
   {/* Sort da tabela */}
@@ -119,15 +141,23 @@ function Empresas() {
     setSortDirection(direction);
   };
 
-  const sortedPosts = [...filteredPosts].sort((a, b) => {
+  const sortedPosts = [...filteredPosts].sort((a, b) => { 
     const aValue = a[sortColumn];
     const bValue = b[sortColumn];
+
+    // Caso o valor seja um objeto, extraia uma propriedade específica para comparação
+    if (typeof aValue === 'object' && aValue !== null) {
+        if (aValue.nome) {
+            return sortDirection === 'asc' ? aValue.nome.localeCompare(bValue.nome) : bValue.nome.localeCompare(aValue.nome);
+        }
+    }
 
     if (typeof aValue === 'string' && typeof bValue === 'string') {
       return sortDirection === 'asc' ? aValue.localeCompare(bValue) : bValue.localeCompare(aValue);
     }
     return sortDirection === 'asc' ? aValue - bValue : bValue - aValue;
-  });
+});
+
 
   {/* Colunas da tabela */}
   const tableColumns = [
@@ -136,9 +166,9 @@ function Empresas() {
     { label: 'Razão Social', key: 'razaoSocial' },
     { label: 'Nome Fantasia', key: 'nomeFantasia' },
     { label: 'CNPJ', key: 'cpfCnpj' },
-    { label: 'Matriz / Filial', key: 'matrizOuFilial' },
+    { label: 'Matriz / Filial', key: 'tipoUnidade' },
     { label: 'Município', key: 'municipio' },
-    { label: 'UF', key: 'uf' },
+    { label: 'UF', key: 'estado' },
     { label: 'Telefone', key: 'telefone' },
     { label: 'Ativo', key: 'ativo' },
     { label: 'Data de Integração', key: 'dataCriacao' },
@@ -151,9 +181,9 @@ function Empresas() {
     'Razão Social': 'razaoSocial',
     'Nome Fantasia': 'nomeFantasia',
     'CNPJ': 'cpfCnpj',
-    'Matriz / Filial': 'matrizOuFilial',
+    'Matriz / Filial': 'tipoUnidade',
     'Município': 'municipio',
-    'UF': 'uf',
+    'UF': 'estado',
     'Telefone': 'telefone',
     'Ativo': 'ativo',
     'Data de Integração': 'dataCriacao'
@@ -240,9 +270,9 @@ function Empresas() {
                               <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700 text-center">{data.razaoSocial}</td>
                               <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700 text-center">{data.nomeFantasia}</td>
                               <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700 text-center">{data.cpfCnpj}</td>
-                              <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700 text-center">{data.matrizOuFilial}</td>
-                              <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700 text-center">{data.municipio}</td>
-                              <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700 text-center">{data.uf}</td>
+                              <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700 text-center">{data.tipoUnidade}</td>
+                              <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700 text-center">{data.municipio?.nome}</td>
+                              <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700 text-center">{data.municipio?.estado?.nome}</td>
                               <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700 text-center">{data.telefone}</td>
                               <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700 text-center">{data.ativo ? 'Sim' : 'Não'}</td>
                               <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700 text-center">{data.dataCriacao}</td>
