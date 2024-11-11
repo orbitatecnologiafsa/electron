@@ -1,5 +1,6 @@
 package com.electron.domain.dtos;
 
+import com.electron.domain.Caixa;
 import com.electron.domain.EmpresaProprietaria;
 import com.electron.domain.Municipio;
 import com.electron.domain.enums.RegimeTributario;
@@ -11,6 +12,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
+import java.util.List;
 
 @Data
 @NoArgsConstructor
@@ -72,12 +74,14 @@ public class EmpresaProprietariaDTO {
 
     private String observacoes;
 
+    private List<Caixa> caixas;
+
     public EmpresaProprietaria toEmpresaProprietaria() {
         return new EmpresaProprietaria(
                 null, tipoUnidade, tipoPessoa, cpfCnpj, versao, regimeTributario, cnae, razaoSocial, numeroFilial,
                 digitoVerificador, ativo, nomeFantasia, nomeExibicao, naturezaJuridica, inscricaoEstadual,
                 inscricaoMunicipal, contato, telefone, email, cep, logradouro, numero, bairro, complemento, municipio,
-                chaveAcesso, dataCriacao, descricaoAtividades, observacoes
+                chaveAcesso, dataCriacao, descricaoAtividades, observacoes, caixas
         );
     }
 }

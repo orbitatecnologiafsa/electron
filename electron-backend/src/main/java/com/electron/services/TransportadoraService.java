@@ -38,7 +38,6 @@ public class TransportadoraService {
         Transportadora transportadoraExistente = buscarPorId(id); // Lança exceção se não encontrar
         validarUnicidadeAtualizacao(transportadoraAtualizada, transportadoraExistente);
 
-        transportadoraExistente.setPessoa(transportadoraAtualizada.getPessoa());
         transportadoraExistente.setEmpresa(transportadoraAtualizada.getEmpresa());
         transportadoraExistente.setPlacaVeiculo(transportadoraAtualizada.getPlacaVeiculo());
         transportadoraExistente.setAnttVeiculo(transportadoraAtualizada.getAnttVeiculo());
