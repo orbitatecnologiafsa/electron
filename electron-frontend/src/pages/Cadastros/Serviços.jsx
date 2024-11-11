@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import Sidebar from '../../partials/Sidebar';
 import Header from '../../partials/Header';
+import { useNavigate } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faMagnifyingGlass, faSort, faHandHoldingDollar } from '@fortawesome/free-solid-svg-icons';
 import { Menu, MenuButton, MenuItems, MenuItem } from '@headlessui/react';
@@ -22,6 +23,12 @@ function Servicos() {
   const handleModalToggle = () => {
     setIsModalOpen(!isModalOpen);
   };
+  
+  const handleRedirect = () => {
+    navigate('/cadastro/servicos/adicionar');
+  };
+
+  const navigate = useNavigate();
 
   {/* Colunas da Tabela */}
   const tableColumns = [
@@ -273,7 +280,8 @@ function Servicos() {
                 </div>
               </div>
               <div className="mr-10 mt-10 h-10">
-                <button className="w-auto float-end rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50">
+                <button className="w-auto float-end px-3 py-2 rounded-md bg-indigo-600 text-white hover:bg-indigo-700"
+                  onClick={handleRedirect}>
                   Cadastrar
                 </button>
               </div>

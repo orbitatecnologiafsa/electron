@@ -18,9 +18,11 @@ import FornecedoresAdd from './pages/Cadastros/FornecedoresAdd';
 import Produtos from './pages/Cadastros/Produtos';
 import ProdutosAdd from './pages/Cadastros/ProdutosAdd';
 import Serviços from './pages/Cadastros/Serviços';
+import ServiçosAdd from './pages/Cadastros/ServiçoAdd';
 import Transportadoras from './pages/Cadastros/Transportadoras';
 import TransportadorasAdd from './pages/Cadastros/TransportadoraAdd';
 import Vendedores from './pages/Cadastros/Vendedores';
+import VendedoresAdd from './pages/Cadastros/VendedoresAdd';
 // Import pages Entradas
 import Pedidos from './pages/Entradas/Pedidos';
 import NotaEntrada from './pages/Entradas/NotaEntrada';
@@ -70,9 +72,11 @@ function App() {
         <Route exact path="/cadastro/produtos" element={<Produtos/>} />
         <Route exact path="/cadastro/produtos/adicionar" element={<ProdutosAdd/>} />
         <Route exact path="/cadastro/servicos" element={<Serviços/>} />
+        <Route exact path="/cadastro/servicos/adicionar" element={<ServiçosAdd/>} />
         <Route exact path="/cadastro/transportadoras" element={<Transportadoras/>} />
         <Route exact path="/cadastro/transportadoras/adicionar" element={<TransportadorasAdd/>} />
         <Route exact path="/cadastro/vendedores" element={<Vendedores/>} />
+        <Route exact path="/cadastro/vendedores/adicionar" element={<VendedoresAdd/>} />
         <Route exact path="/entradas/pedidos" element={<Pedidos/>} />
         <Route exact path="/entradas/NotaEntrada" element={<NotaEntrada/>} />
         <Route exact path="/saidas/orcamento" element={<Orcamento/>} />
