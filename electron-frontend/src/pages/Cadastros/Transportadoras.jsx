@@ -4,12 +4,13 @@ import Header from '../../partials/Header';
 import { useNavigate } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTruck, faSort, faCircleInfo, faMagnifyingGlass } from '@fortawesome/free-solid-svg-icons';
-import { Menu, MenuButton, MenuItems, MenuItem } from '@headlessui/react';
+import { faPenToSquare } from '@fortawesome/free-solid-svg-icons';
+import axios from 'axios';
 import DropDown from '../../components/DropDown';
 
 function Transportadoras() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
-  const [campoValue, setCampoValue] = useState('Selecione um Campo');
+  const [campoValue, setCampoValue] = useState('Todos');
   const [isModalOpen, setIsModalOpen] = useState(false);
   const navigate = useNavigate();
 
@@ -32,29 +33,6 @@ function Transportadoras() {
 
   {/* Sort da Tabela */}
   const [sortDirection, setSortDirection] = useState('asc'); 
-  const [formData, setFormData] = useState({
-      nomeRazao: '',
-      fantasia: '',
-      documento: '',
-      cep: '',
-      municipio: '',
-      uf: '',
-      bairro: '',
-      logradouro: '',
-      numero: '',
-      complemento: '',
-      cpfCnpj: '',
-      pfOuPj: '',
-      email: '',
-      telefone: '',
-      celular: '',
-      contato: '',
-      rgInscricaoEstadual: '',
-      inscricaoEstadualMunicipal: '',
-      observacao: '',
-      ativo: true,
-      revenda: false,
-    });
 
   const [inputInfo, setInputInfo] = useState('');
   const [filteredPosts, setFilteredPosts] = useState([]);
@@ -74,12 +52,27 @@ function Transportadoras() {
   };
 
   useEffect(() => {
+    getPosts();
+  }, []);
+
+  useEffect(() => {
     if (campoValue === 'Todos') {
       setFilteredPosts(posts);
     } else if (searchInfo) {
       const propertyName = campoValueMapping[campoValue];
       const filteredData = posts.filter(data => {
-        const fieldValue = data[propertyName];
+        let fieldValue;
+
+        if (campoValue === 'Matriz / Filial') {
+          fieldValue = data.empresa?.tipoUnidade;
+        } else if (campoValue === 'Município') {
+          fieldValue = data.municipio?.nome;
+        } else if (campoValue === 'Estado') {
+          fieldValue = data.municipio?.estado?.nome;
+        } else {
+          fieldValue = data[propertyName];
+        }
+  
         return fieldValue && fieldValue.toString().toLowerCase() === searchInfo.toLowerCase();
       });
     
@@ -120,24 +113,25 @@ function Transportadoras() {
   const tableColumns = [
     { label: '', key: 'action' },
     { label: 'ID', key: 'id' },
-    { label: 'Documento', key: 'cpfCnpj' },
-    { label: 'Nome', key: 'nomeExibicao' },
+    { label: 'Razão Social', key: 'nomeRazaoSocial' },
     { label: 'Fantasia', key: 'nomeFantasia' },
+    { label: 'Documento', key: 'cpfCnpj' },
     { label: 'Matriz / Filial', key: 'tipoUnidade' },
     { label: 'Contato', key: 'contato' },
     { label: 'Município', key: 'municipio' },
     { label: 'Estado', key: 'estado' },
     { label: 'Telefone', key: 'telefone' },
     { label: 'Celular', key: 'celular' },
-    { label: 'Ativo', key: 'ativo' },
-    { label: 'Data de Integração', key: 'dataCriacao' },
+    { label: 'CEP', key: 'cep' },
+    { label: 'Email', key: 'email' },
+    { label: 'Placa', key: 'placaVeiculo' },
   ];
 
   {/*Filtro*/}
   const campoValueMapping = {
     'Todos': null,
     'ID': 'id',
-    'Nome': 'nomeExibicao',
+    'Razão Social': 'nomeRazaoSocial',
     'Fantasia': 'nomeFantasia',
     'Documento': 'cpfCnpj',
     'Matriz / Filial': 'tipoUnidade',
@@ -146,8 +140,9 @@ function Transportadoras() {
     'Estado': 'estado',
     'Telefone': 'telefone',
     'Celular': 'celular',
-    'Ativo': 'ativo',
-    'Data de Integração': 'dataCriacao'
+    'CEP': 'cep',
+    'Email': 'email',
+    'Placa': 'placaVeiculo'
   };
 
   return (
@@ -180,36 +175,14 @@ function Transportadoras() {
                           type="text"
                           id="input1"
                           className="block w-full ml-3 rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                          onChange={handleInputFilterChange}
                         />
                       </div>
                       {/* Filtros de busca */}
                       <div className="flex-auto w-full">
                         <label htmlFor="input1" className="block text-sm font-medium leading-6 text-gray-900">Filtros</label>
                         <div className="flex rounded-md sm:max-w-md">
-                          <Menu as="div" className="flex rounded-md">
-                            <div>
-                              <MenuButton className="w-56 rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50">
-                                {campoValue || 'Selecione um Campo'}
-                              </MenuButton>
-                            </div>
-                            <MenuItems
-                              transition
-                              className="absolute z-10 mt-10 w-56 origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 transition focus:outline-none data-[closed]:scale-95 data-[closed]:transform data-[closed]:opacity-0 data-[enter]:duration-100 data-[leave]:duration-75 data-[enter]:ease-out data-[leave]:ease-in"
-                            >
-                              <div className="py-1">
-                                {['Todos', 'Documento', 'Nome', 'Fantasia', 'Contato', 'Município', 'UF', 'Telefone', 'Celular', 'Última compra', 'Data de nascimento', 'Incompleto'].map(item => (
-                                  <MenuItem key={item}>
-                                    <a
-                                      className="block px-4 py-2 text-sm text-gray-700 data-[focus]:bg-gray-100 data-[focus]:text-gray-900"
-                                      onClick={() => handleMenuItemClick(item)}
-                                    >
-                                      {item}
-                                    </a>
-                                  </MenuItem>
-                                ))}
-                              </div>
-                            </MenuItems>
-                          </Menu>
+                          <DropDown title={"Selecione um Campo"} ValorBtn={campoValue} listItens={['Todos', 'ID', 'Razão Social', 'Fantasia', 'Documento', 'Matriz / Filial','Contato', 'Município', 'UF', 'Telefone', 'Celular', 'CEP', 'Email', 'Placa']} onSelect={(item) => handleMenuItemClick(item)}/>
                           <button
                             type="button"
                             className="w-10 ml-4 rounded-md bg-white px-2 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50"
@@ -217,7 +190,11 @@ function Transportadoras() {
                           >
                             <FontAwesomeIcon icon={faCircleInfo} />
                           </button>
-                          <button className="w-44 ml-4 rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50">
+                          <button
+                            type="button"
+                            className="w-44 ml-4 rounded-md bg-indigo-600 text-white hover:bg-indigo-700"
+                            onClick={handleSearchClick}
+                          >
                             Pesquisar
                           </button>
                         </div>
@@ -248,17 +225,18 @@ function Transportadoras() {
                                 <FontAwesomeIcon icon={faMagnifyingGlass} className="cursor-pointer" />
                               </td>
                               <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700 text-center">{data.id}</td>
+                              <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700 text-center">{data.nomeRazaoSocial}</td>
+                              <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700 text-center">{data.nomeFantasia}</td>
                               <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700 text-center">{data.cpfCnpj}</td>
-                              <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700 text-center">{data.empresa?.nomeExibicao}</td>
-                              <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700 text-center">{data.fantasia}</td>
-                              <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700 text-center">{data.tipoUnidade}</td>
+                              <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700 text-center">{data.empresa?.tipoUnidade}</td>
                               <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700 text-center">{data.contato}</td>
-                              <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700 text-center">{data.municipio}</td>
-                              <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700 text-center">{data.estado}</td>
+                              <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700 text-center">{data.municipio?.nome}</td>
+                              <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700 text-center">{data.municipio?.estado?.nome}</td>
                               <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700 text-center">{data.telefone}</td>
                               <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700 text-center">{data.celular}</td>
-                              <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700 text-center">{data.ativo ? 'Sim' : 'Não'}</td>
-                              <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700 text-center">{data.dataCriacao}</td>
+                              <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700 text-center">{data.cep}</td>
+                              <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700 text-center">{data.email}</td>
+                              <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700 text-center">{data.placaVeiculo}</td>
                               <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700 text-center">
                                 <FontAwesomeIcon icon={faPenToSquare} className="cursor-pointer" />
                               </td>

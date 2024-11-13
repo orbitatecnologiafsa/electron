@@ -5,7 +5,6 @@ import Header from '../../partials/Header';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faUser, faSort, faCircleInfo, faMagnifyingGlass, faPenToSquare } from '@fortawesome/free-solid-svg-icons';
 import axios from 'axios';
-import { Menu, MenuButton, MenuItems, MenuItem } from '@headlessui/react';
 import DropDown from '../../components/DropDown';
 
 
@@ -24,44 +23,19 @@ function Empresas() {
 
   {/* Sort da Tabela */}
   const [sortDirection, setSortDirection] = useState('asc'); 
-  const [formData, setFormData] = useState({
-      nomeRazao: '',
-      fantasia: '',
-      documento: '',
-      cep: '',
-      municipio: '',
-      uf: '',
-      bairro: '',
-      logradouro: '',
-      numero: '',
-      complemento: '',
-      cpfCnpj: '',
-      pfOuPj: '',
-      email: '',
-      telefone: '',
-      celular: '',
-      contato: '',
-      rgInscricaoEstadual: '',
-      inscricaoEstadualMunicipal: '',
-      observacao: '',
-      ativo: true,
-      revenda: false,
-    });
-
   const [inputInfo, setInputInfo] = useState('');
   const [filteredPosts, setFilteredPosts] = useState([]);
   const [searchInfo, setSearchInfo] = useState('');
 
-  
+  const handleSort = (column) => {
+    const direction = (sortColumn === column && sortDirection === 'asc') ? 'desc' : 'asc';
+    setSortColumn(column);
+    setSortDirection(direction);
+  };
 
   {/* Redireciona para Cadastro de Clientes */}
   const handleRedirect = () => {
     navigate('/cadastro/empresas/adicionar');
-  };
-
-
-  const handleMenuItemClick = (value) => {
-    setCampoValue(value);
   };
 
   const handleModalLegendaToggle = (event) => {
@@ -69,6 +43,7 @@ function Empresas() {
     setIsModalLegendaOpen(!isModalLegendaOpen);
   };
 
+  {/* Filtragem da Tabela */}
   {/* Consumindo API Empresas */}
   const getPosts = async () => {
     try {
@@ -82,6 +57,9 @@ function Empresas() {
     
   };
 
+  const handleMenuItemClick = (value) => {
+    setCampoValue(value);
+  };
 
   useEffect(() => {
     getPosts();
@@ -131,14 +109,6 @@ function Empresas() {
     }
     console.log("InputInfo: ",inputInfo);
     console.log("Seache: ",searchInfo);
-};
-
-
-  {/* Sort da tabela */}
-  const handleSort = (column) => {
-    const direction = (sortColumn === column && sortDirection === 'asc') ? 'desc' : 'asc';
-    setSortColumn(column);
-    setSortDirection(direction);
   };
 
   const sortedPosts = [...filteredPosts].sort((a, b) => { 
@@ -158,8 +128,6 @@ function Empresas() {
     return sortDirection === 'asc' ? aValue - bValue : bValue - aValue;
 });
 
-
-  {/* Colunas da tabela */}
   const tableColumns = [
     { label: '', key: 'action' },
     { label: 'ID', key: 'id' },
@@ -174,7 +142,6 @@ function Empresas() {
     { label: 'Data de Integração', key: 'dataCriacao' },
   ];
 
-  {/*Filtro*/}
   const campoValueMapping = {
     'Todos': null,
     'ID': 'id',
@@ -188,7 +155,7 @@ function Empresas() {
     'Ativo': 'ativo',
     'Data de Integração': 'dataCriacao'
   };
-  
+
   return (
     <div className="flex h-screen overflow-hidden">
       {/* Sidebar */}
@@ -224,7 +191,7 @@ function Empresas() {
                         <div className="flex rounded-md sm:max-w-md">
                         <DropDown title={"Selecione um Campo"} ValorBtn={campoValue} listItens={["Todos","ID", "Razão Social", "Nome Fantasia", "CNPJ", "Matriz / Filial", "Município", "UF", "Telefone","Ativo","Data de Integração"]} onSelect={(item) => handleMenuItemClick(item)}/>
 
-                          <button
+                        <button
                             type="button"
                             className="w-10 ml-4 rounded-md bg-white px-2 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50"
                             onClick={handleModalLegendaToggle}

@@ -5,14 +5,14 @@ import Header from '../../partials/Header';
 import { useNavigate } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faUserTie, faSort, faCircleInfo, faMagnifyingGlass } from '@fortawesome/free-solid-svg-icons';
-import { Menu, MenuButton, MenuItems, MenuItem } from '@headlessui/react';
+import { faPenToSquare } from '@fortawesome/free-solid-svg-icons';
 import DropDown from '../../components/DropDown';
 
 function Vendedores() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
-  const [campoValue, setCampoValue] = useState('Selecione um Campo');
+  const [campoValue, setCampoValue] = useState('Todos');
   const [isModalOpen, setIsModalOpen] = useState(false);
-
+  
   {/* Const API Vendedores */}
   const [posts, setPosts] = useState([]);
   const [sortColumn, setSortColumn] = useState('id'); 
@@ -21,30 +21,6 @@ function Vendedores() {
 
   {/* Sort da Tabela */}
   const [sortDirection, setSortDirection] = useState('asc'); 
-  const [formData, setFormData] = useState({
-      nomeRazao: '',
-      fantasia: '',
-      documento: '',
-      cep: '',
-      municipio: '',
-      uf: '',
-      bairro: '',
-      logradouro: '',
-      numero: '',
-      complemento: '',
-      cpfCnpj: '',
-      pfOuPj: '',
-      email: '',
-      telefone: '',
-      celular: '',
-      contato: '',
-      rgInscricaoEstadual: '',
-      inscricaoEstadualMunicipal: '',
-      observacao: '',
-      ativo: true,
-      revenda: false,
-    });
-
   const [inputInfo, setInputInfo] = useState('');
   const [filteredPosts, setFilteredPosts] = useState([]);
   const [searchInfo, setSearchInfo] = useState('');
@@ -57,12 +33,12 @@ function Vendedores() {
   const getPosts = async () => {
     try {
       {/* URL API */}
-      const response = await axios.get("http://localhost:8080/empresas-proprietarias/");
-      console.log(response.data);
+      const response = await axios.get("http://localhost:8080/vendedor");
       setPosts(response.data);
     } catch (error) {
-      console.log(error);
+      console.error("Erro ao buscar dados: ", error);
     }
+    
   };
 
 
@@ -75,16 +51,29 @@ function Vendedores() {
       setFilteredPosts(posts);
     } else if (searchInfo) {
       const propertyName = campoValueMapping[campoValue];
+  
       const filteredData = posts.filter(data => {
-        const fieldValue = data[propertyName];
-        return fieldValue && fieldValue.toString().toLowerCase() === searchInfo.toLowerCase();
+        let fieldValue;
+
+        if (campoValue === 'Matriz / Filial') {
+          fieldValue = data.empresa?.tipoUnidade;
+        } else if(campoValue === 'Município') {
+          fieldValue = data.municipio?.tipoUnidade;
+        }else if (campoValue === 'UF'){
+          fieldValue = data.municipio?.estado?.nome;
+	      }else {
+          fieldValue = data[propertyName];
+        }
+
+        return fieldValue && fieldValue.toString().toLowerCase().includes(searchInfo.toLowerCase());
       });
-    
+
       setFilteredPosts(filteredData);
     } else {
       setFilteredPosts([]);
     }
   }, [searchInfo, posts, campoValue]);
+  
   
   const handleInputFilterChange = (e) => {
     setInputInfo(e.target.value);
@@ -92,8 +81,12 @@ function Vendedores() {
   
   const handleSearchClick = (event) => {
     event.preventDefault();
-    setSearchInfo(inputInfo);
-  };
+    if (campoValue) {
+        setSearchInfo(inputInfo);
+    } else {
+        setFilteredPosts(posts);
+    }
+};
 
 
   {/* Sort da tabela */}
@@ -117,32 +110,33 @@ function Vendedores() {
   const tableColumns = [
     { label: '', key: 'action' },
     { label: 'ID', key: 'id' },
-    { label: 'Razão Social', key: 'razaoSocial' },
+    { label: 'Razão Social', key: 'nomeRazaoSocial' },
     { label: 'Nome Fantasia', key: 'nomeFantasia' },
     { label: 'CNPJ', key: 'cpfCnpj' },
     { label: 'Matriz / Filial', key: 'matrizOuFilial' },
     { label: 'Município', key: 'municipio' },
-    { label: 'UF', key: 'uf' },
+    { label: 'UF', key: 'estado' },
     { label: 'Telefone', key: 'telefone' },
-    { label: 'Ativo', key: 'ativo' },
-    { label: 'Data de Integração', key: 'dataCriacao' },
+    {label: 'E-mail', key: 'email'},
+    {label: 'Celular', key: 'celular'},
+    { label: 'Data de Nascimento', key: 'dataDeNascimento' },
   ];
 
   {/*Filtro*/}
   const campoValueMapping = {
     'Todos': null,
     'ID': 'id',
-    'Razão Social': 'razaoSocial',
+    'Razão Social': 'nomeRazaoSocial',
     'Nome Fantasia': 'nomeFantasia',
     'CNPJ': 'cpfCnpj',
     'Matriz / Filial': 'matrizOuFilial',
     'Município': 'municipio',
-    'UF': 'uf',
+    'UF': 'estado',
     'Telefone': 'telefone',
-    'Ativo': 'ativo',
-    'Data de Integração': 'dataCriacao'
+    'E-mail': 'email',
+    'Celular': 'celular',
+    'Data de nascimento': 'dataDeNascimento'
   };
-
 
   const handleMenuItemClick = (value) => {
     setCampoValue(value);
@@ -182,13 +176,14 @@ function Vendedores() {
                           type="text"
                           id="input1"
                           className="block w-full ml-3 rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                          onChange={handleInputFilterChange}
                         />
                       </div>
                       {/* Filtros de busca */}
                       <div className="flex-auto w-full">
                         <label htmlFor="input1" className="block text-sm font-medium leading-6 text-gray-900">Filtros</label>
                         <div className="flex rounded-md sm:max-w-md">
-                        <DropDown title={"Selecione um Campo"} ValorBtn={campoValue} listItens={['Todos', 'Documento', 'Nome', 'Fantasia', 'Contato', 'Município', 'UF', 'Telefone', 'Celular', 'Última compra', 'Data de nascimento', 'Incompleto']} onSelect={(item) => handleMenuItemClick(item)}/>
+                        <DropDown title={"Selecione um Campo"} ValorBtn={campoValue} listItens={['Todos', 'ID', 'Razão Social', 'Nome Fantasia', 'CNPJ', 'Matriz / Filial', 'Município', 'UF', 'Telefone', 'E-mail','Celular', 'Data de nascimento']} onSelect={(item) => handleMenuItemClick(item)}/>
                           <button
                             type="button"
                             className="w-10 ml-4 rounded-md bg-white px-2 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50"
@@ -196,7 +191,11 @@ function Vendedores() {
                           >
                             <FontAwesomeIcon icon={faCircleInfo} />
                           </button>
-                          <button className="w-44 ml-4 rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50">
+                          <button
+                            type="button"
+                            className="w-44 ml-4 rounded-md bg-indigo-600 text-white hover:bg-indigo-700"
+                            onClick={handleSearchClick}
+                          >
                             Pesquisar
                           </button>
                         </div>
@@ -227,15 +226,16 @@ function Vendedores() {
                                 <FontAwesomeIcon icon={faMagnifyingGlass} className="cursor-pointer" />
                               </td>
                               <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700 text-center">{data.id}</td>
-                              <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700 text-center">{data.razaoSocial}</td>
+                              <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700 text-center">{data.nomeRazaoSocial}</td>
                               <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700 text-center">{data.nomeFantasia}</td>
                               <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700 text-center">{data.cpfCnpj}</td>
-                              <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700 text-center">{data.matrizOuFilial}</td>
-                              <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700 text-center">{data.municipio}</td>
-                              <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700 text-center">{data.uf}</td>
+                              <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700 text-center">{data.empresa?.tipoUnidade}</td>
+                              <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700 text-center">{data.municipio?.nome}</td>
+                              <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700 text-center">{data.municipio?.estado?.nome}</td>
                               <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700 text-center">{data.telefone}</td>
-                              <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700 text-center">{data.ativo ? 'Sim' : 'Não'}</td>
-                              <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700 text-center">{data.dataCriacao}</td>
+                              <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700 text-center">{data.email}</td>
+                              <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700 text-center">{data.celular}</td>
+                              <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700 text-center">{data.dataDeNascimento}</td>
                               <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700 text-center">
                                 <FontAwesomeIcon icon={faPenToSquare} className="cursor-pointer" />
                               </td>
