@@ -37,12 +37,12 @@ function EmpresasAdd() {
         setFormData({
             tipo: '',
             razaoSocial: '',
-            fantasia: '',
+            nomeFantasia: '',
             cpfCnpj: '',
             cep: '',
             nomeExibicao: '',
             municipio: '',
-            uf: '',
+            estado: '',
             bairro: '',
             logradouro: '',
             numero: '',
@@ -53,7 +53,7 @@ function EmpresasAdd() {
             contato: '',
             rgInscricaoEstadual: '',
             inscricaoEstadualMunicipal: '',
-            observacao: '',
+            observacoes: '',
             ativo: true,
         });
     } catch (error) {
@@ -62,17 +62,16 @@ function EmpresasAdd() {
   };
 
   const [formData, setFormData] = useState({
-    nomeRazao: '',
-    fantasia: '',
-    documento: '',
+    razaoSocial: '',
+    nomeFantasia: '',
+    cpfCnpj: '',
     cep: '',
     municipio: '',
-    uf: '',
+    estado: '',
     bairro: '',
     logradouro: '',
     numero: '',
     complemento: '',
-    cpfCnpj: '',
     pfOuPj: '',
     email: '',
     telefone: '',
@@ -80,7 +79,8 @@ function EmpresasAdd() {
     contato: '',
     rgInscricaoEstadual: '',
     inscricaoEstadualMunicipal: '',
-    observacao: '',
+    observacoes: '',
+    tipoPessoa: '',
     ativo: true,
     revenda: false,
   });
@@ -97,7 +97,7 @@ function EmpresasAdd() {
             logradouro: responseCEP.data.logradouro,
             bairro: responseCEP.data.bairro,
             municipio: responseCEP.data.localidade,
-            uf: responseCEP.data.uf
+            estado: responseCEP.data.uf
         }));
         setError(null);
     } catch (error) {
@@ -107,7 +107,7 @@ function EmpresasAdd() {
             logradouro: '',
             bairro: '',
             municipio: '',
-            uf: ''
+            estado: ''
         }));
     }
   };
@@ -123,7 +123,7 @@ function EmpresasAdd() {
 
         setFormData((prevData) => ({
             ...prevData,
-            fantasia: responseCNPJ.data.estabelecimento?.nome_fantasia || '',
+            nomeFantasia: responseCNPJ.data.estabelecimento?.nome_fantasia || '',
             nomeRazao: responseCNPJ.data.razao_social || '',
         }));
         console.log(responseCNPJ.data.estabelecimento?.cep);
@@ -132,7 +132,7 @@ function EmpresasAdd() {
         setError('Erro ao buscar CNPJ: ' + error.message);
         setFormData((prevData) => ({
             ...prevData,
-            fantasia: '',
+            nomeFantasia: '',
             nomeRazao: '',
         }));
     }
@@ -163,27 +163,37 @@ function EmpresasAdd() {
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
-
+  
     const numericValue = value.replace(/\D/g, '');
-
+  
     let formattedValue = '';
     let maxLength = 11;
-
+  
+    // Determina o tipo de documento e formata
     if (numericValue.length <= 11) {
       formattedValue = formatarCPF(numericValue);
       setDocumentoValue('CPF');
+      setFormData((prevData) => ({
+        ...prevData,
+        tipoPessoa: 'PESSOA_FISICA',  // Pessoa Física
+      }));
       maxLength = 11;
     } else if (numericValue.length <= 14) {
       formattedValue = formatarCNPJ(numericValue);
       setDocumentoValue('CNPJ');
+      setFormData((prevData) => ({
+        ...prevData,
+        tipoPessoa: 'PESSOA_JURIDICA',  // Pessoa Jurídica
+      }));
       maxLength = 14;
-      getDadosCNPJ(numericValue);
+      getDadosCNPJ(numericValue);  // Chama a API para obter dados do CNPJ
     }
-
+  
     const finalValue = numericValue.slice(0, maxLength);
-
+  
     setDocDigitado(formattedValue);
     
+    // Atualiza o valor do CPF/CNPJ no formData
     setFormData((prevData) => ({
       ...prevData,
       cpfCnpj: finalValue,
@@ -271,8 +281,8 @@ function EmpresasAdd() {
                   <label className="block ml-1 text-sm font-medium leading-6 text-gray-900">Nome Fantasia</label>
                   <input
                     type="text"
-                    name="fantasia"
-                    value={formData.fantasia}
+                    name="nomeFantasia"
+                    value={formData.nomeFantasia}
                     onChange={handleInputChange}
                     disabled={documentoValue === 'CPF'}
                     className="w-[66rem] h-11 px-3 py-2 rounded-md ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-indigo-600 disabled:bg-gray-300"
@@ -340,8 +350,8 @@ function EmpresasAdd() {
                   <label className="block ml-1 text-sm font-medium leading-6 text-gray-900">Estado / UF</label>
                   <input
                     type="text"
-                    name="uf"
-                    value={formData.uf}
+                    name="estado"
+                    value={formData.municipio?.estado}
                     onChange={handleInputChange}
                     readOnly
                     className="w-[6rem] h-11 px-3 py-2 rounded-md ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-indigo-600"
@@ -435,8 +445,8 @@ function EmpresasAdd() {
                     <label className="block ml-1 text-sm font-medium leading-6 text-gray-900">Observação</label>
                       <textarea
                         type="text"
-                        name="observacao"
-                        value={formData.observacao}
+                        name="observacoes"
+                        value={formData.observacoes}
                         onChange={handleInputChange}
                         className="w-[32rem] h-[128px] resize-none px-3 py-2 rounded-md ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-indigo-600"
                       />
