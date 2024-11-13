@@ -3,8 +3,10 @@ package com.electron.controllers;
 import com.electron.domain.EmpresaProprietaria;
 import com.electron.domain.dtos.EmpresaProprietariaDTO;
 import com.electron.services.EmpresaProprietariaService;
+import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -13,7 +15,7 @@ import java.util.List;
 @RequestMapping("/empresas-proprietarias")
 public class EmpresaProprietariaController {
 
-    private EmpresaProprietariaService empresaProprietariaService;
+    private final EmpresaProprietariaService empresaProprietariaService;
 
     public EmpresaProprietariaController(EmpresaProprietariaService empresaProprietariaService) {
         this.empresaProprietariaService = empresaProprietariaService;
@@ -30,14 +32,32 @@ public class EmpresaProprietariaController {
     }
 
     @PostMapping
-    public ResponseEntity<Void> criar(@RequestBody EmpresaProprietariaDTO empresaProprietariaDTO) {
+    public ResponseEntity<String> criar(@RequestBody @Valid EmpresaProprietariaDTO empresaProprietariaDTO, BindingResult bindingResult) {
+        if (bindingResult.hasErrors()) {
+
+            StringBuilder errors = new StringBuilder();
+            bindingResult.getAllErrors().forEach(error ->
+                errors.append(error.getDefaultMessage()).append(", ")
+            );
+            return ResponseEntity.badRequest().body(errors.toString());
+        }
+
         empresaProprietariaService.criar(empresaProprietariaDTO.toEmpresaProprietaria());
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Void> atualizar(@PathVariable Long id, @RequestBody EmpresaProprietaria empresaProprietaria) {
-        empresaProprietariaService.atualizar(id, empresaProprietaria);
+    public ResponseEntity<String> atualizar(@PathVariable Long id, @RequestBody @Valid EmpresaProprietariaDTO empresaProprietariaDTO, BindingResult bindingResult) {
+        if (bindingResult.hasErrors()) {
+
+            StringBuilder errors = new StringBuilder();
+            bindingResult.getAllErrors().forEach(error ->
+                errors.append(error.getDefaultMessage()).append(", ")
+            );
+            return ResponseEntity.badRequest().body(errors.toString());
+        }
+
+        empresaProprietariaService.atualizar(id, empresaProprietariaDTO.toEmpresaProprietaria());
         return ResponseEntity.ok().build();
     }
 

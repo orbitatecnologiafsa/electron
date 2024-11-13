@@ -37,7 +37,6 @@ public class EmpresaProprietaria {
     @Column(name = "empresa_tipo_pessoa", nullable = false)
     private TipoPessoa tipoPessoa;
 
-    @ValidCpfCnpj
     @Column(name = "empresa_cpf_cnpj", nullable = false, unique = true, length = 18)
     private String cpfCnpj;
 
@@ -82,15 +81,12 @@ public class EmpresaProprietaria {
     @Column(name = "empresa_contato", length = 60)
     private String contato;
 
-    @Pattern(regexp = "^\\(?\\d{2}\\)? ?\\d{4,5}-?\\d{4}$", message = "Telefone deve ser no formato (XX) XXXX-XXXX ou (XX) XXXXX-XXXX")
     @Column(name = "empresa_telefone", length = 15)
     private String telefone;
 
-    @Email(message = "Email inválido")
     @Column(name = "empresa_email", unique = true)
     private String email;
 
-    @ValidCep
     @Column(name = "empresa_cep", nullable = false, length = 10)
     private String cep;
 
@@ -107,7 +103,6 @@ public class EmpresaProprietaria {
     private String complemento;
 
     @ManyToOne
-   // @JsonIgnore
     @JoinColumn(name = "empresa_fk_municipios", nullable = false)
     private Municipio municipio;
 
@@ -123,7 +118,4 @@ public class EmpresaProprietaria {
     @Column(name = "empresa_observacoes", columnDefinition = "TEXT")
     private String observacoes;
 
-    @OneToMany(mappedBy = "empresaProprietaria")
-    @Column(name = "empresa_caixas")
-    private List<Caixa> caixas;
 }
