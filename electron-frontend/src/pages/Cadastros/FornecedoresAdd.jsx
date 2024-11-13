@@ -63,7 +63,7 @@ function FornecesoresAdd() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-        const response = await axios.post("http://localhost:8080/empresas-proprietarias/", formData);
+        const response = await axios.post("http://localhost:8080/empresas-proprietarias", formData);
         setFormsData({
             tipo: '',
             razaoSocial: '',

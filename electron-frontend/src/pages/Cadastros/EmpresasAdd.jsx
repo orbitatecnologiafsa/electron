@@ -12,20 +12,7 @@ function EmpresasAdd() {
   const [isDocumentoSelected, setIsDocumentoSelected] = useState(false);
   const [tipoCliente, setTipoCliente] = useState('-');
   const [cep, setCep] = useState('');
-
-  const handleDocumentoItemClick = (item) => {
-    setDocumentoValue(item);
-    setDocDigitado('');
-    const tipoCliente = item === 'CPF' ? 'PF' : 'PJ';
-    setTipoCliente(tipoCliente);
-    setFormData((prevData) => ({
-        ...prevData,
-        documento: '',
-        cpfCnpj: '',
-        pfOuPj: tipoCliente,
-    }));
-    setIsDocumentoSelected(true);
-  };
+  const [cnpj, setCnpj] = useState('');
 
   const [error, setError] = useState(null);
 
@@ -46,11 +33,11 @@ function EmpresasAdd() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-        const response = await axios.post("http://localhost:8080/empresas-proprietarias/", formData);
+        const response = await axios.post("http://localhost:8080/empresas-proprietarias", formData);
         setFormData({
             tipo: '',
             razaoSocial: '',
-            nomeFantasia: '',
+            fantasia: '',
             cpfCnpj: '',
             cep: '',
             nomeExibicao: '',
@@ -128,10 +115,7 @@ function EmpresasAdd() {
   {/* Pegando dados da API ao digitar o CNPJ */}
   const getDadosCNPJ = async (cnpjDigitado) => {
     try {
-        const cnpjFormatted = cnpjDigitado.replace(/\D/g, '');
-
-        const responseCNPJ = await axios.get(`https://publica.cnpj.ws/cnpj/${cnpjFormatted}`);
-        console.log('Resposta CNPJ:', responseCNPJ.data);
+        const responseCNPJ = await axios.get(`https://publica.cnpj.ws/cnpj/${cnpjDigitado}`);
 
         if (responseCNPJ.data.erro) {
             throw new Error('CNPJ não encontrado.');
@@ -139,15 +123,10 @@ function EmpresasAdd() {
 
         setFormData((prevData) => ({
             ...prevData,
-            fantasia: responseCNPJ.data.nome_fantasia || '',
+            fantasia: responseCNPJ.data.estabelecimento?.nome_fantasia || '',
             nomeRazao: responseCNPJ.data.razao_social || '',
         }));
-
-        const cepObtido = responseCNPJ.data.cep || '';
-        setCep(cepObtido);
-
-        await getDadosEnderecoCEP(cepObtido);
-
+        console.log(responseCNPJ.data.estabelecimento?.cep);
         setError(null);
     } catch (error) {
         setError('Erro ao buscar CNPJ: ' + error.message);
@@ -156,24 +135,25 @@ function EmpresasAdd() {
             fantasia: '',
             nomeRazao: '',
         }));
-        setCep('');
     }
   };
 
   const formatarCPF = (cpf) => {
-    return cpf.replace(/(\d{3})(\d)/, "$1.$2")
-              .replace(/(\d{3})(\d)/, "$1.$2")
-              .replace(/(\d)(\d{2})$/, "$1-$2");
+    return cpf
+      .replace(/\D/g, '')
+      .replace(/(\d{3})(\d)/, '$1.$2')
+      .replace(/(\d{3})(\d)/, '$1.$2')
+      .replace(/(\d{3})(\d{1,2})$/, '$1-$2');
   };
 
   const formatarCNPJ = (cnpj) => {
-    return cnpj.replace(/(\d{2})(\d)/, "$1.$2")
-               .replace(/(\d{3})(\d)/, "$1.$2")
-               .replace(/(\d{3})(\d)/, "$1/$2")
-               .replace(/(\d)(\d{2})$/, "$1-$2");
+    return cnpj
+      .replace(/\D/g, '')
+      .replace(/(\d{2})(\d)/, '$1.$2')
+      .replace(/(\d{3})(\d)/, '$1.$2')
+      .replace(/(\d{3})(\d)/, '$1/$2')
+      .replace(/(\d{4})(\d{1,2})$/, '$1-$2');
   };
-
-
 
   {/* Redireciona para Empresas */}
   const handleRedirect = () => {
@@ -184,35 +164,31 @@ function EmpresasAdd() {
   const handleInputChange = (e) => {
     const { name, value } = e.target;
 
-    // Atualiza o estado normalmente
-    setFormData((prevData) => ({ ...prevData, [name]: value }));
+    const numericValue = value.replace(/\D/g, '');
 
-    if (name === 'cpfCnpj') {
-        const numericValue = value.replace(/\D/g, '');
-        let formattedValue = numericValue;
-        const maxLength = documentoValue === 'CPF' ? 14 : 18;
+    let formattedValue = '';
+    let maxLength = 11;
 
-        if (documentoValue === 'CPF') {
-            if (numericValue.length <= 11) {
-                formattedValue = formatarCPF(numericValue);
-            }
-        } else if (documentoValue === 'CNPJ') {
-            if (numericValue.length <= 14) {
-                formattedValue = formatarCNPJ(numericValue);
-            }
-        }
-
-        if (formattedValue.length <= maxLength) {
-            setDocDigitado(formattedValue); // Isso deve ser feito após setar o formData
-            // Atualiza novamente o formData com o valor formatado
-            setFormData((prevData) => ({ ...prevData, [name]: formattedValue }));
-
-            if (documentoValue === 'CNPJ' && numericValue.length === 14) {
-                getDadosCNPJ(numericValue);
-            }
-        }
+    if (numericValue.length <= 11) {
+      formattedValue = formatarCPF(numericValue);
+      setDocumentoValue('CPF');
+      maxLength = 11;
+    } else if (numericValue.length <= 14) {
+      formattedValue = formatarCNPJ(numericValue);
+      setDocumentoValue('CNPJ');
+      maxLength = 14;
+      getDadosCNPJ(numericValue);
     }
-};
+
+    const finalValue = numericValue.slice(0, maxLength);
+
+    setDocDigitado(formattedValue);
+    
+    setFormData((prevData) => ({
+      ...prevData,
+      cpfCnpj: finalValue,
+    }));
+  };
 
 
 
@@ -231,14 +207,14 @@ function EmpresasAdd() {
               <h3 className="text-lg font-semibold justify-center text-center mb-4 mt-4 ml-1">Cadastro de Empresa</h3>
 
               <div className="flex justify-between">
-                <div className="flex gap-4 mt-2 mr-3">
-                  <div className="flex items-center">
-                    <label className="text-base">Tipo de documento:</label>
-                  </div>
-                  <div className="flex items-center">
-                    <label className="text-base">CPF</label>
-                  </div>
+              <div className="flex gap-4 mt-2 mr-3">
+                <div className="flex items-center">
+                  <label className="text-base">Tipo de documento:</label>
                 </div>
+                <div className="flex items-center">
+                  <label className="text-base">{documentoValue || '-'}</label> {/* Exibe CPF ou CNPJ */}
+                </div>
+              </div>
 
                 {/* Ativo e Revenda */}
                 <div className="flex gap-4 mt-2 mr-3">
@@ -279,14 +255,14 @@ function EmpresasAdd() {
                   />
                 </div>
                 <div className="flex flex-col">
-                  <label className="block ml-1 text-sm font-medium leading-6 text-gray-900">Documento</label>
+                <label className="block ml-1 text-sm font-medium leading-6 text-gray-900">Documento</label>
                   <input
                     type="text"
                     name="cpfCnpj"
                     value={docDigitado}
                     onChange={handleInputChange}
-                    maxLength={documentoValue === 'CPF' ? 14 : 18}
-                    className="w-[15rem] h-11 px-3 py-2 rounded-md ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-indigo-600 disabled:bg-gray-300"
+                    maxLength={18}
+                    className="w-[15rem] h-11 px-3 py-2 rounded-md ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-indigo-600"
                   />
                 </div>
               </div>
