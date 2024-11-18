@@ -31,7 +31,7 @@ const ServiçoAdd = () => {
     custo: '',
     precoVenda: '',
     precoRevenda: '',
-    tribEstadual: '',
+    tribMunicipal: '',
     tribFederal: '',
     Observacoes: '',
   });
@@ -241,11 +241,11 @@ const ServiçoAdd = () => {
               {/* Trib. Estadual*/}
               <div className="flex flex-col md:flex-row gap-4">
               <div className="flex flex-col">
-                  <label className="block ml-1 text-sm font-medium leading-6 text-black">Trib. Estadual</label>
+                  <label className="block ml-1 text-sm font-medium leading-6 text-black">Trib. Municipal</label>
                   <input
                     type="text"
-                    name="tribEstadual"
-                    value={formData.tribEstadual}
+                    name="tribMunicipal"
+                    value={formData.tribMunicipal}
                     onChange={handleInputChange}
                     className="w-[66rem] px-3 py-2 rounded-md ring-inset focus:ring-2 focus:ring-indigo-600"
                   />

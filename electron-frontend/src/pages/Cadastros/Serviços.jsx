@@ -1,116 +1,174 @@
-import React, { useState } from 'react';
+import React, {  useEffect, useState } from 'react';
 import Sidebar from '../../partials/Sidebar';
 import Header from '../../partials/Header';
 import { useNavigate } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faMagnifyingGlass, faSort, faHandHoldingDollar } from '@fortawesome/free-solid-svg-icons';
 import { Menu, MenuButton, MenuItems, MenuItem } from '@headlessui/react';
+import DropDown from '../../components/DropDown';
 
 function Servicos() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [campoValue, setCampoValue] = useState('Selecione um Campo');
   const [statusValue, setStatusValue] = useState('Status');
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [inputInfo, setInputInfo] = useState('');
+  const [filteredPosts, setFilteredPosts] = useState([]);
+  const [searchInfo, setSearchInfo] = useState('');
+
+  const sortedPosts = [...filteredPosts].sort((a, b) => {
+    const aValue = a[sortColumn];
+    const bValue = b[sortColumn];
+
+    if (typeof aValue === 'string' && typeof bValue === 'string') {
+      return sortDirection === 'asc' ? aValue.localeCompare(bValue) : bValue.localeCompare(aValue);
+    }
+    return sortDirection === 'asc' ? aValue - bValue : bValue - aValue;
+  });
+
+  {/* Sort da tabela */}
+  const handleSort = (column) => {
+    const direction = (sortColumn === column && sortDirection === 'asc') ? 'desc' : 'asc';
+    setSortColumn(column);
+    setSortDirection(direction);
+  };
+  
+
+  {/* Const API Clientes */}
+  const [posts, setPosts] = useState([]);
+  const [sortColumn, setSortColumn] = useState('id'); 
+
+  useEffect(() => {
+    if (campoValue === 'Todos') {
+      setFilteredPosts(posts);
+    } else if (searchInfo) {
+      const propertyName = campoValueMapping[campoValue];
+      const filteredData = posts.filter(data => {
+        const fieldValue = data[propertyName];
+        return fieldValue && fieldValue.toString().toLowerCase() === searchInfo.toLowerCase();
+      });
+    
+      setFilteredPosts(filteredData);
+    } else {
+      setFilteredPosts([]);
+    }
+  }, [searchInfo, posts, campoValue]);
+
+  const [sortDirection, setSortDirection] = useState('asc'); 
+  const navigate = useNavigate();
 
   const handleMenuItemClick = (value) => {
     setCampoValue(value);
   };
 
-  const handleStatusItemClick = (value) => {
-    setStatusValue(value);
-  };
-
   const handleModalToggle = () => {
     setIsModalOpen(!isModalOpen);
   };
+
+  {/* Comandos de Filtragem */}
+  const handleInputFilterChange = (e) => {
+    setInputInfo(e.target.value);
+  };
+
+  const handleSearchClick = (event) => {
+    event.preventDefault();
+    if (campoValue) {
+      console.log("campoValue:",campoValue);
+        setSearchInfo(inputInfo);
+    } else {
+        setFilteredPosts(posts);
+    }
+    console.log("InputInfo: ",inputInfo);
+    console.log("Seache: ",searchInfo);
+};
   
+  const getPosts = async () => {
+    try {
+      {/* URL API */}
+      const response = await axios.get("http://localhost:8080/produtos");
+      console.log(response.data);
+      setPosts(response.data);
+    } catch (error) {
+      console.error("Erro ao buscar dados: ", error);
+    }
+    
+  };
+
+  useEffect(() => {
+    getPosts();
+  }, []);
+
+  useEffect(() => {
+    if (campoValue === 'Todos') {
+      setFilteredPosts(posts);
+      console.log("Aqui os posts: ", posts);
+    } else if (searchInfo) {
+      console.log("searchInfo:", searchInfo);
+      const propertyName = campoValueMapping[campoValue];
+  
+      console.log("propertyName:", propertyName);
+  
+      const filteredData = posts.filter(data => {
+        let fieldValue;
+
+        if (campoValue === 'Grupo') {
+          fieldValue = data.grupoProdServ?.nome;
+        } else if(campoValue === 'Tributação Estadual') {
+          fieldValue = data.tributacaoEstadual?.nome;
+        }else if (campoValue === 'CEST'){
+          fieldValue = data.codigoCestNcm?.codigo;
+        }else if (campoValue === 'NCM'){
+          fieldValue = data.codigoCestNcm?.tributoNcm?.codigo;
+        }else if (campoValue === 'Tributação Federal'){
+          fieldValue = data.tributacaoFederal?.nome;
+	      }else {
+          fieldValue = data[propertyName];
+        }
+  
+        return fieldValue && fieldValue.toString().toLowerCase().includes(searchInfo.toLowerCase());
+      });
+  
+      setFilteredPosts(filteredData);
+      console.log(filteredData);
+    } else {
+      setFilteredPosts([]);
+    }
+  }, [searchInfo, posts, campoValue]);
+
+  {/*Filtro*/}
+  const campoValueMapping = {
+    'Todos': null,
+    'ID': 'id',
+    'Barras': 'codigo',
+    'Nome': 'nome',
+    'Uni. Saída': 'unidadeSaida',
+    'Atividade': 'atividade',
+    'Grupo': 'grupoProdServ',
+    'Custo': 'precoCusto',
+    'Venda': 'precoVenda',
+    'Revenda': 'precoRevenda',
+    'Tributação Estadual': 'tributacaoEstadual',
+    'Tributação Federal': 'tributacaoFederal',
+  };
+
   const handleRedirect = () => {
     navigate('/cadastro/servicos/adicionar');
   };
 
-  const navigate = useNavigate();
-
   {/* Colunas da Tabela */}
   const tableColumns = [
-    '',
-    'Código',
-    'Barras',
-    'Nome',
-    'UN',
-    'Quantidade',
-    'Qtd Bloqueada',
-    'Qtd Disponível',
-    'Qtd Ideal',
-    'Preço Custo',
-    'Custo Médio',
-    'Preço Venda',
-    'Preço Revenda',
-    'Descrição',
-    'Contr. Lote',
-    'Contr. Serial',
-    'Contr. Grade',
-    'Grupo',
-    'NCM',
-    'CEST',
-    'Trib. Estadual',
-    'Trib. Federal',
-    'Referência',
-    'Status',
-  ];
-
-  {/* Dados da Tabela */}
-  const exampleData = [
-    {
-      index: "",
-      codigo: '001',
-      barras: '7891234567890',
-      nome: 'Produto A',
-      un: 'kg',
-      quantidade: 100,
-      qtdBloqueada: 10,
-      qtdDisponivel: 90,
-      qtdIdeal: 120,
-      precoCusto: 10.00,
-      custoMedio: 10.50,
-      precoVenda: 15.00,
-      precoRevenda: 20.00,
-      descricao: 'Descrição do Produto A',
-      contrLote: 'Sim',
-      contrSerial: 'Não',
-      contrGrade: 'Não',
-      grupo: 'Grupo A',
-      ncm: '1234.56.78',
-      cest: '12.345.67',
-      tribEstadual: 'ICMS',
-      tribFederal: 'PIS/COFINS',
-      referencia: 'REF001',
-      status: 'Ativo',
-    },
-    {
-      codigo: '002',
-      barras: '7891234567891',
-      nome: 'Produto B',
-      un: 'un',
-      quantidade: 200,
-      qtdBloqueada: 20,
-      qtdDisponivel: 180,
-      qtdIdeal: 250,
-      precoCusto: 5.00,
-      custoMedio: 5.50,
-      precoVenda: 8.00,
-      precoRevenda: 12.00,
-      descricao: 'Descrição do Produto B',
-      contrLote: 'Não',
-      contrSerial: 'Sim',
-      contrGrade: 'Não',
-      grupo: 'Grupo B',
-      ncm: '2345.67.89',
-      cest: '23.456.78',
-      tribEstadual: 'ICMS',
-      tribFederal: 'PIS/COFINS',
-      referencia: 'REF002',
-      status: 'Ativo',
-    },
+    { label: '', key: 'action' },
+    { label: 'ID', key: 'id' },
+    { label: 'Barras', key: 'barras' },
+    { label: 'Nome', key: 'nome' },
+    { label: 'Uni. Saída', key: 'unidadeSaida' },
+    { label: 'Atividade', key: 'atividade' },
+    { label: 'Grupo', key: 'grupoProdServ' },
+    { label: 'Preço custo', key: 'precoCusto' },
+    { label: 'Preço venda', key: 'precoVenda' },
+    { label: 'Preço revenda', key: 'precoRevenda' },
+    { label: 'Trib. Estadual', key: 'tributacaoEstadual' },
+    { label: 'Trib. Federal', key: 'tributacaoFederal' },
   ];
 
   return (
@@ -143,62 +201,19 @@ function Servicos() {
                           type="text"
                           id="input1"
                           className="block w-full ml-3 rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                          onChange={handleInputFilterChange}
                         />
                       </div>
                       {/* Filtros de busca */}
                       <div className="flex-auto w-full">
                         <label htmlFor="input1" className="block text-sm font-medium leading-6 text-gray-900">Filtros</label>
                         <div className="flex rounded-md sm:max-w-md">
-                          <Menu as="div" className="flex rounded-md">
-                            <div>
-                              <MenuButton className="w-44 rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50">
-                                {campoValue || 'Selecione um Campo'}
-                              </MenuButton>
-                            </div>
-                            <MenuItems
-                              transition
-                              className="absolute z-10 mt-10 w-44 origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 transition focus:outline-none data-[closed]:scale-95 data-[closed]:transform data-[closed]:opacity-0 data-[enter]:duration-100 data-[leave]:duration-75 data-[enter]:ease-out data-[leave]:ease-in"
-                            >
-                              <div className="py-1">
-                                {['Todos', 'Código', 'Barras', 'Nome', 'Descrição', 'Grupo', 'Tributação Estadual', 'Tributação Federal'].map(item => (
-                                  <MenuItem key={item}>
-                                    <a
-                                      className="block px-4 py-2 text-sm text-gray-700 data-[focus]:bg-gray-100 data-[focus]:text-gray-900"
-                                      onClick={() => handleMenuItemClick(item)}
-                                    >
-                                      {item}
-                                    </a>
-                                  </MenuItem>
-                                ))}
-                              </div>
-                            </MenuItems>
-                          </Menu>
-                          {/* Botão de status */}
-                          <Menu as="div" className="flex rounded-md ml-4">
-                            <div>
-                              <MenuButton className="w-32 rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50">
-                                {statusValue || 'Status'}
-                              </MenuButton>
-                            </div>
-                            <MenuItems
-                              transition
-                              className="absolute z-10 mt-10 w-32 origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 transition focus:outline-none data-[closed]:scale-95 data-[closed]:transform data-[closed]:opacity-0 data-[enter]:duration-100 data-[leave]:duration-75 data-[enter]:ease-out data-[leave]:ease-in"
-                            >
-                              <div className="py-1">
-                                {['Ativo', 'Inativo', 'Todos'].map(item => (
-                                  <MenuItem key={item}>
-                                    <a
-                                      className="block px-4 py-2 text-sm text-gray-700 data-[focus]:bg-gray-100 data-[focus]:text-gray-900"
-                                      onClick={() => handleStatusItemClick(item)}
-                                    >
-                                      {item}
-                                    </a>
-                                  </MenuItem>
-                                ))}
-                              </div>
-                            </MenuItems>
-                          </Menu>
-                          <button className="w-32 ml-4 rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50">
+                          <DropDown title={"Selecione um Campo"} ValorBtn={campoValue} listItens={['Todos', 'Código', 'Barras', 'Nome', 'Descrição', 'Grupo', 'Tributação Estadual', 'Tributação Federal']} onSelect={(item) => handleMenuItemClick(item)}/>
+                          <button
+                            type="button"
+                            className="w-44 ml-4 rounded-md bg-indigo-600 text-white hover:bg-indigo-700"
+                            onClick={handleSearchClick}
+                          >
                             Pesquisar
                           </button>
                         </div>
@@ -214,40 +229,30 @@ function Servicos() {
                           <tr>
                             {tableColumns.map((column, index) => (
                               <th key={column} className="px-6 py-3 text-center text-sm font-medium text-gray-700">
-                                {index === 0 ? column : <>{column} <FontAwesomeIcon icon={faSort} /></>}
+                                <div className="flex items-center justify-center cursor-pointer" onClick={() => handleSort(column.key)}>
+                                  <span className="mr-1">{column.label}</span>
+                                  {index !== 0 && <FontAwesomeIcon icon={faSort} />}
+                                </div>
                               </th>
                             ))}
                           </tr>
                         </thead>
                         <tbody className="bg-white divide-y divide-gray-200 text-center">
-                          {exampleData.map((data, index) => (
+                          {sortedPosts.map((data, index) => (
                             <tr key={index}>
                               <td className="px-4 py-4 whitespace-nowrap text-sm text-gray-700">
                                 <FontAwesomeIcon icon={faMagnifyingGlass} />
                               </td>
-                              <td className="px-14 py-4 whitespace-nowrap text-sm text-gray-700">{data.codigo}</td>
+                              <td className="px-14 py-4 whitespace-nowrap text-sm text-gray-700">{data.id}</td>
                               <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700">{data.barras}</td>
                               <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700">{data.nome}</td>
-                              <td className="px-10 py-4 whitespace-nowrap text-sm text-gray-700">{data.un}</td>
-                              <td className="px-14 py-4 whitespace-nowrap text-sm text-gray-700">{data.quantidade}</td>
-                              <td className="px-20 py-4 whitespace-nowrap text-sm text-gray-700">{data.qtdBloqueada}</td>
-                              <td className="px-20 py-4 whitespace-nowrap text-sm text-gray-700">{data.qtdDisponivel}</td>
-                              <td className="px-14 py-4 whitespace-nowrap text-sm text-gray-700">{data.qtdIdeal}</td>
-                              <td className="px-14 py-4 whitespace-nowrap text-sm text-gray-700">{data.precoCusto.toFixed(2)}</td>
-                              <td className="px-14 py-4 whitespace-nowrap text-sm text-gray-700">{data.custoMedio.toFixed(2)}</td>
-                              <td className="px-14 py-4 whitespace-nowrap text-sm text-gray-700">{data.precoVenda.toFixed(2)}</td>
-                              <td className="px-20 py-4 whitespace-nowrap text-sm text-gray-700">{data.precoRevenda.toFixed(2)}</td>
-                              <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700">{data.descricao}</td>
-                              <td className="px-14 py-4 whitespace-nowrap text-sm text-gray-700">{data.contrLote}</td>
-                              <td className="px-20 py-4 whitespace-nowrap text-sm text-gray-700">{data.contrSerial}</td>
-                              <td className="px-20 py-4 whitespace-nowrap text-sm text-gray-700">{data.contrGrade}</td>
-                              <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700">{data.grupo}</td>
-                              <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700">{data.ncm}</td>
-                              <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700">{data.cest}</td>
-                              <td className="px-20 py-4 whitespace-nowrap text-sm text-gray-700">{data.tribEstadual}</td>
-                              <td className="px-20 py-4 whitespace-nowrap text-sm text-gray-700">{data.tribFederal}</td>
-                              <td className="px-14 py-4 whitespace-nowrap text-sm text-gray-700">{data.referencia}</td>
-                              <td className="px-14 py-4 whitespace-nowrap text-sm text-gray-700">{data.status}</td>
+                              <td className="px-10 py-4 whitespace-nowrap text-sm text-gray-700">{data.unidadeSaida}</td>
+                              <td className="px-14 py-4 whitespace-nowrap text-sm text-gray-700">{data.grupoProdServ}</td>
+                              <td className="px-20 py-4 whitespace-nowrap text-sm text-gray-700">{data.precoCusto}</td>
+                              <td className="px-20 py-4 whitespace-nowrap text-sm text-gray-700">{data.precoVenda}</td>
+                              <td className="px-14 py-4 whitespace-nowrap text-sm text-gray-700">{data.precoRevenda}</td>
+                              <td className="px-14 py-4 whitespace-nowrap text-sm text-gray-700">{data.tributacaoEstadual}</td>
+                              <td className="px-14 py-4 whitespace-nowrap text-sm text-gray-700">{data.tributacaoFederal}</td>
                             </tr>
                           ))}
                         </tbody>

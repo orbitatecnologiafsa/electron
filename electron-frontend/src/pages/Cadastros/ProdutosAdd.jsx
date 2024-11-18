@@ -1,9 +1,10 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Sidebar from '../../partials/Sidebar';
 import Header from '../../partials/Header';
 import axios from 'axios';
 import { Menu, MenuButton, MenuItems, MenuItem } from '@headlessui/react';
+import DropDown from '../../components/DropDown';
 
 
 function ProdutosAdd() {
@@ -12,14 +13,17 @@ function ProdutosAdd() {
 
   const [documentoValue, setDocumentoValue] = useState('');
   const [cep, setCep] = useState('');
-  const [UnSelected, setUnSelected] = useState("");
-
   const [formsData, setFormsData] = useState({
     index: "",
     codigo: '',
     barras: '',
     nome: '',
     quantidade: '',
+    classificacao: '',
+    unEntrada: '',
+    unSaida: '',
+    UnTributacao: '',
+    tControle: '',
     qtdBloqueada: '',
     qtdDisponivel: '',
     precoCusto: '',
@@ -34,26 +38,63 @@ function ProdutosAdd() {
     tribFederal: '',
     referencia: '',
   });
+  const [UnSelected, setUnSelected] = useState("");
+  const [Classified, setClassified] = useState("");
+  const [UnEntrada, setUnEntrada] = useState("");
+  const [UnSaida, setUnSaida] = useState("");
+  const [UnTributacao, setUnTributacao] = useState("");
+  const [TControle, setTControle] = useState("");
 
   const handleMenuItemClick = (item, index) => {
+
     if (index == "UN"){
+
       setUnSelected(item);
-      formsData.un = (item);
-    }else if( index == "LOTE"){
-      setLoteSelected(item);
-      formsData.contrLote = (item);
-    }else if( index == "SERIAL"){
-      setSerialSelected(item);
-      formsData.contrSerial = (item);
-    }else if( index == "GRADE"){
-      setGradeSelected(item);
-      formsData.contrGrade = (item);
+      if(item == "KILOGRAMA"){
+        formsData.un = ("KG_KILOGRAMA");
+      }else if(item == "LITRO"){
+        formsData.un = ("LT_LITRO");
+      }else{
+        formsData.un = ("MT_METRO");
+      }
+
+    }else if( index == "Classficacao"){
+
+      setClassified(item);
+      formsData.classificacao = (item);
+
+    }else if( index == "UnEntrada"){
+
+      setUnEntrada(item);
+      formsData.unEntrada = (item);
+
+    }else if( index == "UnSaída"){
+
+      setUnSaida(item);
+      formsData.unSaida = (item);
+      
+    }else if(index == 'UnTributacao'){
+
+      setUnTributacao(item);
+      formsData.UnTributacao = (item);
+
+    }else if(index == 'TControle'){
+
+      setTControle(item);
+      if(item == 'Controla grade'){
+
+        formsData.tControle = ("Controla_Grade");
+
+      }else if(item == 'Vende Francionado'){
+
+        formsData.tControle = ("Vende_Fracionado");
+      }else{
+
+        formsData.tControle = (item);
+        
+      }
     }
   }
-
-
-  const [error, setError] = useState(null);
-
 
   const [sidebarOpen, setSidebarOpen] = useState(false);
   {/* Post ADD Tabela */}
@@ -98,6 +139,13 @@ function ProdutosAdd() {
     setFormsData((prevData) => ({ ...prevData, [name]: value }));
 };
 
+const unidadesEmbList = ["KILOGRAMA", "LITRO", "METRO"];
+
+const ClassificacaoList = ["Despesa", "Imobilizado", "Produto"];
+
+const unidadeSaidaEntradaTributação = ["AM","AMPOLA","AR","BALDE","BANDEJ","BARRA","BISNAG","BLOCO","CART","CD","CENTO","CJ","CM","CM2","CX","DISP","DZ","FARDO","FRASCO","GAL","GALÃO","GF","GR","HR","JOGO","K","KG","KIT","LATAO","LT","M2","M3","MC","MI","MILHEI","ML","MT","ND","PACOTE","PARES","PC","RESMA","ROLO","SACO","SACOLA","ST","TAMBOR","TON","TUBO","UN"];
+
+const tipoControle = [ "Composição", "Controla grade", "Pesável","Vende Francionado"];
 
   {/* Tela principal do administrador */}
   return (
@@ -149,7 +197,7 @@ function ProdutosAdd() {
                     name="nome"
                     value={formsData.nome}
                     onChange={handleInputChange}
-                    className=" w-[38rem] h-11 px-3 py-2 rounded-md  ring-inset focus:ring-2 focus:ring-indigo-600"
+                    className=" w-[23rem] h-11 px-3 py-2 rounded-md  ring-inset focus:ring-2 focus:ring-indigo-600"
                     required
                   />
                 </div>
@@ -164,7 +212,11 @@ function ProdutosAdd() {
                     required
                   />
                 </div>
-                
+
+                <div className="flex flex-col">
+                  <DropDown labelDrop={"Classificação"} title={"Selecione a classificação"} ValorBtn={Classified} listItens={ClassificacaoList} onSelect={(item) => handleMenuItemClick(item,"Classficacao")}/>
+                </div>
+
               </div>
 
               <div className="flex flex-col md:flex-row gap-4">
@@ -180,13 +232,32 @@ function ProdutosAdd() {
               </div>
               </div>
 
+              <div className="flex flex-col md:flex-row gap-4 justify-between ">
+
+                <div className="flex flex-col">
+                  <DropDown labelDrop={"Tipo de controle"} title={"Selecione o tipo de controle"} ValorBtn={TControle} listItens={tipoControle} onSelect={(item) => handleMenuItemClick(item,"TControle")}/>
+                </div>
+
+                <div className="flex flex-col">
+                  <DropDown labelDrop={"Unidade de Entrada"} title={"Selecione a Un. entrada"} ValorBtn={UnEntrada} listItens={unidadeSaidaEntradaTributação} onSelect={(item) => handleMenuItemClick(item,"UnEntrada")}/>
+                </div>
+
+                <div className="flex flex-col">
+                  <DropDown labelDrop={"Unidade de Saída"} title={"Selecione a Un. saída"} ValorBtn={UnSaida} listItens={unidadeSaidaEntradaTributação} onSelect={(item) => handleMenuItemClick(item,"UnSaída")}/>
+                </div>
+
+                <div className="flex flex-col">
+                  <DropDown labelDrop={"Unidade de Tributação"} title={"Selecione a Un. Tributação"} ValorBtn={UnTributacao} listItens={unidadeSaidaEntradaTributação} onSelect={(item) => handleMenuItemClick(item,"UnTributacao")}/>
+                </div>
+              </div>
+              
               <h2 style={{ color: '#5E16ED', fontSize: '170%', fontWeight: 'bold' }}>
                 Quantidade
                 <hr style={{ border: '1px solid #5E16ED' }} />
               </h2>
 
               {/* Aréa da Quantidade*/}
-              <div className="flex flex-col md:flex-row gap-4">
+              <div className="flex flex-col md:flex-row gap-4  justify-between">
                 <div className="flex flex-col">
                   <label className="block ml-1 text-sm font-medium leading-6 text-black">Quantidade</label>
                   <input
@@ -195,35 +266,12 @@ function ProdutosAdd() {
                     value={formsData.quantidade}
                     onChange={handleInputChange}
                     maxLength={documentoValue === 'CPF' ? 14 : 18}
-                    className="w-[50.8rem] h-11 px-3 py-2 rounded-md ring-inset focus:ring-2 focus:ring-indigo-600 disabled:bg-gray-300"
+                    className="w-[32.5rem] h-11 px-3 py-2 rounded-md ring-inset focus:ring-2 focus:ring-indigo-600 disabled:bg-gray-300"
                   />
                 </div>
                 <div className="flex flex-col">
-                  <label className="block ml-1 text-sm font-medium leading-6 text-black">Unidade de Medida</label>
-                  <Menu as="div" className="flex rounded-md">
-                            <div>
-                              <MenuButton className="w-56 h-11 rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50">
-                                {UnSelected || 'Selecione a unidade'}
-                              </MenuButton>
-                            </div>
-                            <MenuItems
-                              transition
-                              className="absolute z-10 mt-10 w-56 origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 transition focus:outline-none data-[closed]:scale-95 data-[closed]:transform data-[closed]:opacity-0 data-[enter]:duration-100 data-[leave]:duration-75 data-[enter]:ease-out data-[leave]:ease-in"
-                            >
-                              <div className="py-1">
-                                {["kg","hg", "dag", "g", "dg", "cg", "Mmg", "UF"].map(item => (
-                                  <MenuItem key={item}>
-                                    <a
-                                      className="block px-4 py-2 text-sm text-gray-700 data-[focus]:bg-gray-100 data-[focus]:text-gray-900"
-                                      onClick={() => handleMenuItemClick(item)}
-                                    >
-                                      {item}
-                                    </a>
-                                  </MenuItem>
-                                ))}
-                              </div>
-                            </MenuItems>
-                   </Menu>
+                   <DropDown labelDrop={"Unidade de Medida"} title={"Selecione a unidade"} ValorBtn={UnSelected} listItens={unidadesEmbList} onSelect={(item) => handleMenuItemClick(item,"UN")}/>
+
                 </div>
               </div>
 
@@ -236,7 +284,7 @@ function ProdutosAdd() {
                     name="qtdBloqueada"
                     value={formsData.qtdBloqueada}
                     onChange={handleInputChange}
-                    className="w-[21.3rem] h-11 px-3 py-2 rounded-md ring-inset focus:ring-2 focus:ring-indigo-600 disabled:bg-gray-300"
+                    className="w-[32.5rem] h-11 px-3 py-2 rounded-md ring-inset focus:ring-2 focus:ring-indigo-600 disabled:bg-gray-300"
                   />
                 </div>
                 <div className="flex flex-col">
@@ -246,7 +294,7 @@ function ProdutosAdd() {
                     name="qtdDisponivel"
                     value={formsData.qtdDisponivel}
                     onChange={handleInputChange}
-                    className="w-[21.3rem] h-11 px-3 py-2 rounded-md ring-inset focus:ring-2 focus:ring-indigo-600 disabled:bg-gray-300"
+                    className="w-[32.5rem] h-11 px-3 py-2 rounded-md ring-inset focus:ring-2 focus:ring-indigo-600 disabled:bg-gray-300"
                   />
                 </div>
               </div>

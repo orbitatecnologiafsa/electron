@@ -5,7 +5,6 @@ import Header from '../../partials/Header';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faImage } from '@fortawesome/free-solid-svg-icons';
 import axios from 'axios';
-import { Menu, MenuButton, MenuItems, MenuItem } from '@headlessui/react';
 import DropDown from '../../components/DropDown';
 import Fornecedores from './Fornecedores';
 import Button from 'react-bootstrap/Button';
@@ -167,30 +166,7 @@ function FornecesoresAdd() {
                 </div>
                 <div className="flex flex-col">
                   <label className="block ml-1 text-sm font-medium leading-6 text-black">Tipo de Fornecedor</label>
-                  <Menu as="div" className="flex rounded-md">
-                            <div>
-                              <MenuButton className="w-56 rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50 h-11">
-                                {formsData.cpf_cnpj || 'Tipo de Fornecedor'}
-                              </MenuButton>
-                            </div>
-                            <MenuItems
-                              transition
-                              className="absolute z-10 mt-10 w-56 origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 transition focus:outline-none data-[closed]:scale-95 data-[closed]:transform data-[closed]:opacity-0 data-[enter]:duration-100 data-[leave]:duration-75 data-[enter]:ease-out data-[leave]:ease-in"
-                            >
-                              <div className="py-1">
-                                {["Fisica", "Juridica"].map(item => (
-                                  <MenuItem key={item}>
-                                    <a
-                                      className="block px-4 py-2 text-sm text-gray-700 data-[focus]:bg-gray-100 data-[focus]:text-gray-900"
-                                      onClick={() => handleMenuItemClick(item)}
-                                    >
-                                      {item}
-                                    </a>
-                                  </MenuItem>
-                                ))}
-                              </div>
-                            </MenuItems>
-                   </Menu>
+                   <DropDown title={"Tipo de Fornecedor"} ValorBtn={formsData.cpf_cnpj} listItens={["Fisica", "Juridica"]} onSelect={(item) => handleMenuItemClick(item)}/>
                 </div>
                 <div className="flex items-center">
                     <input
