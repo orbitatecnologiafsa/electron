@@ -16,7 +16,6 @@ function ProdutosAdd() {
   const [formsData, setFormsData] = useState({
     index: "",
     codigo: '',
-    barras: '',
     nome: '',
     quantidade: '',
     classificacao: '',
@@ -24,8 +23,8 @@ function ProdutosAdd() {
     unSaida: '',
     UnTributacao: '',
     tControle: '',
-    qtdBloqueada: '',
-    qtdDisponivel: '',
+    bloqueada: '',
+    disponivel: '',
     precoCusto: '',
     custoMedio: '',
     precoVenda: '',
@@ -36,7 +35,6 @@ function ProdutosAdd() {
     cest: '',
     tribEstadual: '',
     tribFederal: '',
-    referencia: '',
   });
   const [UnSelected, setUnSelected] = useState("");
   const [Classified, setClassified] = useState("");
@@ -101,15 +99,19 @@ function ProdutosAdd() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-        const response = await axios.post("http://localhost:8080/produtos", formsData);
+        const response = await axios.post("http://localhost:8080/produtos/89", formsData);
         setFormsData({
           index: "",
           codigo: '',
-          barras: '',
           nome: '',
           quantidade: '',
-          qtdBloqueada: '',
-          qtdDisponivel: '',
+          classificacao: '',
+          unEntrada: '',
+          unSaida: '',
+          UnTributacao: '',
+          tControle: '',
+          bloqueada: '',
+          disponivel: '',
           precoCusto: '',
           custoMedio: '',
           precoVenda: '',
@@ -120,9 +122,9 @@ function ProdutosAdd() {
           cest: '',
           tribEstadual: '',
           tribFederal: '',
-          referencia: '',
         });
     } catch (error) {
+        console.log(formsData);
         console.error('Erro ao cadastrar empresa:', error.response ? error.response.data : error.message);
     }
   };
@@ -135,9 +137,11 @@ function ProdutosAdd() {
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
-
-    setFormsData((prevData) => ({ ...prevData, [name]: value }));
-};
+    setFormsData((prevData) => {
+      return { ...prevData, [name]: value };
+    });
+  };
+  
 
 const unidadesEmbList = ["KILOGRAMA", "LITRO", "METRO"];
 
@@ -180,10 +184,10 @@ const tipoControle = [ "Composição", "Controla grade", "Pesável","Vende Franc
 
               <div className="flex flex-col md:flex-row gap-4">
                 <div className="flex flex-col">
-                <label className="block ml-1 text-sm font-medium leading-6 text-black">Código de barras</label>
+                  <label className="block ml-1 text-sm font-medium leading-6 text-black">Código de barras</label>
                   <input
                     type="text"
-                    name="codigoBarras"
+                    name="codigo"
                     value={formsData.codigo}
                     onChange={handleInputChange}
                     className=" w-[13rem] h-11 px-3 py-2 rounded-md  ring-inset focus:ring-2 focus:ring-indigo-600"
@@ -281,8 +285,8 @@ const tipoControle = [ "Composição", "Controla grade", "Pesável","Vende Franc
                   <label className="block ml-1 text-sm font-medium leading-6 text-black">Quantidade bloqueada</label>
                   <input
                     type="text"
-                    name="qtdBloqueada"
-                    value={formsData.qtdBloqueada}
+                    name="bloqueada"
+                    value={formsData.bloqueada}
                     onChange={handleInputChange}
                     className="w-[32.5rem] h-11 px-3 py-2 rounded-md ring-inset focus:ring-2 focus:ring-indigo-600 disabled:bg-gray-300"
                   />
@@ -291,8 +295,8 @@ const tipoControle = [ "Composição", "Controla grade", "Pesável","Vende Franc
                   <label className="block ml-1 text-sm font-medium leading-6 text-black">Quantidade disponível</label>
                   <input
                     type="text"
-                    name="qtdDisponivel"
-                    value={formsData.qtdDisponivel}
+                    name="disponivel"
+                    value={formsData.disponivel}
                     onChange={handleInputChange}
                     className="w-[32.5rem] h-11 px-3 py-2 rounded-md ring-inset focus:ring-2 focus:ring-indigo-600 disabled:bg-gray-300"
                   />

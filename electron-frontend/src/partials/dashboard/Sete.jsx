@@ -3,16 +3,6 @@ import { Bar, Line } from 'react-chartjs-2';
 
 function DashboardCard05Sete({ titulo, itens = [], graficoTipo = 'bar' }) {
 
-  const formatDate = (dateString) => {
-    const [day, month, year] = dateString.split('-');
-    const monthNames = [
-      "janeiro", "fevereiro", "março", "abril", "maio", 
-      "junho", "julho", "agosto", "setembro", "outubro", 
-      "novembro", "dezembro"
-    ];
-    return `${day} ${monthNames[parseInt(month) - 1]}`;
-  };
-
   {/* Calcula os dias em relação a data atual */}
   const calculateDaysAgo = (dateString) => {
     const [day, month, year] = dateString.split('-');

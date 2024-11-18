@@ -3,7 +3,8 @@ import Sidebar from '../../partials/Sidebar';
 import { useNavigate } from 'react-router-dom';
 import Header from '../../partials/Header';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faMagnifyingGlass, faSort } from '@fortawesome/free-solid-svg-icons';
+import { faMagnifyingGlass, faSort, faPenToSquare } from '@fortawesome/free-solid-svg-icons';
+import axios from 'axios';
 import DropDown from '../../components/DropDown';
 
 function Produtos() {
@@ -14,6 +15,11 @@ function Produtos() {
   const [filteredPosts, setFilteredPosts] = useState([]);
   const [searchInfo, setSearchInfo] = useState('');
 
+  // Declare sortColumn e sortDirection antes de usá-los
+  const [sortColumn, setSortColumn] = useState('id');
+  const [sortDirection, setSortDirection] = useState('asc'); 
+
+  // Defina sortedPosts com base em filteredPosts e as variáveis de ordenação
   const sortedPosts = [...filteredPosts].sort((a, b) => {
     const aValue = a[sortColumn];
     const bValue = b[sortColumn];
@@ -24,17 +30,16 @@ function Produtos() {
     return sortDirection === 'asc' ? aValue - bValue : bValue - aValue;
   });
 
-  {/* Sort da tabela */}
+  // Lógica de manipulação de ordenação
   const handleSort = (column) => {
     const direction = (sortColumn === column && sortDirection === 'asc') ? 'desc' : 'asc';
     setSortColumn(column);
     setSortDirection(direction);
   };
-  
+
 
   {/* Const API Clientes */}
   const [posts, setPosts] = useState([]);
-  const [sortColumn, setSortColumn] = useState('id'); 
 
   useEffect(() => {
     if (campoValue === 'Todos') {
@@ -52,7 +57,6 @@ function Produtos() {
     }
   }, [searchInfo, posts, campoValue]);
 
-  const [sortDirection, setSortDirection] = useState('asc'); 
   const navigate = useNavigate();
 
   const handleMenuItemClick = (value) => {

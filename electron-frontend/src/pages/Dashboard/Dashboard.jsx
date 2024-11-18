@@ -28,13 +28,13 @@ function Dashboard() {
     { nome: "Item 3", valor: 30 }
   ];
   const conteudo5= [
-    { data: "23-05-2022", valor: 10 },
-    { data: "24-05-2022", valor: 20 },
-    { data: "25-05-2022", valor: 30 },
-    { data: "26-05-2022", valor: 33 },
-    { data: "27-05-2022", valor: 54 },
-    { data: "28-05-2022", valor: 23 },
-    { data: "29-05-2022", valor: 12 },
+    { data: "23-05-2024", valor: 10 },
+    { data: "24-05-2024", valor: 20 },
+    { data: "25-05-2024", valor: 30 },
+    { data: "26-05-2024", valor: 33 },
+    { data: "27-05-2024", valor: 54 },
+    { data: "28-05-2024", valor: 23 },
+    { data: "29-05-2024", valor: 12 },
   ];
 
   const conteudo6 = [
