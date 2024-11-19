@@ -22,7 +22,9 @@ import lombok.NoArgsConstructor;
 import lombok.ToString;
 
 @Entity
-@Table(name = "caixas")
+@Table(name = "caixas", indexes = {
+    @jakarta.persistence.Index(name = "idx_caixa_serie", columnList = "caixa_serie")
+})
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
@@ -44,7 +46,6 @@ public class Caixa {
     private String modelo;
 
     @Column(name = "caixa_serie", nullable = false, unique = true, length = 50)
-    @org.hibernate.annotations.Index(name = "idx_caixa_serie")
     private String serie;
 
     @Column(name = "caixa_ativo")

@@ -16,14 +16,18 @@ import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.Index;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Entity
-@Table(name = "produtos")
+@Table(name = "produtos", indexes = {
+    @jakarta.persistence.Index(name = "idx_produto_codigo", columnList = "codigo"),
+    @jakarta.persistence.Index(name = "idx_produto_barras", columnList = "barras")
+})
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
@@ -33,11 +37,9 @@ public class Produto {
     private Long id;
 
     @Column(nullable = false, length = 20)
-    @org.hibernate.annotations.Index(name = "idx_produto_codigo")
     private String codigo;
 
     @Column(length = 20)
-    @org.hibernate.annotations.Index(name = "idx_produto_barras")
     private String barras;
 
     @Column(nullable = false, length = 255)
