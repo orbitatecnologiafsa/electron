@@ -3,6 +3,8 @@ package com.electron.services;
 import com.electron.domain.Caixa;
 import com.electron.repositories.CaixaRepository;
 import com.electron.services.exceptions.NotFoundException;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -14,6 +16,10 @@ public class CaixaService {
 
     public CaixaService(CaixaRepository caixaRepository) {
         this.caixaRepository = caixaRepository;
+    }
+
+    public Page<Caixa> listarTodos(Pageable pageable){
+        return caixaRepository.findAll(pageable);
     }
 
     public List<Caixa> listarTodos(){

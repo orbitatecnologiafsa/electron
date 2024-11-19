@@ -1,12 +1,23 @@
 package com.electron.domain;
 
+import java.time.LocalDate;
+
 import com.electron.domain.enums.TipoPessoa;
-import jakarta.persistence.*;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
+import jakarta.persistence.Column;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.MappedSuperclass;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
-import java.time.LocalDate;
 
 @MappedSuperclass
 @Data
@@ -64,8 +75,9 @@ public abstract class BasePessoa {
     @Column(name = "pessoas_complemento", length = 100)
     private String complemento;
 
-    @ManyToOne
-    @JoinColumn(name = "pessoas_fk_municipios", nullable = false)
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "pessoas_fk_municipios")
+    @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
     private Municipio municipio;
 
     @Column(name = "pessoas_telefone", length = 15)
@@ -83,8 +95,9 @@ public abstract class BasePessoa {
     @Column(name = "pessoas_observacoes")
     private String observacoes;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "pessoas_fk_empresa")
+    @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
     private EmpresaProprietaria empresa;
 
 }

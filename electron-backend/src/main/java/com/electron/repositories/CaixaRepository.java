@@ -1,7 +1,9 @@
 package com.electron.repositories;
 
-import com.electron.domain.Caixa;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.repository.PagingAndSortingRepository;
 
-public interface CaixaRepository extends JpaRepository<Caixa, Long> {
+import com.electron.domain.Caixa;
+
+public interface CaixaRepository extends JpaRepository<Caixa, Long>, PagingAndSortingRepository<Caixa, Long> {
 }

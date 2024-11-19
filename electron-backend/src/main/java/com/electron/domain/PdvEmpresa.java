@@ -1,10 +1,12 @@
 package com.electron.domain;
 
 import com.electron.domain.enums.PagamentoAceito;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 import java.time.LocalDate;
 
@@ -27,7 +29,9 @@ public class PdvEmpresa {
     private String numeroCaixa;
 
     @ManyToOne
-    @JoinColumn(name = "pdv_fk_usuario", insertable = false, updatable = false)
+    @JoinColumn(name = "pdv_fk_usuario")
+    @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
+    @ToString.Exclude
     private Usuario usuario;
 
     @Enumerated(EnumType.STRING)
