@@ -1,9 +1,14 @@
 package com.electron.repositories;
 
-import com.electron.domain.Dispositivo;
-import com.electron.domain.EmpresaProprietaria;
-import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.repository.PagingAndSortingRepository;
+import java.util.Optional;
 
-public interface EmpresaProprietariaRepository extends JpaRepository<EmpresaProprietaria, Long>, PagingAndSortingRepository<EmpresaProprietaria, Long> {
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
+
+import com.electron.domain.EmpresaProprietaria;
+
+@Repository
+public interface EmpresaProprietariaRepository extends JpaRepository<EmpresaProprietaria, Long> {
+    Optional<EmpresaProprietaria> findByCpfCnpj(String cpfCnpj);
+    Optional<EmpresaProprietaria> findByEmail(String email);
 }

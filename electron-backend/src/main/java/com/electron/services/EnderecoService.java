@@ -1,13 +1,12 @@
 package com.electron.services;
 
-import com.electron.domain.Endereco;
-import com.electron.repositories.EnderecoRepository;
-import com.electron.services.exceptions.NotFoundException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
+import com.electron.domain.Endereco;
+import com.electron.repositories.EnderecoRepository;
+import com.electron.services.exceptions.NotFoundException;
 
 @Service
 public class EnderecoService {
@@ -23,31 +22,47 @@ public class EnderecoService {
     }
 
     public Endereco listarPorId(Long id) {
+        if (id == null) {
+            throw new IllegalArgumentException("ID não pode ser nulo");
+        }
         return enderecoRepository.findById(id)
-                .orElseThrow(() -> new NotFoundException("Endereço não encontrado"));
+                .orElseThrow(() -> new NotFoundException("Endereço não encontrado com ID: " + id));
     }
 
     public Endereco criar(Endereco endereco) {
+        if (endereco == null) {
+            throw new IllegalArgumentException("Endereço não pode ser nulo");
+        }
+        if (endereco.getCep() == null || endereco.getCep().trim().isEmpty()) {
+            throw new IllegalArgumentException("CEP é obrigatório");
+        }
         return enderecoRepository.save(endereco);
     }
 
     public Endereco atualizar(Long id, Endereco endereco) {
-        Endereco enderecoObj = listarPorId(id);
+        if (id == null || endereco == null) {
+            throw new IllegalArgumentException("ID e endereço não podem ser nulos");
+        }
 
-        enderecoObj.setTipoEndereco(endereco.getTipoEndereco());
-        enderecoObj.setCep(endereco.getCep());
-        enderecoObj.setLogradouro(endereco.getLogradouro());
-        enderecoObj.setNumero(endereco.getNumero());
-        enderecoObj.setBairro(endereco.getBairro());
-        enderecoObj.setComplemento(endereco.getComplemento());
-        enderecoObj.setTelefone(endereco.getTelefone());
-        enderecoObj.setPessoa(endereco.getPessoa());
-        enderecoObj.setMunicipio(endereco.getMunicipio());
+        Endereco existente = listarPorId(id);
+        
+        existente.setTipoEndereco(endereco.getTipoEndereco());
+        existente.setCep(endereco.getCep());
+        existente.setLogradouro(endereco.getLogradouro());
+        existente.setNumero(endereco.getNumero());
+        existente.setBairro(endereco.getBairro());
+        existente.setComplemento(endereco.getComplemento());
+        existente.setTelefone(endereco.getTelefone());
+        existente.setPessoa(endereco.getPessoa());
+        existente.setMunicipio(endereco.getMunicipio());
 
-        return enderecoRepository.save(enderecoObj);
+        return enderecoRepository.save(existente);
     }
 
     public void deletar(Long id) {
+        if (!enderecoRepository.existsById(id))
+            throw new NotFoundException("Endereço id: " + id + " não encontrado");
+
         enderecoRepository.deleteById(id);
     }
 }

@@ -18,21 +18,21 @@ public class CaixaService {
         this.caixaRepository = caixaRepository;
     }
 
-    public Page<Caixa> listarTodos(Pageable pageable){
+    public Page<Caixa> listarTodos(Pageable pageable) {
         return caixaRepository.findAll(pageable);
     }
 
-    public Caixa listarPorId(Long id){
+    public Caixa listarPorId(Long id) {
         return caixaRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException("Caixa não encontrada"));
     }
 
-    public Caixa criar(Caixa caixa){
+    public Caixa criar(Caixa caixa) {
         return caixaRepository.save(caixa);
     }
 
-    public Caixa atualizar(Long id, Caixa caixa){
-        Caixa caixaObj =  listarPorId(id);
+    public Caixa atualizar(Long id, Caixa caixa) {
+        Caixa caixaObj = listarPorId(id);
 
         caixaObj.setAtivo(caixa.getAtivo());
         caixaObj.setModelo(caixa.getModelo());
@@ -46,7 +46,9 @@ public class CaixaService {
         return caixaRepository.save(caixaObj);
     }
 
-    public void deletar(Long id){
+    public void deletar(Long id) {
+        if (!caixaRepository.existsById(id))
+            throw new NotFoundException("Grupo de Produto/Serviço não encontrado com o ID: " + id);
         caixaRepository.deleteById(id);
     }
 }

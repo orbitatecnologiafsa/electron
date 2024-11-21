@@ -1,9 +1,13 @@
 package com.electron.repositories;
 
-import com.electron.domain.Dispositivo;
-import com.electron.domain.GrupoProdServ;
-import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.repository.PagingAndSortingRepository;
+import java.util.Optional;
 
-public interface GrupoProdServRepository extends JpaRepository<GrupoProdServ, Long>, PagingAndSortingRepository<GrupoProdServ, Long> {
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
+
+import com.electron.domain.GrupoProdServ;
+
+@Repository
+public interface GrupoProdServRepository extends JpaRepository<GrupoProdServ, Long> {
+    Optional<GrupoProdServ> findByNome(String nome);
 }

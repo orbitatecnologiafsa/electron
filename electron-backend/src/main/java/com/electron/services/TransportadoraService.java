@@ -1,14 +1,14 @@
 package com.electron.services;
 
-import com.electron.domain.Transportadora;
-import com.electron.repositories.TransportadoraRepository;
-import com.electron.services.exceptions.AlreadyExistException;
-import com.electron.services.exceptions.NotFoundException;
+import org.springframework.beans.BeanUtils;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
+import com.electron.domain.Transportadora;
+import com.electron.repositories.TransportadoraRepository;
+import com.electron.services.exceptions.AlreadyExistException;
+import com.electron.services.exceptions.NotFoundException;
 
 @Service
 public class TransportadoraService {
@@ -22,45 +22,50 @@ public class TransportadoraService {
         return transportadoraRepository.findAll(pageable);
     }
 
-    // Buscar transportadora por ID
     public Transportadora buscarPorId(Long id) {
+        if (id == null) {
+            throw new IllegalArgumentException("ID não pode ser nulo");
+        }
         return transportadoraRepository.findById(id)
-                .orElseThrow(() -> new NotFoundException("Transportadora não encontrada com o ID: " + id));
+                .orElseThrow(() -> new NotFoundException("Transportadora não encontrada com ID: " + id));
     }
 
-    // Criar nova transportadora com validações
     public Transportadora salvar(Transportadora transportadora) {
+        if (transportadora == null) {
+            throw new IllegalArgumentException("Transportadora não pode ser nula");
+        }
+        
+        if (transportadora.getCpfCnpj() == null || transportadora.getCpfCnpj().trim().isEmpty()) {
+            throw new IllegalArgumentException("CPF/CNPJ é obrigatório");
+        }
+        
         validarUnicidade(transportadora);
         return transportadoraRepository.save(transportadora);
     }
 
-    // Atualizar transportadora existente com validações
-    public Transportadora atualizar(Long id, Transportadora transportadoraAtualizada) {
-        Transportadora transportadoraExistente = buscarPorId(id); // Lança exceção se não encontrar
-        validarUnicidadeAtualizacao(transportadoraAtualizada, transportadoraExistente);
-
-        transportadoraExistente.setEmpresa(transportadoraAtualizada.getEmpresa());
-        transportadoraExistente.setPlacaVeiculo(transportadoraAtualizada.getPlacaVeiculo());
-        transportadoraExistente.setAnttVeiculo(transportadoraAtualizada.getAnttVeiculo());
-
-        return transportadoraRepository.save(transportadoraExistente);
-    }
-
-    // Excluir transportadora por ID
     public void excluir(Long id) {
+        if (id == null) {
+            throw new IllegalArgumentException("ID não pode ser nulo");
+        }
         if (!transportadoraRepository.existsById(id)) {
-            throw new NotFoundException("Transportadora não encontrada com o ID: " + id);
+            throw new NotFoundException("Transportadora não encontrada com ID: " + id);
         }
         transportadoraRepository.deleteById(id);
     }
 
+    public Transportadora atualizar(Long id, Transportadora transportadora) {
+        if (id == null || transportadora == null) {
+            throw new IllegalArgumentException("ID e transportadora não podem ser nulos");
+        }
+        
+        Transportadora existente = buscarPorId(id);
+        validarUnicidadeAtualizacao(transportadora, existente);
+        
+        BeanUtils.copyProperties(transportadora, existente, "id");
+        return transportadoraRepository.save(existente);
+    }
+
     private void validarUnicidade(Transportadora transportadora) {
-        if (transportadoraRepository.findByTelefone(transportadora.getTelefone()).isPresent()) {
-            throw new AlreadyExistException("Telefone já está em uso: " + transportadora.getTelefone());
-        }
-        if (transportadoraRepository.findByCelular(transportadora.getCelular()).isPresent()) {
-            throw new AlreadyExistException("Celular já está em uso: " + transportadora.getCelular());
-        }
         if (transportadoraRepository.findByEmail(transportadora.getEmail()).isPresent()) {
             throw new AlreadyExistException("Email já está em uso: " + transportadora.getEmail());
         }
@@ -69,22 +74,14 @@ public class TransportadoraService {
         }
     }
 
-    private void validarUnicidadeAtualizacao(Transportadora transportadoraAtualizada, Transportadora transportadoraExistente) {
-        if (!transportadoraExistente.getTelefone().equals(transportadoraAtualizada.getTelefone())
-                && transportadoraRepository.findByTelefone(transportadoraAtualizada.getTelefone()).isPresent()) {
-            throw new AlreadyExistException("Telefone já está em uso: " + transportadoraAtualizada.getTelefone());
+    private void validarUnicidadeAtualizacao(Transportadora nova, Transportadora existente) {
+        if (!existente.getEmail().equals(nova.getEmail()) && 
+            transportadoraRepository.findByEmail(nova.getEmail()).isPresent()) {
+            throw new AlreadyExistException("Email já está em uso: " + nova.getEmail());
         }
-        if (!transportadoraExistente.getCelular().equals(transportadoraAtualizada.getCelular())
-                && transportadoraRepository.findByCelular(transportadoraAtualizada.getCelular()).isPresent()) {
-            throw new AlreadyExistException("Celular já está em uso: " + transportadoraAtualizada.getCelular());
-        }
-        if (!transportadoraExistente.getEmail().equals(transportadoraAtualizada.getEmail())
-                && transportadoraRepository.findByEmail(transportadoraAtualizada.getEmail()).isPresent()) {
-            throw new AlreadyExistException("Email já está em uso: " + transportadoraAtualizada.getEmail());
-        }
-        if (!transportadoraExistente.getCpfCnpj().equals(transportadoraAtualizada.getCpfCnpj())
-                && transportadoraRepository.findByCpfCnpj(transportadoraAtualizada.getCpfCnpj()).isPresent()) {
-            throw new AlreadyExistException("CPF/CNPJ já está em uso: " + transportadoraAtualizada.getCpfCnpj());
+        if (!existente.getCpfCnpj().equals(nova.getCpfCnpj()) && 
+            transportadoraRepository.findByCpfCnpj(nova.getCpfCnpj()).isPresent()) {
+            throw new AlreadyExistException("CPF/CNPJ já está em uso: " + nova.getCpfCnpj());
         }
     }
 }

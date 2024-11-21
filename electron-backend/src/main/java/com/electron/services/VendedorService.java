@@ -38,7 +38,7 @@ public class VendedorService {
     }
 
     public Vendedor atualizar(Long id, Vendedor vendedorAtualizado) {
-        Vendedor vendedorExistente = buscarPorId(id); // Lança exceção se não encontrar
+        Vendedor vendedorExistente = buscarPorId(id);
 
         vendedorExistente.setDesconto(vendedorAtualizado.getDesconto());
         vendedorExistente.setComissao(vendedorAtualizado.getComissao());
@@ -50,9 +50,9 @@ public class VendedorService {
     }
 
     public void excluir(Long id) {
-        if (!vendedorRepository.existsById(id)) {
+        if (!vendedorRepository.existsById(id))
             throw new NotFoundException("Vendedor não encontrado com o ID: " + id);
-        }
+
         vendedorRepository.deleteById(id);
     }
 

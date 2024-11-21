@@ -21,18 +21,15 @@ public class SubgrupoProdServService {
         return subgrupoProdServRepository.findAll(pageable);
     }
 
-    // Buscar subgrupo de produto/serviço por ID
     public SubgrupoProdServ buscarPorId(Long id) {
         return subgrupoProdServRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException("Subgrupo de Produto/Serviço não encontrado com o ID: " + id));
     }
 
-    // Criar novo subgrupo de produto/serviço
     public SubgrupoProdServ salvar(SubgrupoProdServ subgrupoProdServ) {
         return subgrupoProdServRepository.save(subgrupoProdServ);
     }
 
-    // Atualizar subgrupo de produto/serviço existente
     public SubgrupoProdServ atualizar(Long id, SubgrupoProdServ subgrupoProdServAtualizado) {
         return subgrupoProdServRepository.findById(id)
                 .map(subgrupoProdServ -> {
@@ -43,11 +40,10 @@ public class SubgrupoProdServService {
                 .orElseThrow(() -> new NotFoundException("Subgrupo de Produto/Serviço não encontrado com o ID: " + id));
     }
 
-    // Excluir subgrupo de produto/serviço por ID
     public void excluir(Long id) {
-        if (!subgrupoProdServRepository.existsById(id)) {
+        if (!subgrupoProdServRepository.existsById(id))
             throw new NotFoundException("Subgrupo de Produto/Serviço não encontrado com o ID: " + id);
-        }
+
         subgrupoProdServRepository.deleteById(id);
     }
 }

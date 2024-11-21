@@ -2,6 +2,7 @@ package com.electron.services;
 
 import com.electron.domain.Dispositivo;
 import com.electron.repositories.DispositivoRepository;
+import com.electron.services.exceptions.AlreadyExistException;
 import com.electron.services.exceptions.NotFoundException;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
@@ -23,40 +24,57 @@ public class DispositivoService {
     }
 
     public Dispositivo listarPorId(Long id) {
+        if (id == null) {
+            throw new IllegalArgumentException("ID não pode ser nulo");
+        }
         return dispositivoRepository.findById(id)
-                .orElseThrow(() -> new NotFoundException("Dispositivo não encontrado!"));
+                .orElseThrow(() -> new NotFoundException("Dispositivo não encontrado com ID: " + id));
     }
 
     public Dispositivo criar(Dispositivo dispositivo) {
-        try {
-            return dispositivoRepository.save(dispositivo);
-        } catch (DataIntegrityViolationException e) {
-            throw new RuntimeException("Erro ao criar dispositivo. Verifique os dados.", e);
+        if (dispositivo == null) {
+            throw new IllegalArgumentException("Dispositivo não pode ser nulo");
         }
+        if (dispositivo.getDispositivoNumeroSerie() == null || dispositivo.getDispositivoNumeroSerie().trim().isEmpty()) {
+            throw new IllegalArgumentException("Número de série é obrigatório");
+        }
+        if (dispositivoRepository.findByDispositivoNumeroSerie(dispositivo.getDispositivoNumeroSerie()).isPresent()) {
+            throw new AlreadyExistException("Já existe um dispositivo com este número de série: " + dispositivo.getDispositivoNumeroSerie());
+        }
+        return dispositivoRepository.save(dispositivo);
     }
 
     public Dispositivo atualizar(Long id, Dispositivo dispositivo) {
-        Dispositivo dispositivoExistente = dispositivoRepository.findById(id)
-                .orElseThrow(() -> new NotFoundException("Dispositivo não encontrado!"));
+        if (id == null || dispositivo == null) {
+            throw new IllegalArgumentException("ID e dispositivo não podem ser nulos");
+        }
 
-        dispositivoExistente.setDispositivoTipo(dispositivo.getDispositivoTipo());
-        dispositivoExistente.setDispositivoMarca(dispositivo.getDispositivoMarca());
-        dispositivoExistente.setDispositivoModelo(dispositivo.getDispositivoModelo());
-        dispositivoExistente.setDispositivoNumeroSerie(dispositivo.getDispositivoNumeroSerie());
-        dispositivoExistente.setDispositivoAtivo(dispositivo.getDispositivoAtivo());
-        dispositivoExistente.setDispositivoDataInstalacao(dispositivo.getDispositivoDataInstalacao());
-        dispositivoExistente.setDispositivoFkUsuario(dispositivo.getDispositivoFkUsuario());
-        dispositivoExistente.setDispositivoObservacoes(dispositivo.getDispositivoObservacoes());
+        Dispositivo existente = listarPorId(id);
+        
+        if (!existente.getDispositivoNumeroSerie().equals(dispositivo.getDispositivoNumeroSerie()) &&
+            dispositivoRepository.findByDispositivoNumeroSerie(dispositivo.getDispositivoNumeroSerie()).isPresent()) {
+            throw new AlreadyExistException("Já existe um dispositivo com este número de série: " + dispositivo.getDispositivoNumeroSerie());
+        }
 
-        return dispositivoRepository.save(dispositivoExistente);
+        existente.setDispositivoTipo(dispositivo.getDispositivoTipo());
+        existente.setDispositivoMarca(dispositivo.getDispositivoMarca());
+        existente.setDispositivoModelo(dispositivo.getDispositivoModelo());
+        existente.setDispositivoNumeroSerie(dispositivo.getDispositivoNumeroSerie());
+        existente.setDispositivoAtivo(dispositivo.getDispositivoAtivo());
+        existente.setDispositivoDataInstalacao(dispositivo.getDispositivoDataInstalacao());
+        existente.setDispositivoFkUsuario(dispositivo.getDispositivoFkUsuario());
+        existente.setDispositivoObservacoes(dispositivo.getDispositivoObservacoes());
+
+        return dispositivoRepository.save(existente);
     }
 
-
     public void deletar(Long id) {
-        if (dispositivoRepository.findById(id).isPresent()) {
-            dispositivoRepository.deleteById(id);
-            return;
+        if (id == null) {
+            throw new IllegalArgumentException("ID não pode ser nulo");
         }
-        throw new NotFoundException("Não foi possível deletar o dispositivo de id " + id);
+        if (!dispositivoRepository.existsById(id)) {
+            throw new NotFoundException("Dispositivo não encontrado com ID: " + id);
+        }
+        dispositivoRepository.deleteById(id);
     }
 }

@@ -1,13 +1,12 @@
 package com.electron.services;
 
-import com.electron.domain.OutrasInformacoes;
-import com.electron.repositories.OutrasInformacoesRepository;
-import com.electron.services.exceptions.NotFoundException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
+import com.electron.domain.OutrasInformacoes;
+import com.electron.repositories.OutrasInformacoesRepository;
+import com.electron.services.exceptions.NotFoundException;
 
 @Service
 public class OutrasInformacoesService {
@@ -22,43 +21,60 @@ public class OutrasInformacoesService {
     }
 
     public OutrasInformacoes listarPorId(Long id) {
+        if (id == null) {
+            throw new IllegalArgumentException("ID não pode ser nulo");
+        }
         return outrasInformacoesRepository.findById(id)
-                .orElseThrow(() -> new NotFoundException("Outras informações não encontradas"));
+                .orElseThrow(() -> new NotFoundException("Outras informações não encontradas com ID: " + id));
     }
 
     public OutrasInformacoes criar(OutrasInformacoes outrasInformacoes) {
+        if (outrasInformacoes == null) {
+            throw new IllegalArgumentException("Outras informações não podem ser nulas");
+        }
         return outrasInformacoesRepository.save(outrasInformacoes);
     }
 
     public OutrasInformacoes atualizar(Long id, OutrasInformacoes outrasInformacoes) {
-        OutrasInformacoes outrasInformacoesObj = listarPorId(id);
-        outrasInformacoesObj.setPessoa(outrasInformacoes.getPessoa());
-        outrasInformacoesObj.setEstadoCivil(outrasInformacoes.getEstadoCivil());
-        outrasInformacoesObj.setConjuge(outrasInformacoes.getConjuge());
-        outrasInformacoesObj.setNomeMae(outrasInformacoes.getNomeMae());
-        outrasInformacoesObj.setNomePai(outrasInformacoes.getNomePai());
-        outrasInformacoesObj.setLocalTrabalho(outrasInformacoes.getLocalTrabalho());
-        outrasInformacoesObj.setOutrasProfissao(outrasInformacoes.getOutrasProfissao());
-        outrasInformacoesObj.setDataNascimento(outrasInformacoes.getDataNascimento());
-        outrasInformacoesObj.setNaturalidade(outrasInformacoes.getNaturalidade());
-        outrasInformacoesObj.setDiaAcerto(outrasInformacoes.getDiaAcerto());
-        outrasInformacoesObj.setRendaMensal(outrasInformacoes.getRendaMensal());
-        outrasInformacoesObj.setLimiteCredito(outrasInformacoes.getLimiteCredito());
-        outrasInformacoesObj.setCreditoDisponivel(outrasInformacoes.getCreditoDisponivel());
-        outrasInformacoesObj.setCreditoData(outrasInformacoes.getCreditoData());
-        outrasInformacoesObj.setDiaFaturamento(outrasInformacoes.getDiaFaturamento());
-        outrasInformacoesObj.setFormaPagamento(outrasInformacoes.getFormaPagamento());
-        outrasInformacoesObj.setNumParcelasFaturamento(outrasInformacoes.getNumParcelasFaturamento());
-        outrasInformacoesObj.setReterIr(outrasInformacoes.getReterIr());
-        outrasInformacoesObj.setReterCsll(outrasInformacoes.getReterCsll());
-        outrasInformacoesObj.setReterPrevidenciaSocial(outrasInformacoes.getReterPrevidenciaSocial());
-        outrasInformacoesObj.setReterCofins(outrasInformacoes.getReterCofins());
-        outrasInformacoesObj.setReterPis(outrasInformacoes.getReterPis());
+        if (id == null || outrasInformacoes == null) {
+            throw new IllegalArgumentException("ID e outras informações não podem ser nulos");
+        }
 
-        return outrasInformacoesRepository.save(outrasInformacoesObj);
+        OutrasInformacoes existente = listarPorId(id);
+        
+        existente.setPessoa(outrasInformacoes.getPessoa());
+        existente.setEstadoCivil(outrasInformacoes.getEstadoCivil());
+        existente.setConjuge(outrasInformacoes.getConjuge());
+        existente.setNomeMae(outrasInformacoes.getNomeMae());
+        existente.setNomePai(outrasInformacoes.getNomePai());
+        existente.setLocalTrabalho(outrasInformacoes.getLocalTrabalho());
+        existente.setOutrasProfissao(outrasInformacoes.getOutrasProfissao());
+        existente.setDataNascimento(outrasInformacoes.getDataNascimento());
+        existente.setNaturalidade(outrasInformacoes.getNaturalidade());
+        existente.setDiaAcerto(outrasInformacoes.getDiaAcerto());
+        existente.setRendaMensal(outrasInformacoes.getRendaMensal());
+        existente.setLimiteCredito(outrasInformacoes.getLimiteCredito());
+        existente.setCreditoDisponivel(outrasInformacoes.getCreditoDisponivel());
+        existente.setCreditoData(outrasInformacoes.getCreditoData());
+        existente.setDiaFaturamento(outrasInformacoes.getDiaFaturamento());
+        existente.setFormaPagamento(outrasInformacoes.getFormaPagamento());
+        existente.setNumParcelasFaturamento(outrasInformacoes.getNumParcelasFaturamento());
+        existente.setReterIr(outrasInformacoes.getReterIr());
+        existente.setReterCsll(outrasInformacoes.getReterCsll());
+        existente.setReterPrevidenciaSocial(outrasInformacoes.getReterPrevidenciaSocial());
+        existente.setReterCofins(outrasInformacoes.getReterCofins());
+        existente.setReterPis(outrasInformacoes.getReterPis());
+
+        return outrasInformacoesRepository.save(existente);
     }
 
     public void deletar(Long id) {
+        if (id == null) {
+            throw new IllegalArgumentException("ID não pode ser nulo");
+        }
+        if (!outrasInformacoesRepository.existsById(id)) {
+            throw new NotFoundException("Outras informações não encontradas com ID: " + id);
+        }
         outrasInformacoesRepository.deleteById(id);
     }
 }

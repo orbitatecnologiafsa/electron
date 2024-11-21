@@ -34,7 +34,6 @@ public class UsuarioService {
             return;
         }
         throw new NotFoundException("Não foi possível deletar o usuário de id: " + id);
-
     }
 
     public Usuario atualizar(Long id, Usuario usuarioAtualizado) {
