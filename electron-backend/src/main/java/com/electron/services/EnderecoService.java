@@ -25,11 +25,11 @@ public class EnderecoService {
                 .orElseThrow(() -> new NotFoundException("Endereço não encontrado"));
     }
 
-    public void criar(Endereco endereco) {
-        enderecoRepository.save(endereco);
+    public Endereco criar(Endereco endereco) {
+        return enderecoRepository.save(endereco);
     }
 
-    public void atualizar(Long id, Endereco endereco) {
+    public Endereco atualizar(Long id, Endereco endereco) {
         Endereco enderecoObj = listarPorId(id);
 
         enderecoObj.setTipoEndereco(endereco.getTipoEndereco());
@@ -39,11 +39,10 @@ public class EnderecoService {
         enderecoObj.setBairro(endereco.getBairro());
         enderecoObj.setComplemento(endereco.getComplemento());
         enderecoObj.setTelefone(endereco.getTelefone());
-
         enderecoObj.setPessoa(endereco.getPessoa());
         enderecoObj.setMunicipio(endereco.getMunicipio());
 
-        enderecoRepository.save(enderecoObj);
+        return enderecoRepository.save(enderecoObj);
     }
 
     public void deletar(Long id) {

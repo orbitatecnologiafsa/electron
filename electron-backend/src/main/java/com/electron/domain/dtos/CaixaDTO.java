@@ -29,9 +29,4 @@ public class CaixaDTO {
 
     private EmpresaProprietaria empresaProprietaria;
 
-    public Caixa toCaixa() {
-        return new Caixa(
-            null, tipo, numero, modelo, serie, ativo, dataInstalacao, observacoes, empresaProprietaria
-        );
-    }
 }

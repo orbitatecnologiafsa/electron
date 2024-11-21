@@ -24,13 +24,12 @@ public class OutrasInformacoesService {
                 .orElseThrow(() -> new NotFoundException("Outras informações não encontradas"));
     }
 
-    public void criar(OutrasInformacoes outrasInformacoes) {
-        outrasInformacoesRepository.save(outrasInformacoes);
+    public OutrasInformacoes criar(OutrasInformacoes outrasInformacoes) {
+        return outrasInformacoesRepository.save(outrasInformacoes);
     }
 
-    public void atualizar(Long id, OutrasInformacoes outrasInformacoes) {
+    public OutrasInformacoes atualizar(Long id, OutrasInformacoes outrasInformacoes) {
         OutrasInformacoes outrasInformacoesObj = listarPorId(id);
-
         outrasInformacoesObj.setPessoa(outrasInformacoes.getPessoa());
         outrasInformacoesObj.setEstadoCivil(outrasInformacoes.getEstadoCivil());
         outrasInformacoesObj.setConjuge(outrasInformacoes.getConjuge());
@@ -54,9 +53,8 @@ public class OutrasInformacoesService {
         outrasInformacoesObj.setReterCofins(outrasInformacoes.getReterCofins());
         outrasInformacoesObj.setReterPis(outrasInformacoes.getReterPis());
 
-        outrasInformacoesRepository.save(outrasInformacoesObj);
+        return outrasInformacoesRepository.save(outrasInformacoesObj);
     }
-
 
     public void deletar(Long id) {
         outrasInformacoesRepository.deleteById(id);

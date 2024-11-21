@@ -38,12 +38,4 @@ public class TransportadoraDTO {
     private String placaVeiculo;
     private String anttVeiculo;
 
-    public Transportadora toTransportadora() {
-        return new Transportadora(
-                tipo, foto, entidade, cpfCnpj, nomeRazaoSocial, nomeFantasia, passaporte,
-                rgInscricaoEstadual, inscricaoMunicipal, contato, cep, logradouro, numero,
-                bairro, complemento, municipio, telefone, celular, email, dataDeNascimento,
-                observacoes, null, placaVeiculo, anttVeiculo
-        );
-    }
 }

@@ -76,12 +76,4 @@ public class EmpresaProprietariaDTO {
 
     private List<Caixa> caixas;
 
-    public EmpresaProprietaria toEmpresaProprietaria() {
-        return new EmpresaProprietaria(
-                null, tipoUnidade, tipoPessoa, cpfCnpj, versao, regimeTributario, cnae, razaoSocial, numeroFilial,
-                digitoVerificador, ativo, nomeFantasia, nomeExibicao, naturezaJuridica, inscricaoEstadual,
-                inscricaoMunicipal, contato, telefone, email, cep, logradouro, numero, bairro, complemento, municipio,
-                chaveAcesso, dataCriacao, descricaoAtividades, observacoes, caixas
-        );
-    }
 }

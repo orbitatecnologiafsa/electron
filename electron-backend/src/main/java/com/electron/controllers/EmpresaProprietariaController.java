@@ -1,49 +1,70 @@
 package com.electron.controllers;
 
-import com.electron.domain.EmpresaProprietaria;
-import com.electron.domain.dtos.EmpresaProprietariaDTO;
-import com.electron.services.EmpresaProprietariaService;
+import java.util.List;
+import java.util.stream.Collectors;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
-import java.util.List;
+import com.electron.domain.dtos.EmpresaProprietariaDTO;
+import com.electron.mappers.EmpresaProprietariaMapper;
+import com.electron.services.EmpresaProprietariaService;
 
 @RestController
 @RequestMapping("/empresas-proprietarias")
 public class EmpresaProprietariaController {
+    private final EmpresaProprietariaService empresaProprietariaService;
+    private final EmpresaProprietariaMapper empresaProprietariaMapper;
 
-    private EmpresaProprietariaService empresaProprietariaService;
-
-    public EmpresaProprietariaController(EmpresaProprietariaService empresaProprietariaService) {
+    public EmpresaProprietariaController(EmpresaProprietariaService empresaProprietariaService, 
+                                       EmpresaProprietariaMapper empresaProprietariaMapper) {
         this.empresaProprietariaService = empresaProprietariaService;
+        this.empresaProprietariaMapper = empresaProprietariaMapper;
     }
 
     @GetMapping
-    public ResponseEntity<List<EmpresaProprietaria>> listarTodas() {
-        return ResponseEntity.ok(empresaProprietariaService.listarTodas());
+    public ResponseEntity<List<EmpresaProprietariaDTO>> listarTodas() {
+        var empresas = empresaProprietariaService.listarTodas();
+        return ResponseEntity.ok(
+            empresas.stream()
+                .map(empresaProprietariaMapper::toDTO)
+                .collect(Collectors.toList())
+        );
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<EmpresaProprietaria> listarPorId(@PathVariable Long id) {
-        return ResponseEntity.ok(empresaProprietariaService.listarPorId(id));
+    public ResponseEntity<EmpresaProprietariaDTO> listarPorId(@PathVariable Long id) {
+        var empresa = empresaProprietariaService.listarPorId(id);
+        return ResponseEntity.ok(empresaProprietariaMapper.toDTO(empresa));
     }
 
     @PostMapping
-    public ResponseEntity<Void> criar(@RequestBody EmpresaProprietariaDTO empresaProprietariaDTO) {
-        empresaProprietariaService.criar(empresaProprietariaDTO.toEmpresaProprietaria());
-        return new ResponseEntity<>(HttpStatus.CREATED);
+    public ResponseEntity<EmpresaProprietariaDTO> criar(@RequestBody EmpresaProprietariaDTO empresaProprietariaDTO) {
+        var empresa = empresaProprietariaMapper.toEntity(empresaProprietariaDTO);
+        var empresaSalva = empresaProprietariaService.criar(empresa);
+        return ResponseEntity.status(HttpStatus.CREATED)
+            .body(empresaProprietariaMapper.toDTO(empresaSalva));
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Void> atualizar(@PathVariable Long id, @RequestBody EmpresaProprietaria empresaProprietaria) {
-        empresaProprietariaService.atualizar(id, empresaProprietaria);
-        return ResponseEntity.ok().build();
+    public ResponseEntity<EmpresaProprietariaDTO> atualizar(@PathVariable Long id, 
+                                                           @RequestBody EmpresaProprietariaDTO empresaProprietariaDTO) {
+        var empresa = empresaProprietariaMapper.toEntity(empresaProprietariaDTO);
+        var empresaAtualizada = empresaProprietariaService.atualizar(id, empresa);
+        return ResponseEntity.ok(empresaProprietariaMapper.toDTO(empresaAtualizada));
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deletar(@PathVariable Long id) {
         empresaProprietariaService.deletar(id);
-        return ResponseEntity.ok().build();
+        return ResponseEntity.noContent().build();
     }
 }

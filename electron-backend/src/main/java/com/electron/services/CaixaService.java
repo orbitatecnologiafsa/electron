@@ -31,11 +31,11 @@ public class CaixaService {
                 .orElseThrow(() -> new NotFoundException("Caixa não encontrada"));
     }
 
-    public void criar(Caixa caixa){
-        caixaRepository.save(caixa);
+    public Caixa criar(Caixa caixa){
+        return caixaRepository.save(caixa);
     }
 
-    public void atualizar(Long id, Caixa caixa){
+    public Caixa atualizar(Long id, Caixa caixa){
         Caixa caixaObj =  listarPorId(id);
 
         caixaObj.setAtivo(caixa.getAtivo());
@@ -47,10 +47,10 @@ public class CaixaService {
         caixaObj.setTipo(caixa.getTipo());
         caixaObj.setEmpresaProprietaria(caixa.getEmpresaProprietaria());
 
-        caixaRepository.save(caixaObj);
+        return caixaRepository.save(caixaObj);
     }
 
-    public void delete(Long id){
+    public void deletar(Long id){
         caixaRepository.deleteById(id);
     }
 }

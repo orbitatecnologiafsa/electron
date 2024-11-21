@@ -25,11 +25,11 @@ public class EmpresaProprietariaService {
                 .orElseThrow(() -> new NotFoundException("Empresa proprietária não encontrada"));
     }
 
-    public void criar(EmpresaProprietaria empresaProprietaria) {
-        empresaProprietariaRepository.save(empresaProprietaria);
+    public EmpresaProprietaria criar(EmpresaProprietaria empresaProprietaria) {
+        return empresaProprietariaRepository.save(empresaProprietaria);
     }
 
-    public void atualizar(Long id, EmpresaProprietaria empresaProprietaria) {
+    public EmpresaProprietaria atualizar(Long id, EmpresaProprietaria empresaProprietaria) {
         EmpresaProprietaria empresaObj = listarPorId(id);
 
         empresaObj.setTipoUnidade(empresaProprietaria.getTipoUnidade());
@@ -61,7 +61,7 @@ public class EmpresaProprietariaService {
         empresaObj.setDescricaoAtividades(empresaProprietaria.getDescricaoAtividades());
         empresaObj.setObservacoes(empresaProprietaria.getObservacoes());
 
-        empresaProprietariaRepository.save(empresaObj);
+        return empresaProprietariaRepository.save(empresaObj);
     }
 
     public void deletar(Long id) {

@@ -58,11 +58,4 @@ public class OutrasInformacoesDTO {
 
     private Boolean reterPis = false;
 
-    public OutrasInformacoes toOutrasInformacoes() {
-        return new OutrasInformacoes(
-                null, pessoa, estadoCivil, conjuge, nomeMae, nomePai, localTrabalho, outrasProfissao, dataNascimento,
-                naturalidade, diaAcerto, rendaMensal, limiteCredito, creditoDisponivel, creditoData, diaFaturamento,
-                formaPagamento, numParcelasFaturamento, reterIr, reterCsll, reterPrevidenciaSocial, reterCofins, reterPis
-        );
-    }
 }

@@ -31,10 +31,4 @@ public class DispositivoDTO {
 
     private String dispositivoObservacoes;
 
-    public Dispositivo toDispositivo() {
-        return new Dispositivo(
-                null, empresaProprietaria, dispositivoTipo, dispositivoMarca, dispositivoModelo, dispositivoNumeroSerie,
-                dispositivoAtivo, dispositivoDataInstalacao, dispositivoFkUsuario, dispositivoObservacoes
-        );
-    }
 }

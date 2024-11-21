@@ -12,7 +12,4 @@ public class EstadoDTO {
 
     private String nome;
 
-    public Estado toEstado() {
-        return new Estado(null, nome);
-    }
 }

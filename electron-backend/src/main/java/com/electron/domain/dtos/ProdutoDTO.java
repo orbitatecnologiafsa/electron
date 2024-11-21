@@ -83,13 +83,4 @@ public class ProdutoDTO {
 
     private String localizacao;
 
-    public Produto toProduto() {
-        return new Produto(
-                null, codigo, barras, nome, descricao, unidadeEntrada, unidadeSaida, unidadeEstocagem, unidadeTributacao,
-                fatorConversao, grupoProdServ, classificacao, diasValidade, tipoControle, precoCusto, precoCustoMedio,
-                precoMargemLucro, precoVenda, precoRevenda, saldo, bloqueado, pedidoVenda, disponivel, saldoIdeal,
-                codigoAjuste, codigoCestNcm, tributacaoEstadual, tributacaoFederal, observacoes, informacaoExtraBalanca,
-                unidadeEmbalagem, quantidadeEmbalagem, codigoAnp, referencia, localizacao
-        );
-    }
 }
