@@ -197,7 +197,7 @@ const VendedoresAdd = () => {
                 </div>
 
                 <div className="flex flex-col mr-4">
-                    <DropDown labelDrop={"Tipo de Fornecedor"} title= 'Selecione a UF' ValorBtn={formsData.cpf_cnpj} listItens={['Fisica', 'Juridica']} onSelect={(item) => handleMenuItemClick(item, "Pessoa")} />
+                    <DropDown labelDrop={"Tipo de Fornecedor"} title= 'Selecione o tipo' ValorBtn={formsData.cpf_cnpj} listItens={['Fisica', 'Juridica']} onSelect={(item) => handleMenuItemClick(item, "Pessoa")} />
 
                 </div>
                 

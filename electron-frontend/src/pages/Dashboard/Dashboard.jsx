@@ -116,22 +116,23 @@ function Dashboard() {
               <DashboardCard05Sete titulo="Vendas dos últimos 7 dias" itens={conteudo5} graficoTipo = 'bar' />
               {/* Vendas dos últimos 30 dias*/}
               <DashboardCard05Sete titulo="Vendas dos últimos 30 dias" itens={conteudo6} graficoTipo = 'line' />
-              {/* Doughnut chart (Top Countries) */}
-              <DashboardCard06 />
               {/* Top produtos*/}
               <DashboardCard07/>
-              {/* Line chart (Sales Over Time) */}
-              <DashboardCard08 />
-              {/* Stacked bar chart (Sales VS Refunds) */}
-              <DashboardCard09 />
-              {/* Card (Customers) */}
+              {/* Comissão de vendedores por mês*/}
               <DashboardCard10 />
+
+               {/* Doughnut chart (Top Countries) */}
+              {/*<DashboardCard06 />*/}
+              {/* Line chart (Sales Over Time) */}
+              {/*<DashboardCard08 />*/}
+              {/* Stacked bar chart (Sales VS Refunds) */}
+              {/*<DashboardCard09 />*/}
               {/* Card (Reasons for Refunds) */}
-              <DashboardCard11 />
+              {/*<DashboardCard11 />*/}
               {/* Card (Recent Activity) */}
-              <DashboardCard12 />
+              {/*<DashboardCard12 />*/}
               {/* Card (Income/Expenses) */}
-              <DashboardCard13 />
+              {/*<DashboardCard13 /> */}
               
             </div>
 

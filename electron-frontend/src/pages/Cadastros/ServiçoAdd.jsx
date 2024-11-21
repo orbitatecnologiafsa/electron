@@ -55,7 +55,7 @@ const ServiçoAdd = () => {
     e.preventDefault();
     try {
         const response = await axios.post("http://localhost:8080/empresas-proprietarias/", formData);
-        setFormsData({
+        setFormData({
             tipo: '',
             razaoSocial: '',
             nomeFantasia: '',

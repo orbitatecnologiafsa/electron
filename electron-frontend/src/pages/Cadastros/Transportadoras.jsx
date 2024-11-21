@@ -278,7 +278,7 @@ function Transportadoras() {
                 </div>
               </div>
               <div className="mr-10 mt-10 h-10">
-                <button className="w-auto float-end rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50"
+                <button className= "w-auto float-end px-3 py-2 rounded-md bg-indigo-600 text-white hover:bg-indigo-700"
                   onClick={handleRedirect}>
                   Cadastrar
                 </button>
