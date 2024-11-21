@@ -1,8 +1,11 @@
 package com.electron.controllers;
 
+import java.net.URI;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import com.electron.domain.OutrasInformacoes;
+import jakarta.validation.Valid;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -17,6 +20,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.util.UriComponentsBuilder;
 
 import com.electron.domain.dtos.OutrasInformacoesDTO;
 import com.electron.mappers.OutrasInformacoesMapper;
@@ -52,11 +56,15 @@ public class OutrasInformacoesController {
     }
 
     @PostMapping
-    public ResponseEntity<OutrasInformacoesDTO> criar(@RequestBody OutrasInformacoesDTO outrasInformacoesDTO) {
-        var entidade = outrasInformacoesMapper.toEntity(outrasInformacoesDTO);
-        var salvo = outrasInformacoesService.criar(entidade);
-        return ResponseEntity.status(HttpStatus.CREATED)
-            .body(outrasInformacoesMapper.toDTO(salvo));
+    public ResponseEntity<OutrasInformacoesDTO> criar(@RequestBody @Valid OutrasInformacoesDTO outrasInformacoesDTO, UriComponentsBuilder uriBuilder) {
+        OutrasInformacoes outrasInformacoes = outrasInformacoesMapper.toEntity(outrasInformacoesDTO);
+        OutrasInformacoes outrasInformacoesSalvas = outrasInformacoesService.criar(outrasInformacoes);
+        
+        URI uri = uriBuilder.path("/outras-informacoes/{id}")
+            .buildAndExpand(outrasInformacoesSalvas.getId())
+            .toUri();
+            
+        return ResponseEntity.created(uri).body(outrasInformacoesMapper.toDTO(outrasInformacoesSalvas));
     }
 
     @PutMapping("/{id}")

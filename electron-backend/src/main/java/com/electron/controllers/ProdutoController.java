@@ -1,8 +1,11 @@
 package com.electron.controllers;
 
+import java.net.URI;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import com.electron.domain.Produto;
+import jakarta.validation.Valid;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
@@ -16,6 +19,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.util.UriComponentsBuilder;
 
 import com.electron.domain.dtos.ProdutoDTO;
 import com.electron.mappers.ProdutoMapper;
@@ -50,9 +54,15 @@ public class ProdutoController {
     }
 
     @PostMapping
-    public ResponseEntity<ProdutoDTO> criar(@RequestBody ProdutoDTO produtoDTO) {
-        return ResponseEntity.status(HttpStatus.CREATED)
-            .body(produtoMapper.toDTO(produtoService.salvar(produtoMapper.toEntity(produtoDTO))));
+    public ResponseEntity<ProdutoDTO> criar(@RequestBody @Valid  ProdutoDTO produtoDTO, UriComponentsBuilder uriBuilder) {
+        Produto produto = produtoMapper.toEntity(produtoDTO);
+        Produto produtoSalvo = produtoService.salvar(produto);
+        
+        URI uri = uriBuilder.path("/produtos/{id}")
+            .buildAndExpand(produtoSalvo.getId())
+            .toUri();
+        
+        return ResponseEntity.created(uri).body(produtoMapper.toDTO(produtoSalvo));
     }
 
     @PutMapping("/{id}")

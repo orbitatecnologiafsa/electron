@@ -1,8 +1,11 @@
 package com.electron.controllers;
 
+import java.net.URI;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import com.electron.domain.Dispositivo;
+import jakarta.validation.Valid;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
@@ -16,6 +19,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.util.UriComponentsBuilder;
 
 import com.electron.domain.dtos.DispositivoDTO;
 import com.electron.mappers.DispositivoMapper;
@@ -50,9 +54,15 @@ public class DispositivoController {
     }
 
     @PostMapping
-    public ResponseEntity<DispositivoDTO> criar(@RequestBody DispositivoDTO dispositivoDTO) {
-        return ResponseEntity.status(HttpStatus.CREATED)
-            .body(dispositivoMapper.toDTO(dispositivoService.criar(dispositivoMapper.toEntity(dispositivoDTO))));
+    public ResponseEntity<DispositivoDTO> criar(@RequestBody @Valid DispositivoDTO dispositivoDTO, UriComponentsBuilder uriBuilder) {
+        Dispositivo dispositivo = dispositivoMapper.toEntity(dispositivoDTO);
+        Dispositivo dispositivoSalvo = dispositivoService.criar(dispositivo);
+        
+        URI uri = uriBuilder.path("/dispositivos/{id}")
+            .buildAndExpand(dispositivoSalvo.getId())
+            .toUri();
+            
+        return ResponseEntity.created(uri).body(dispositivoMapper.toDTO(dispositivoSalvo));
     }
 
     @PutMapping("/{id}")

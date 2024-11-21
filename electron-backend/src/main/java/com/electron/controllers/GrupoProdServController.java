@@ -1,7 +1,9 @@
 package com.electron.controllers;
 
+import java.net.URI;
 import java.util.List;
 
+import jakarta.validation.Valid;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
@@ -15,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.util.UriComponentsBuilder;
 
 import com.electron.domain.GrupoProdServ;
 import com.electron.services.GrupoProdServService;
@@ -46,9 +49,14 @@ public class GrupoProdServController {
 
     // Criar novo grupo de produto/serviço
     @PostMapping
-    public ResponseEntity<GrupoProdServ> criar(@RequestBody GrupoProdServ grupoProdServ) {
-        GrupoProdServ novoGrupoProdServ = grupoProdServService.salvar(grupoProdServ);
-        return ResponseEntity.status(HttpStatus.CREATED).body(novoGrupoProdServ);
+    public ResponseEntity<GrupoProdServ> criar(@RequestBody @Valid GrupoProdServ grupoProdServ, UriComponentsBuilder uriBuilder) {
+        GrupoProdServ grupoSalvo = grupoProdServService.salvar(grupoProdServ);
+        
+        URI uri = uriBuilder.path("/grupos-prod-serv/{id}")
+            .buildAndExpand(grupoSalvo.getId())
+            .toUri();
+            
+        return ResponseEntity.created(uri).body(grupoSalvo);
     }
 
     // Atualizar grupo de produto/serviço existente

@@ -1,14 +1,22 @@
 package com.electron.controllers;
 
+import java.net.URI;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import com.electron.domain.dtos.CaixaDTO;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.util.UriComponentsBuilder;
 
 import com.electron.domain.dtos.VendedorDTO;
 import com.electron.mappers.VendedorMapper;
@@ -43,9 +51,16 @@ public class VendedorController {
     }
 
     @PostMapping
-    public ResponseEntity<VendedorDTO> criar(@RequestBody VendedorDTO vendedorDTO) {
-        return ResponseEntity.status(HttpStatus.CREATED)
-                .body(vendedorMapper.toDTO(vendedorService.salvar(vendedorMapper.toEntity(vendedorDTO))));
+    public ResponseEntity<VendedorDTO> criar(@RequestBody VendedorDTO vendedorDTO, UriComponentsBuilder uriBuilder) {
+        var vendedor = vendedorMapper.toEntity(vendedorDTO);
+        var vendedorSalvo = vendedorService.salvar(vendedor);
+        
+        URI uri = uriBuilder.path("/vendedor/{id}")
+            .buildAndExpand(vendedorSalvo.getId())
+            .toUri();
+        
+        return ResponseEntity.created(uri)
+            .body(vendedorMapper.toDTO(vendedorSalvo));
     }
 
     @PutMapping("/{id}")

@@ -1,8 +1,11 @@
 package com.electron.controllers;
 
+import java.net.URI;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import com.electron.domain.Endereco;
+import jakarta.validation.Valid;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
@@ -16,6 +19,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.util.UriComponentsBuilder;
 
 import com.electron.domain.dtos.EnderecoDTO;
 import com.electron.mappers.EnderecoMapper;
@@ -51,11 +55,15 @@ public class EnderecoController {
     }
 
     @PostMapping
-    public ResponseEntity<EnderecoDTO> criar(@RequestBody EnderecoDTO enderecoDTO) {
-        var endereco = enderecoMapper.toEntity(enderecoDTO);
-        var enderecoSalvo = enderecoService.criar(endereco);
-        return ResponseEntity.status(HttpStatus.CREATED)
-            .body(enderecoMapper.toDTO(enderecoSalvo));
+    public ResponseEntity<EnderecoDTO> criar(@RequestBody @Valid EnderecoDTO enderecoDTO, UriComponentsBuilder uriBuilder) {
+        Endereco endereco = enderecoMapper.toEntity(enderecoDTO);
+        Endereco enderecoSalvo = enderecoService.criar(endereco);
+        
+        URI uri = uriBuilder.path("/enderecos/{id}")
+            .buildAndExpand(enderecoSalvo.getId())
+            .toUri();
+            
+        return ResponseEntity.created(uri).body(enderecoMapper.toDTO(enderecoSalvo));
     }
 
     @PutMapping("/{id}")

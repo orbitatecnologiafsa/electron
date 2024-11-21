@@ -1,7 +1,9 @@
 package com.electron.controllers;
 
+import java.net.URI;
 import java.util.List;
 
+import jakarta.validation.Valid;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
@@ -15,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.util.UriComponentsBuilder;
 
 import com.electron.domain.TributoNcm;
 import com.electron.services.TributoNCMService;
@@ -44,9 +47,14 @@ public class TributoNCMController {
     }
 
     @PostMapping
-    public ResponseEntity<TributoNcm> criar(@RequestBody TributoNcm tributoNCM) {
-        TributoNcm novoTributo = tributoNCMService.criar(tributoNCM);
-        return ResponseEntity.status(HttpStatus.CREATED).body(novoTributo);
+    public ResponseEntity<TributoNcm> criar(@RequestBody @Valid TributoNcm tributoNcm, UriComponentsBuilder uriBuilder) {
+        TributoNcm tributoSalvo = tributoNCMService.criar(tributoNcm);
+        
+        URI uri = uriBuilder.path("/tributos-ncm/{id}")
+            .buildAndExpand(tributoSalvo.getId())
+            .toUri();
+            
+        return ResponseEntity.created(uri).body(tributoSalvo);
     }
 
     @PutMapping("/{id}")

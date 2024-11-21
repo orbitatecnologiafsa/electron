@@ -1,10 +1,14 @@
 package com.electron.controllers;
 
+import java.net.URI;
 import java.util.List;
+import java.util.stream.Collectors;
 
+import com.electron.domain.dtos.SubgrupoProdServDTO;
+import com.electron.mappers.SubgrupoProdServMapper;
+import jakarta.validation.Valid;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -15,43 +19,57 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-
-import com.electron.domain.SubgrupoProdServ;
+import org.springframework.web.util.UriComponentsBuilder;
 import com.electron.services.SubgrupoProdServService;
 
 @RestController
 @RequestMapping("/subgrupos-prod-serv")
 public class SubgrupoProdServController {
     private final SubgrupoProdServService subgrupoProdServService;
+    private final SubgrupoProdServMapper subgrupoProdServMapper;
 
-    public SubgrupoProdServController(SubgrupoProdServService subgrupoProdServService) {
+    public SubgrupoProdServController(SubgrupoProdServService subgrupoProdServService,
+                                      SubgrupoProdServMapper subgrupoProdServMapper) {
         this.subgrupoProdServService = subgrupoProdServService;
+        this.subgrupoProdServMapper = subgrupoProdServMapper;
     }
 
     @GetMapping
-    public ResponseEntity<List<SubgrupoProdServ>> listarTodos(
+    public ResponseEntity<List<SubgrupoProdServDTO>> listarTodos(
             @RequestParam(value = "page", defaultValue = "0") int page,
             @RequestParam(value = "size", defaultValue = "10") int size) {
         Pageable pageable = PageRequest.of(page, size);
-        return ResponseEntity.ok(subgrupoProdServService.listarTodos(pageable).getContent());
+        return ResponseEntity.ok(
+                subgrupoProdServService.listarTodos(pageable).getContent().stream()
+                        .map(subgrupoProdServMapper::toDTO)
+                        .collect(Collectors.toList())
+        );
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<SubgrupoProdServ> buscarPorId(@PathVariable Long id) {
-        SubgrupoProdServ subgrupoProdServ = subgrupoProdServService.buscarPorId(id);
-        return ResponseEntity.ok(subgrupoProdServ);
+    public ResponseEntity<SubgrupoProdServDTO> buscarPorId(@PathVariable Long id) {
+        return ResponseEntity.ok(subgrupoProdServMapper.toDTO(subgrupoProdServService.buscarPorId(id)));
     }
 
     @PostMapping
-    public ResponseEntity<SubgrupoProdServ> criar(@RequestBody SubgrupoProdServ subgrupoProdServ) {
-        SubgrupoProdServ novoSubgrupoProdServ = subgrupoProdServService.salvar(subgrupoProdServ);
-        return ResponseEntity.status(HttpStatus.CREATED).body(novoSubgrupoProdServ);
+    public ResponseEntity<SubgrupoProdServDTO> criar(@RequestBody @Valid SubgrupoProdServDTO dto, 
+                                                    UriComponentsBuilder uriBuilder) {
+        var entity = subgrupoProdServMapper.toEntity(dto);
+        var saved = subgrupoProdServService.salvar(entity);
+        
+        URI uri = uriBuilder.path("/subgrupos-prod-serv/{id}")
+            .buildAndExpand(saved.getId())
+            .toUri();
+            
+        return ResponseEntity.created(uri).body(subgrupoProdServMapper.toDTO(saved));
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<SubgrupoProdServ> atualizar(@PathVariable Long id, @RequestBody SubgrupoProdServ subgrupoProdServAtualizado) {
-        SubgrupoProdServ subgrupoProdServ = subgrupoProdServService.atualizar(id, subgrupoProdServAtualizado);
-        return ResponseEntity.ok(subgrupoProdServ);
+    public ResponseEntity<SubgrupoProdServDTO> atualizar(@PathVariable Long id, 
+                                                        @RequestBody @Valid SubgrupoProdServDTO dto) {
+        var entity = subgrupoProdServMapper.toEntity(dto);
+        var updated = subgrupoProdServService.atualizar(id, entity);
+        return ResponseEntity.ok(subgrupoProdServMapper.toDTO(updated));
     }
 
     @DeleteMapping("/{id}")
