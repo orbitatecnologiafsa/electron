@@ -32,31 +32,22 @@ public class CaixaController {
         this.caixaMapper = caixaMapper;
     }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<CaixaDTO> listarPorId(@PathVariable Long id) {
-        var caixa = caixaService.listarPorId(id);
-        return ResponseEntity.ok(caixaMapper.toDTO(caixa));
-    }
-
     @GetMapping
-    public ResponseEntity<List<CaixaDTO>> listarTodos() {
-        return ResponseEntity.ok(
-            caixaService.listarTodos().stream()
-                .map(caixaMapper::toDTO)
-                .collect(Collectors.toList())
-        );
-    }
-
-    @GetMapping("/pageable")
     public ResponseEntity<List<CaixaDTO>> listarPageable(
             @RequestParam(value = "page", defaultValue = "0") int page,
             @RequestParam(value = "size", defaultValue = "10") int size) {
         Pageable pageable = PageRequest.of(page, size);
         return ResponseEntity.ok(
-            caixaService.listarTodos(pageable).getContent().stream()
-                .map(caixaMapper::toDTO)
-                .collect(Collectors.toList())
+                caixaService.listarTodos(pageable).getContent().stream()
+                        .map(caixaMapper::toDTO)
+                        .collect(Collectors.toList())
         );
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<CaixaDTO> listarPorId(@PathVariable Long id) {
+        var caixa = caixaService.listarPorId(id);
+        return ResponseEntity.ok(caixaMapper.toDTO(caixa));
     }
 
     @PostMapping
@@ -64,7 +55,7 @@ public class CaixaController {
         var caixa = caixaMapper.toEntity(caixaDTO);
         var novaCaixa = caixaService.criar(caixa);
         return ResponseEntity.status(HttpStatus.CREATED)
-            .body(caixaMapper.toDTO(novaCaixa));
+                .body(caixaMapper.toDTO(novaCaixa));
     }
 
     @PutMapping("/{id}")

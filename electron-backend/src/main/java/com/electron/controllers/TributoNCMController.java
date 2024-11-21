@@ -1,12 +1,23 @@
 package com.electron.controllers;
 
-import com.electron.domain.TributoNcm;
-import com.electron.services.TributoNCMService;
+import java.util.List;
+
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
-import java.util.List;
+import com.electron.domain.TributoNcm;
+import com.electron.services.TributoNCMService;
 
 @RestController
 @RequestMapping("/tributo-ncm")
@@ -19,9 +30,11 @@ public class TributoNCMController {
     }
 
     @GetMapping
-    public ResponseEntity<List<TributoNcm>> listarTodos() {
-        List<TributoNcm> tributos = tributoNCMService.listarTodos();
-        return ResponseEntity.ok(tributos);
+    public ResponseEntity<List<TributoNcm>> listarTodos(
+            @RequestParam(value = "page", defaultValue = "0") int page,
+            @RequestParam(value = "size", defaultValue = "10") int size) {
+        Pageable pageable = PageRequest.of(page, size);
+        return ResponseEntity.ok(tributoNCMService.listarTodos(pageable).getContent());
     }
 
     @GetMapping("/{id}")

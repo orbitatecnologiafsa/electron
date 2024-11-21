@@ -4,6 +4,8 @@ import com.electron.domain.Transportadora;
 import com.electron.repositories.TransportadoraRepository;
 import com.electron.services.exceptions.AlreadyExistException;
 import com.electron.services.exceptions.NotFoundException;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -16,9 +18,8 @@ public class TransportadoraService {
         this.transportadoraRepository = transportadoraRepository;
     }
 
-    // Listar todas as transportadoras
-    public List<Transportadora> listarTodas() {
-        return transportadoraRepository.findAll();
+    public Page<Transportadora> listarTodas(Pageable pageable) {
+        return transportadoraRepository.findAll(pageable);
     }
 
     // Buscar transportadora por ID

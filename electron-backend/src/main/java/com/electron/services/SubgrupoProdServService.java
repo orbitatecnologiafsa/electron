@@ -3,6 +3,8 @@ package com.electron.services;
 import com.electron.domain.SubgrupoProdServ;
 import com.electron.repositories.SubgrupoProdServRepository;
 import com.electron.services.exceptions.NotFoundException;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -15,9 +17,8 @@ public class SubgrupoProdServService {
         this.subgrupoProdServRepository = subgrupoProdServRepository;
     }
 
-    // Listar todos os subgrupos de produto/serviço
-    public List<SubgrupoProdServ> listarTodos() {
-        return subgrupoProdServRepository.findAll();
+    public Page<SubgrupoProdServ> listarTodos(Pageable pageable) {
+        return subgrupoProdServRepository.findAll(pageable);
     }
 
     // Buscar subgrupo de produto/serviço por ID

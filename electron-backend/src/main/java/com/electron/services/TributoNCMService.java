@@ -3,6 +3,8 @@ package com.electron.services;
 import com.electron.domain.TributoNcm;
 import com.electron.repositories.TributoNCMRepository;
 import com.electron.services.exceptions.NotFoundException;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -16,8 +18,8 @@ public class TributoNCMService {
         this.tributoNCMRepository = tributoNCMRepository;
     }
 
-    public List<TributoNcm> listarTodos() {
-        return tributoNCMRepository.findAll();
+    public Page<TributoNcm> listarTodos(Pageable pageable) {
+        return tributoNCMRepository.findAll(pageable);
     }
 
     public TributoNcm listarPorId(Long id) {

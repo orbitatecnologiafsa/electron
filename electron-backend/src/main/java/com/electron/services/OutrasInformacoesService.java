@@ -3,6 +3,8 @@ package com.electron.services;
 import com.electron.domain.OutrasInformacoes;
 import com.electron.repositories.OutrasInformacoesRepository;
 import com.electron.services.exceptions.NotFoundException;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -15,8 +17,8 @@ public class OutrasInformacoesService {
         this.outrasInformacoesRepository = outrasInformacoesRepository;
     }
 
-    public List<OutrasInformacoes> listarTodos() {
-        return outrasInformacoesRepository.findAll();
+    public Page<OutrasInformacoes> listarTodos(Pageable pageable) {
+        return outrasInformacoesRepository.findAll(pageable);
     }
 
     public OutrasInformacoes listarPorId(Long id) {

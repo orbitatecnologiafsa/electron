@@ -3,6 +3,8 @@ package com.electron.services;
 import com.electron.domain.Produto;
 import com.electron.repositories.ProdutoRepository;
 import com.electron.services.exceptions.NotFoundException;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -17,8 +19,8 @@ public class ProdutoService {
     }
 
     // Listar todos os produtos
-    public List<Produto> listarTodos() {
-        return produtoRepository.findAll();
+    public Page<Produto> listarTodos(Pageable pageable) {
+        return produtoRepository.findAll(pageable);
     }
 
     // Buscar produto por ID

@@ -3,9 +3,9 @@ package com.electron.services;
 import com.electron.domain.Usuario;
 import com.electron.repositories.UsuarioRepository;
 import com.electron.services.exceptions.NotFoundException;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-
-import java.util.List;
 
 @Service
 public class UsuarioService {
@@ -15,9 +15,8 @@ public class UsuarioService {
         this.usuarioRepository = usuarioRepository;
     }
 
-    public List<Usuario> listarTodos() {
-        List<Usuario> usuarios = usuarioRepository.findAll();
-        return usuarios;
+    public Page<Usuario> listarTodos(Pageable pageable) {
+        return usuarioRepository.findAll(pageable);
     }
 
     public Usuario listarPorId(Long id) {

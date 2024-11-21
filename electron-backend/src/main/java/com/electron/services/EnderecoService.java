@@ -3,6 +3,8 @@ package com.electron.services;
 import com.electron.domain.Endereco;
 import com.electron.repositories.EnderecoRepository;
 import com.electron.services.exceptions.NotFoundException;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -16,8 +18,8 @@ public class EnderecoService {
         this.enderecoRepository = enderecoRepository;
     }
 
-    public List<Endereco> listarTodos() {
-        return enderecoRepository.findAll();
+    public Page<Endereco> listarTodos(Pageable pageable) {
+        return enderecoRepository.findAll(pageable);
     }
 
     public Endereco listarPorId(Long id) {

@@ -3,6 +3,8 @@ package com.electron.services;
 import com.electron.domain.GrupoProdServ;
 import com.electron.repositories.GrupoProdServRepository;
 import com.electron.services.exceptions.NotFoundException;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -15,8 +17,8 @@ public class GrupoProdServService {
         this.grupoProdServRepository = grupoProdServRepository;
     }
 
-    public List<GrupoProdServ> listarTodos() {
-        return grupoProdServRepository.findAll();
+    public Page<GrupoProdServ> listarTodos(Pageable pageable) {
+        return grupoProdServRepository.findAll(pageable);
     }
 
     public GrupoProdServ buscarPorId(Long id) {

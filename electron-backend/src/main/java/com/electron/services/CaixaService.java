@@ -22,10 +22,6 @@ public class CaixaService {
         return caixaRepository.findAll(pageable);
     }
 
-    public List<Caixa> listarTodos(){
-        return caixaRepository.findAll();
-    }
-
     public Caixa listarPorId(Long id){
         return caixaRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException("Caixa não encontrada"));

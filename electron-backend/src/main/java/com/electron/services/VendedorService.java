@@ -6,6 +6,8 @@ import com.electron.repositories.PessoaRepository;
 import com.electron.repositories.VendedorRepository;
 import com.electron.services.exceptions.AlreadyExistException;
 import com.electron.services.exceptions.NotFoundException;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -22,23 +24,19 @@ public class VendedorService {
         this.pessoaRepository = pessoaRepository;
     }
 
-    // Listar todos os vendedores
-    public List<Vendedor> listarTodos() {
-        return vendedorRepository.findAll();
+    public Page<Vendedor> listarTodos(Pageable pageable) {
+        return vendedorRepository.findAll(pageable);
     }
 
-    // Buscar vendedor por ID
     public Vendedor buscarPorId(Long id) {
         return vendedorRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException("Vendedor não encontrado com o ID: " + id));
     }
 
-    // Salvar um novo vendedor com validações de unicidade em Pessoa
     public Vendedor salvar(Vendedor vendedor) {
         return vendedorRepository.save(vendedor);
     }
 
-    // Atualizar um vendedor existente com validações de unicidade em Pessoa
     public Vendedor atualizar(Long id, Vendedor vendedorAtualizado) {
         Vendedor vendedorExistente = buscarPorId(id); // Lança exceção se não encontrar
 
@@ -51,7 +49,6 @@ public class VendedorService {
         return vendedorRepository.save(vendedorExistente);
     }
 
-    // Excluir vendedor por ID
     public void excluir(Long id) {
         if (!vendedorRepository.existsById(id)) {
             throw new NotFoundException("Vendedor não encontrado com o ID: " + id);
@@ -59,7 +56,6 @@ public class VendedorService {
         vendedorRepository.deleteById(id);
     }
 
-    // Validação para garantir unicidade de email e cpfCnpj na entidade Pessoa
     private void validarPessoaUnicidade(Pessoa pessoa) {
         if (pessoaRepository.findByEmail(pessoa.getEmail()).isPresent()) {
             throw new AlreadyExistException("Email já está em uso: " + pessoa.getEmail());

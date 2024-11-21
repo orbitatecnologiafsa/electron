@@ -4,6 +4,8 @@ import com.electron.domain.Dispositivo;
 import com.electron.repositories.DispositivoRepository;
 import com.electron.services.exceptions.NotFoundException;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -16,8 +18,8 @@ public class DispositivoService {
         this.dispositivoRepository = dispositivoRepository;
     }
 
-    public List<Dispositivo> listarTodos() {
-        return dispositivoRepository.findAll();
+    public Page<Dispositivo> listarTodos(Pageable pageable) {
+        return dispositivoRepository.findAll(pageable);
     }
 
     public Dispositivo listarPorId(Long id) {

@@ -3,16 +3,12 @@ package com.electron.controllers;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import com.electron.domain.dtos.CaixaDTO;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import com.electron.domain.dtos.VendedorDTO;
 import com.electron.mappers.VendedorMapper;
@@ -29,12 +25,15 @@ public class VendedorController {
         this.vendedorMapper = vendedorMapper;
     }
 
-    @GetMapping
-    public ResponseEntity<List<VendedorDTO>> listarTodos() {
+     @GetMapping
+    public ResponseEntity<List<VendedorDTO>> listarPageable(
+            @RequestParam(value = "page", defaultValue = "0") int page,
+            @RequestParam(value = "size", defaultValue = "10") int size) {
+        Pageable pageable = PageRequest.of(page, size);
         return ResponseEntity.ok(
-            vendedorService.listarTodos().stream()
-                .map(vendedorMapper::toDTO)
-                .collect(Collectors.toList())
+                vendedorService.listarTodos(pageable).getContent().stream()
+                        .map(vendedorMapper::toDTO)
+                        .collect(Collectors.toList())
         );
     }
 
@@ -46,13 +45,13 @@ public class VendedorController {
     @PostMapping
     public ResponseEntity<VendedorDTO> criar(@RequestBody VendedorDTO vendedorDTO) {
         return ResponseEntity.status(HttpStatus.CREATED)
-            .body(vendedorMapper.toDTO(vendedorService.salvar(vendedorMapper.toEntity(vendedorDTO))));
+                .body(vendedorMapper.toDTO(vendedorService.salvar(vendedorMapper.toEntity(vendedorDTO))));
     }
 
     @PutMapping("/{id}")
     public ResponseEntity<VendedorDTO> atualizar(@PathVariable Long id, @RequestBody VendedorDTO vendedorDTO) {
         return ResponseEntity.ok(
-            vendedorMapper.toDTO(vendedorService.atualizar(id, vendedorMapper.toEntity(vendedorDTO)))
+                vendedorMapper.toDTO(vendedorService.atualizar(id, vendedorMapper.toEntity(vendedorDTO)))
         );
     }
 

@@ -3,6 +3,8 @@ package com.electron.services;
 import com.electron.domain.EmpresaProprietaria;
 import com.electron.repositories.EmpresaProprietariaRepository;
 import com.electron.services.exceptions.NotFoundException;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -16,8 +18,8 @@ public class EmpresaProprietariaService {
         this.empresaProprietariaRepository = empresaProprietariaRepository;
     }
 
-    public List<EmpresaProprietaria> listarTodas() {
-        return empresaProprietariaRepository.findAll();
+    public Page<EmpresaProprietaria> listarTodas(Pageable pageable) {
+        return empresaProprietariaRepository.findAll(pageable);
     }
 
     public EmpresaProprietaria listarPorId(Long id) {
