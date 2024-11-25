@@ -14,23 +14,18 @@ import java.math.BigDecimal;
 @AllArgsConstructor
 public class TributacaoEstadual {
 
+    @Column(name = "tributacao_estadual_contribuinte")
+    private final Boolean contribuinte = false;
+    @Column(name = "tributacao_estadual_nao_contribuinte")
+    private final Boolean naoContribuinte = false;
+    @Column(name = "tributacao_estadual_isento")
+    private final Boolean isento = false;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "tributacao_estadual_id")
     private Long id;
-
     @Column(name = "tributacao_estadual_nome", nullable = false)
     private String nome;
-
-    @Column(name = "tributacao_estadual_contribuinte")
-    private final Boolean contribuinte = false;
-
-    @Column(name = "tributacao_estadual_nao_contribuinte")
-    private final Boolean naoContribuinte = false;
-
-    @Column(name = "tributacao_estadual_isento")
-    private final Boolean isento = false;
-
     @ManyToOne
     @JoinColumn(name = "tributacao_estadual_fk_UF_origem", insertable = false, updatable = false)
     private Estado origem;
@@ -78,4 +73,9 @@ public class TributacaoEstadual {
 
     @Column(name = "tributacao_estadual_observacoes", columnDefinition = "TEXT")
     private String observacoes;
+
+    public TributacaoEstadual(Long id) {
+        this.id = id;
+    }
+
 }

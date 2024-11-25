@@ -4,18 +4,17 @@ import com.electron.domain.enums.RegimeTributario;
 import com.electron.domain.enums.TipoPessoa;
 import com.electron.domain.enums.TipoUnidade;
 import com.electron.domain.enums.VersaoEmpresa;
-import com.electron.validation.ValidCpfCnpj;
 import com.electron.validation.ValidCep;
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.electron.validation.ValidCpfCnpj;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.Pattern;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+
 import java.time.LocalDate;
 import java.util.List;
-
-import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.Pattern;
 
 @Entity
 @Table(name = "empresa_proprietaria")
@@ -87,7 +86,7 @@ public class EmpresaProprietaria {
     private String telefone;
 
     @Email(message = "Email inválido")
-    @Column(name = "empresa_email", unique = true)
+    @Column(name = "empresa_email", unique = true, nullable = false)
     private String email;
 
     @ValidCep
@@ -103,11 +102,11 @@ public class EmpresaProprietaria {
     @Column(name = "empresa_bairro", nullable = false, length = 100)
     private String bairro;
 
-    @Column(name = "empresa_complemento", nullable = false, length = 100)
+    @Column(name = "empresa_complemento", length = 100)
     private String complemento;
 
     @ManyToOne
-   // @JsonIgnore
+    // @JsonIgnore
     @JoinColumn(name = "empresa_fk_municipios", nullable = false)
     private Municipio municipio;
 
@@ -123,7 +122,6 @@ public class EmpresaProprietaria {
     @Column(name = "empresa_observacoes", columnDefinition = "TEXT")
     private String observacoes;
 
-    @OneToMany(mappedBy = "empresaProprietaria")
-    @Column(name = "empresa_caixas")
+    @OneToMany(mappedBy = "empresaProprietaria", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Caixa> caixas;
 }

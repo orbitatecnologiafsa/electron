@@ -185,10 +185,15 @@ function Sidebar({
                 pathname === "/cadastro/empresas" ||
                 pathname === "/cadastro/empresas/adicionar" ||
                 pathname === "/cadastro/produtos" || 
+                pathname === "/cadastro/produtos/adicionar" || 
                 pathname === "/cadastro/fornecedores" || 
+                pathname === "/cadastro/fornecedores/adicionar" || 
                 pathname === "/cadastro/transportadoras" || 
+                pathname === "/cadastro/transportadoras/adicionar" || 
                 pathname === "/cadastro/vendedores" || 
-                pathname === "/cadastro/servicos" 
+                pathname === "/cadastro/vendedores/adicionar" || 
+                pathname === "/cadastro/servicos" ||
+                pathname === "/cadastro/servicos/adicionar" 
               }>
                 {(handleClick, open) => {
                   return (
@@ -199,10 +204,15 @@ function Sidebar({
                           pathname === "/cadastro/empresas" ||
                           pathname === "/cadastro/empresas/adicionar" ||
                           pathname === "/cadastro/produtos" || 
+                          pathname === "/cadastro/produtos/adicionar" || 
                           pathname === "/cadastro/fornecedores" || 
+                          pathname === "/cadastro/fornecedores/adicionar" || 
                           pathname === "/cadastro/transportadoras" || 
+                          pathname === "/cadastro/transportadoras/adicionar" || 
                           pathname === "/cadastro/vendedores" || 
-                          pathname === "/cadastro/servicos" ? "" : "hover:text-gray-900 dark:hover:text-white"
+                          pathname === "/cadastro/vendedores/adicionar" || 
+                          pathname === "/cadastro/servicos" ||
+                          pathname === "/cadastro/servicos/adicionar" ? "" : "hover:text-gray-900 dark:hover:text-white"
                         }`}
                         onClick={(e) => {
                           e.preventDefault();
@@ -387,7 +397,7 @@ function Sidebar({
               <SidebarLinkGroup activecondition={
                 pathname === "/saidas/orcamento" ||
                 pathname === "/saidas/pedido" || 
-                pathname === "/saidas/notafiscal"  
+                pathname === "/saidas/notafiscalnfe"  
               }>
                 {(handleClick, open) => {
                   return (

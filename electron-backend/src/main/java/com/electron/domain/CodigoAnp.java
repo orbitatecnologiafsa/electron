@@ -19,4 +19,8 @@ public class CodigoAnp {
 
     @Column(name = "codigo_anp_nome", length = 20)
     private String nome;
+
+    public CodigoAnp(Long id) {
+        this.id = id;
+    }
 }
