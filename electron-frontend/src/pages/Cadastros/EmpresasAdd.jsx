@@ -173,8 +173,9 @@ function EmpresasAdd() {
   const handleInputChange = (e) => {
     const { name, value } = e.target;
   
+    // Verifica qual campo está sendo atualizado
     if (name === "complemento") {
-      // Atualiza diretamente o campo "complemento"
+      // Atualiza o complemento
       setFormData((prevData) => ({
         ...prevData,
         complemento: value,
@@ -182,40 +183,58 @@ function EmpresasAdd() {
       return;
     }
   
-    const numericValue = value.replace(/\D/g, '');
-    let formattedValue = '';
-    let maxLength = 11;
-  
-    // Determina o tipo de documento e formata
-    if (numericValue.length <= 11) {
-      formattedValue = formatarCPF(numericValue);
-      setDocumentoValue('CPF');
+    if (name === "numero") {
+      // Atualiza o número
       setFormData((prevData) => ({
         ...prevData,
-        tipoPessoa: 'PESSOA_FISICA',  // Pessoa Física
+        numero: value,
       }));
-      maxLength = 11;
-    } else if (numericValue.length <= 14) {
-      formattedValue = formatarCNPJ(numericValue);
-      setDocumentoValue('CNPJ');
-      setFormData((prevData) => ({
-        ...prevData,
-        tipoPessoa: 'PESSOA_JURIDICA',  // Pessoa Jurídica
-      }));
-      maxLength = 14;
-      getDadosCNPJ(numericValue);  // Chama a API para obter dados do CNPJ
+      return;
     }
   
-    const finalValue = numericValue.slice(0, maxLength);
-    
-    setDocDigitado(formattedValue);
+    if (name === "cpfCnpj") {
+      // Aqui tratamos os campos de CPF e CNPJ
+      const numericValue = value.replace(/\D/g, '');
+      let formattedValue = '';
+      let maxLength = 11;
   
-    // Atualiza o valor do CPF/CNPJ no formData
+      if (numericValue.length <= 11) {
+        formattedValue = formatarCPF(numericValue);
+        setDocumentoValue('CPF');
+        setFormData((prevData) => ({
+          ...prevData,
+          tipoPessoa: 'PESSOA_FISICA', // Pessoa Física
+        }));
+        maxLength = 11;
+      } else if (numericValue.length <= 14) {
+        formattedValue = formatarCNPJ(numericValue);
+        setDocumentoValue('CNPJ');
+        setFormData((prevData) => ({
+          ...prevData,
+          tipoPessoa: 'PESSOA_JURIDICA', // Pessoa Jurídica
+        }));
+        maxLength = 14;
+        getDadosCNPJ(numericValue); // Chama a API para obter dados do CNPJ
+      }
+  
+      const finalValue = numericValue.slice(0, maxLength);
+      setDocDigitado(formattedValue);
+  
+      // Atualiza o valor do CPF/CNPJ no formData
+      setFormData((prevData) => ({
+        ...prevData,
+        cpfCnpj: finalValue,
+      }));
+      return;
+    }
+    
+    // Aqui é o fallback para qualquer outro campo não tratado
     setFormData((prevData) => ({
       ...prevData,
-      cpfCnpj: finalValue,
+      [name]: value,
     }));
   };
+  
   
 
 
@@ -430,15 +449,15 @@ function EmpresasAdd() {
 
               <div className="flex flex-col md:flex-row gap-4 justify-between ">
               <div className="flex flex-col">
-                  <label className="block ml-1 text-sm font-medium leading-6 text-black">Número</label>
-                  <input
-                    type="text"
-                    name="numero"
-                    value={formData.numero}
-                    onChange={handleInputChange}
-                    className="w-[7rem] h-11 px-3 py-2 rounded-md ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-indigo-600"
-                  />
-                </div>
+                <label className="block ml-1 text-sm font-medium leading-6 text-black">Número</label>
+                <input
+                  type="text"
+                  name="numero"
+                  value={formData.numero}
+                  onChange={handleInputChange}
+                  className="w-[7rem] h-11 px-3 py-2 rounded-md ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-indigo-600"
+                />
+              </div>
 
                 <div className="flex flex-col">
                   <label className="block ml-1 text-sm font-medium leading-6 text-black">Bairro</label>
@@ -464,7 +483,7 @@ function EmpresasAdd() {
                 </div>
 
                 <div className="flex flex-col">
-                  <DropDown name='estado' value={formData.municipio?.estado} labelDrop="Estado" title= 'Selecione a UF' ValorBtn={dropEstado} listItens={["US", "MX", "BA"]} onSelect={(item) => handleMenuItemClick(item,'Estado')} />
+                  <DropDown name='estado' value={formData.estado} labelDrop="Estado" title= 'Selecione a UF' ValorBtn={dropEstado} listItens={["US", "MX", "BA"]} onSelect={(item) => handleMenuItemClick(item,'Estado')} />
                 </div>
               </div>
 
