@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import Sidebar from '../../partials/Sidebar';
 import Header from '../../partials/Header';
 import axios from 'axios';
+import DropDown from '../../components/DropDown';
 
 function EmpresasAdd() {
 
@@ -13,6 +14,7 @@ function EmpresasAdd() {
   const [tipoCliente, setTipoCliente] = useState('-');
   const [cep, setCep] = useState('');
   const [cnpj, setCnpj] = useState('');
+  const [dropEstado, setDropEstado] = useState('');
 
   const [error, setError] = useState(null);
 
@@ -161,6 +163,13 @@ function EmpresasAdd() {
   };
   const navigate = useNavigate();
 
+  const handleMenuItemClick = (item, tipo) => {
+    if(tipo === 'Estado'){
+        setDropEstado(item);
+    }
+    handleInputChange({ target: { name: 'estado', value: item } });
+  };
+
   const handleInputChange = (e) => {
     const { name, value } = e.target;
   
@@ -252,9 +261,15 @@ function EmpresasAdd() {
               </div>
 
               {/* Dados da Empresa */}
+
+              <h2 style={{ color: '#5E16ED', fontSize: '170%', fontWeight: 'bold' }}>
+                Dados
+                <hr style={{ border: '1px solid #5E16ED' }} />
+              </h2>
+
               <div className="flex flex-col md:flex-row gap-4">
                 <div className="flex flex-col">
-                  <label className="block ml-1 text-sm font-medium leading-6 text-gray-900">Razão Social</label>
+                  <label className="block ml-1 text-sm font-medium leading-6 text-black">Razão Social</label>
                   <input
                     type="text"
                     name="nomeRazao"
@@ -265,7 +280,7 @@ function EmpresasAdd() {
                   />
                 </div>
                 <div className="flex flex-col">
-                <label className="block ml-1 text-sm font-medium leading-6 text-gray-900">Documento</label>
+                <label className="block ml-1 text-sm font-medium leading-6 text-black">Documento</label>
                   <input
                     type="text"
                     name="cpfCnpj"
@@ -278,7 +293,7 @@ function EmpresasAdd() {
               </div>
 
               <div className="flex flex-col">
-                  <label className="block ml-1 text-sm font-medium leading-6 text-gray-900">Nome Fantasia</label>
+                  <label className="block ml-1 text-sm font-medium leading-6 text-black">Nome Fantasia</label>
                   <input
                     type="text"
                     name="nomeFantasia"
@@ -288,91 +303,10 @@ function EmpresasAdd() {
                     className="w-[66rem] h-11 px-3 py-2 rounded-md ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-indigo-600 disabled:bg-gray-300"
                   />
                 </div>
-              
-              {/* Endereço do Cliente */}
-              <div className="flex flex-col md:flex-row gap-4">
-                <div className="flex flex-col">
-                  <label className="block ml-1 text-sm font-medium leading-6 text-gray-900">CEP</label>
-                  <input
-                    type="text"
-                    name="cep"
-                    value={cep}
-                    onChange={handleCepChange}
-                    className="w-[15rem] h-11 px-3 py-2 rounded-md ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-indigo-600"
-                  />
-                </div>
-                <div className="flex flex-col">
-                  <label className="block ml-1 text-sm font-medium leading-6 text-gray-900">Logradouro</label>
-                  <input
-                    type="text"
-                    name="logradouro"
-                    value={formData.logradouro}
-                    onChange={handleInputChange}
-                    readOnly
-                    className="w-[42rem] h-11 px-3 py-2 rounded-md ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-indigo-600"
-                  />
-                </div>
-                <div className="flex flex-col">
-                  <label className="block ml-1 text-sm font-medium leading-6 text-gray-900">Número</label>
-                  <input
-                    type="text"
-                    name="numero"
-                    value={formData.numero}
-                    onChange={handleInputChange}
-                    className="w-[7rem] h-11 px-3 py-2 rounded-md ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-indigo-600"
-                  />
-                </div>
-              </div>
 
-              <div className="flex flex-col md:flex-row gap-4">
+                <div className="flex flex-col md:flex-row gap-4">
                 <div className="flex flex-col">
-                  <label className="block ml-1 text-sm font-medium leading-6 text-gray-900">Bairro</label>
-                  <input
-                    type="text"
-                    name="bairro"
-                    value={formData.bairro}
-                    onChange={handleInputChange}
-                    readOnly
-                    className="w-[26rem] h-11 px-3 py-2 rounded-md ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-indigo-600"
-                  />
-                </div>
-                <div className="flex flex-col">
-                  <label className="block ml-1 text-sm font-medium leading-6 text-gray-900">Complemento</label>
-                  <input
-                    type="text"
-                    name="complemento"
-                    value={formData.complemento}
-                    onChange={handleInputChange}
-                    className="w-[20rem] h-11 px-3 py-2 rounded-md ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-indigo-600"
-                  />
-                </div>
-                <div className="flex flex-col">
-                  <label className="block ml-1 text-sm font-medium leading-6 text-gray-900">Estado / UF</label>
-                  <input
-                    type="text"
-                    name="estado"
-                    value={formData.municipio?.estado}
-                    onChange={handleInputChange}
-                    readOnly
-                    className="w-[6rem] h-11 px-3 py-2 rounded-md ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-indigo-600"
-                  />
-                </div>
-                <div className="flex flex-col">
-                  <label className="block ml-1 text-sm font-medium leading-6 text-gray-900">Município</label>
-                  <input
-                    type="text"
-                    name="municipio"
-                    value={formData.municipio}
-                    onChange={handleInputChange}
-                    readOnly
-                    className="w-[11rem] h-11 px-3 py-2 rounded-md ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-indigo-600"
-                  />
-                </div>
-              </div>
-              
-              <div className="flex flex-col md:flex-row gap-4">
-                <div className="flex flex-col">
-                  <label className="block ml-1 text-sm font-medium leading-6 text-gray-900">RG Inscrição Estadual</label>
+                  <label className="block ml-1 text-sm font-medium leading-6 text-black">RG Inscrição Estadual</label>
                   <input
                     type="text"
                     name="rgInscricaoEstadual"
@@ -382,7 +316,7 @@ function EmpresasAdd() {
                   />
                 </div>
                 <div className="flex flex-col">
-                  <label className="block ml-1 text-sm font-medium leading-6 text-gray-900">Inscrição Estadual Municipal</label>
+                  <label className="block ml-1 text-sm font-medium leading-6 text-black">Inscrição Estadual Municipal</label>
                   <input
                     type="text"
                     name="inscricaoEstadualMunicipal"
@@ -394,11 +328,15 @@ function EmpresasAdd() {
               </div>
 
                 {/* Contato do Cliente */}
+                <h2 style={{ color: '#5E16ED', fontSize: '170%', fontWeight: 'bold' }}>
+                  Contato
+                  <hr style={{ border: '1px solid #5E16ED' }} />
+                </h2>
                 <div className="flex">
                   <div className="grid grid-cols-1 gap-4">
                     <div className="flex flex-col md:flex-row gap-4 max-w-[30rem]">
                       <div className="flex flex-col">
-                        <label className="block ml-1 text-sm font-medium leading-6 text-gray-900">Email</label>
+                        <label className="block ml-1 text-sm font-medium leading-6 text-black">Email</label>
                         <input
                           type="email"
                           name="email"
@@ -408,7 +346,7 @@ function EmpresasAdd() {
                         />
                       </div>
                       <div className="flex flex-col">
-                        <label className="block ml-1 text-sm font-medium leading-6 text-gray-900">Contato</label>
+                        <label className="block ml-1 text-sm font-medium leading-6 text-black">Contato</label>
                         <input
                           type="text"
                           name="contato"
@@ -420,7 +358,7 @@ function EmpresasAdd() {
                     </div>
                     <div className="flex flex-col md:flex-row gap-4 max-w-[30rem]">
                       <div>
-                          <label className="block ml-1 text-sm font-medium leading-6 text-gray-900">Telefone</label>
+                          <label className="block ml-1 text-sm font-medium leading-6 text-black">Telefone</label>
                           <input
                             type="text"
                             name="telefone"
@@ -430,7 +368,7 @@ function EmpresasAdd() {
                           />
                         </div>
                         <div>
-                          <label className="block ml-1 text-sm font-medium leading-6 text-gray-900">Celular</label>
+                          <label className="block ml-1 text-sm font-medium leading-6 text-black">Celular</label>
                           <input
                             type="text"
                             name="celular"
@@ -442,7 +380,7 @@ function EmpresasAdd() {
                       </div>
                     </div>
                     <div className="flex flex-col max-w-fit relative left-[4rem]">
-                    <label className="block ml-1 text-sm font-medium leading-6 text-gray-900">Observação</label>
+                    <label className="block ml-1 text-sm font-medium leading-6 text-black">Observação</label>
                       <textarea
                         type="text"
                         name="observacoes"
@@ -452,6 +390,88 @@ function EmpresasAdd() {
                       />
                     </div>
                   </div>
+                                {/* Endereço do Cliente */}
+              <h2 style={{ color: '#5E16ED', fontSize: '170%', fontWeight: 'bold' }}>
+                Endereço
+                <hr style={{ border: '1px solid #5E16ED' }} />
+              </h2>
+              <div className="flex flex-col md:flex-row gap-4">
+                <div className="flex flex-col">
+                  <label className="block ml-1 text-sm font-medium leading-6 text-black">CEP</label>
+                  <input
+                    type="text"
+                    name="cep"
+                    value={cep}
+                    onChange={handleCepChange}
+                    className="w-[32.5rem] h-11 px-3 py-2 rounded-md ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-indigo-600"
+                  />
+                </div>
+                <div className="flex flex-col">
+                  <label className="block ml-1 text-sm font-medium leading-6 text-black">Logradouro</label>
+                  <input
+                    type="text"
+                    name="logradouro"
+                    value={formData.logradouro}
+                    onChange={handleInputChange}
+                    readOnly
+                    className="w-[32.5rem] h-11 px-3 py-2 rounded-md ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-indigo-600"
+                  />
+                </div>
+              </div>
+
+              <div className="flex flex-col md:flex-row gap-4 justify-between ">
+              <div className="flex flex-col">
+                  <label className="block ml-1 text-sm font-medium leading-6 text-black">Número</label>
+                  <input
+                    type="text"
+                    name="numero"
+                    value={formData.numero}
+                    onChange={handleInputChange}
+                    className="w-[7rem] h-11 px-3 py-2 rounded-md ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-indigo-600"
+                  />
+                </div>
+
+                <div className="flex flex-col">
+                  <label className="block ml-1 text-sm font-medium leading-6 text-black">Bairro</label>
+                  <input
+                    type="text"
+                    name="bairro"
+                    value={formData.bairro}
+                    onChange={handleInputChange}
+                    readOnly
+                    className="w-[26rem] h-11 px-3 py-2 rounded-md ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-indigo-600"
+                  />
+                </div>
+                <div className="flex flex-col">
+                  <label className="block ml-1 text-sm font-medium leading-6 text-black">Município</label>
+                  <input
+                    type="text"
+                    name="municipio"
+                    value={formData.municipio}
+                    onChange={handleInputChange}
+                    readOnly
+                    className="w-[11rem] h-11 px-3 py-2 rounded-md ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-indigo-600"
+                  />
+                </div>
+
+                <div className="flex flex-col">
+                  <DropDown name='estado' value={formData.municipio?.estado} labelDrop="Estado" title= 'Selecione a UF' ValorBtn={dropEstado} listItens={["US", "MX", "BA"]} onSelect={(item) => handleMenuItemClick(item,'Estado')} />
+                </div>
+              </div>
+
+              <div className="flex flex-col md:flex-row gap-4">
+                <div className="flex flex-col">
+                  <label className="block ml-1 text-sm font-medium leading-6 text-black">Complemento</label>
+                  <input
+                    type="text"
+                    name="complemento"
+                    value={formData.complemento}
+                    onChange={handleInputChange}
+                    className="w-[66rem] h-11 px-3 py-2 rounded-md ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-indigo-600"
+                  />
+                </div>
+              </div>
+
               <div className="flex justify-end gap-4">
                 <button type="submit" className="h-[3rem] w-40 px-4 py-2 rounded-md bg-indigo-600 text-white hover:bg-indigo-700">
                   Cadastrar
