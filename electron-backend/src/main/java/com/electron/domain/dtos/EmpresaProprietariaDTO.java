@@ -36,7 +36,7 @@ public class EmpresaProprietariaDTO {
     private RegimeTributario regimeTributario;
 
     @NotBlank(message = "CNAE é obrigatório")
-    @Size(max = 20, message = "CNAE não pode ter mais que 20 caracteres")
+    @Size(max = 10, message = "CNAE não pode ter mais que 10 caracteres")
     private String cnae;
 
     @NotBlank(message = "Razão social é obrigatória")

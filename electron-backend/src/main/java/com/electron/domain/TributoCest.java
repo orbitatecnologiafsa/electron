@@ -17,7 +17,7 @@ public class TributoCest {
     @Column(name = "tributo_cest_id")
     private Long id;
 
-    @Column(name = "tributo_cest_codigo",unique = true, nullable = false, length = 8)
+    @Column(name = "tributo_cest_codigo", unique = true, nullable = false, length = 8)
     private String codigo;
 
     @Column(name = "tributo_cest_descricao", columnDefinition = "TEXT")
@@ -26,4 +26,8 @@ public class TributoCest {
     @ManyToOne
     @JoinColumn(name = "cest_fk_ncm")
     private TributoNcm tributoNcm;
+
+    public TributoCest(Long id) {
+        this.id = id;
+    }
 }

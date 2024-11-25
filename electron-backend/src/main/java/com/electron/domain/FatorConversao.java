@@ -39,4 +39,9 @@ public class FatorConversao {
     @Enumerated(EnumType.STRING)
     @Column(name = "fator_conversao_un_convertida")
     private Unidade unidadeConvertida;
+
+    public FatorConversao(Long id) {
+        this.id = id;
+    }
+
 }

@@ -19,4 +19,8 @@ public class GrupoProdServ {
 
     @Column(name = "grupo_prod_serv_nome")
     private String nome;
+
+    public GrupoProdServ(Long id) {
+        this.id = id;
+    }
 }
