@@ -173,8 +173,16 @@ function EmpresasAdd() {
   const handleInputChange = (e) => {
     const { name, value } = e.target;
   
-    const numericValue = value.replace(/\D/g, '');
+    if (name === "complemento") {
+      // Atualiza diretamente o campo "complemento"
+      setFormData((prevData) => ({
+        ...prevData,
+        complemento: value,
+      }));
+      return;
+    }
   
+    const numericValue = value.replace(/\D/g, '');
     let formattedValue = '';
     let maxLength = 11;
   
@@ -199,15 +207,16 @@ function EmpresasAdd() {
     }
   
     const finalValue = numericValue.slice(0, maxLength);
-  
-    setDocDigitado(formattedValue);
     
+    setDocDigitado(formattedValue);
+  
     // Atualiza o valor do CPF/CNPJ no formData
     setFormData((prevData) => ({
       ...prevData,
       cpfCnpj: finalValue,
     }));
   };
+  
 
 
 
@@ -222,7 +231,7 @@ function EmpresasAdd() {
         <div className="relative flex flex-col flex-1 overflow-y-auto overflow-x-hidden">
           <Header sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} />
           <div className="flex justify-center w-full">
-            <form onSubmit={handleSubmit} className="space-y-5 mx-[2rem] max-w-full">
+            <form onSubmit={handleSubmit} className="space-y-5 mx-[2rem] max-w-full h-[120vh]">
               <h3 className="text-lg font-semibold justify-center text-center mb-4 mt-4 ml-1">Cadastro de Empresa</h3>
 
               <div className="flex justify-between">
