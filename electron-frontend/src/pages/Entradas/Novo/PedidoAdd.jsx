@@ -5,21 +5,19 @@ import Header from '../../../partials/Header';
 import axios from 'axios';
 import Datepicker from '../../../components/Datepicker';
 import DropDown from '../../../components/DropDown';
-import ModalWithOptions from '../../../components/Modal';
+import TabelaWBtn from '../../../components/TabelaWBtn';
 import InputWBtn from '../../../components/InputWBtn';
 
 const PedidoAdd = () => {
 
-  const [docDigitado, setDocDigitado] = useState('');
-
-  const [documentoValue, setDocumentoValue] = useState('');
-  const [cep, setCep] = useState('');
-  const [UnSelected, setUnSelected] = useState("");
-  const [grupoSelected, setGrupoSelected] = useState('');
-
   const [opSelected,setOpSelected] = useState('');
   const [opDia,setOpDia] = useState('');
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const modalOptions = [
+    { id: 1, name: "Laranja", quantidade: 1, preco: 9.30},
+    { id: 2, name: "Enchaguante", quantidade: 1, preco: 12.32},
+    { id: 3, name: "Vassoura", quantidade: 1, preco: 10.65 },
+  ];
 
   const [formData, setFormData] = useState({
     Fornecedor: '',
@@ -121,8 +119,6 @@ const PedidoAdd = () => {
 
   const optionModalF = [{id:'1',name:'Froz da mota', ceep:'12345-678'},{id:'2',name:'FELIX Amaral', ceep:'12215-628'}];
   const optionModalT = [{id:'1',name:'Moto', ceep:'12345-678'},{id:'2',name:'BUS', ceep:'12215-628'}];
-  const optionModalP = [{id:'1',name:'Noz moscado',quantidade: '21'},{id:'2',name:'Pera', quantidade:'22'}];
-
   const optionDia= ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12', '13', '14', '15', '16', '17', '18', '19', '20', '21', '22', '23', '24', '25', '26', '27', '28', '29', '30', '31']
 
   {/* Tela principal do administrador */}
@@ -141,7 +137,7 @@ const PedidoAdd = () => {
 
               {/* Dados do produto */}
               <h2 style={{ color: '#5E16ED', fontSize: '170%', fontWeight: 'bold' }}>
-                Dados do Pedido
+                Dados do Pedido de Compra
                 <hr style={{ border: '1px solid #5E16ED' }} />
               </h2>
 
@@ -156,18 +152,21 @@ const PedidoAdd = () => {
                 </div>
               </div>
 
+              <div className="flex flex-col md:flex-row gap-4">
+                <div className="flex flex-col">
+                  <label className="block text-sm font-medium leading-6 text-black">Fornecedor</label>
+                  <InputWBtn widthValue={29} options={optionModalF} onSelect={onSelectedOptionModal('Fornecedor')} modalTitle="Escolha um fornecedor"/>
+                </div>
+                <div className="flex flex-col">
+                  <label className="block text-sm font-medium leading-6 text-black">Transportadora</label>
+                  <InputWBtn widthValue={29} options={optionModalT} onSelect={onSelectedOptionModal('Transportadora')} modalTitle="Escolha uma transportadora"/>
+                </div>
+              </div>
+
               <div className="flex flex-col md:flex-row gap-4 justify-between">
                 <div className="flex flex-col">
-                  <InputWBtn label='Fornecedores' btnTitle='Selecione o Fornecedor' options={optionModalF} onSelect={onSelectedOptionModal('Fornecedor')} modalTitle="Escolha um fornecedor"/>
+                  <TabelaWBtn modalOptions={modalOptions}></TabelaWBtn>
                 </div>
-                
-                <div className="flex flex-col">
-                  <ModalWithOptions label='Produto' btnTitle='Selecione o Produto' options={optionModalP} onSelect={onSelectedOptionModal('Produto')} modalTitle="Escolha um Produto"/>
-                </div>
-                <div className="flex flex-col">
-                  <ModalWithOptions label='Transportadora' btnTitle='Selecione a Transportadora' options={optionModalT} onSelect={onSelectedOptionModal('Transportadora')} modalTitle="Escolha uma transportadora"/>
-                </div>
-                
               </div>
 
               <div className="flex flex-col md:flex-row gap-4 justify-between">
@@ -185,7 +184,7 @@ const PedidoAdd = () => {
                   <label className="block ml-1 text-sm font-medium leading-6 text-black">Desconto</label>
                   <input
                     type="text"
-                    name="Desconto"
+                    name="desconto"
                     value={formData.desconto}
                     onChange={handleInputChange}
                     className="w-[20rem] h-11 px-3 py-2 rounded-md ring-inset focus:ring-2 focus:ring-indigo-600 disabled:bg-gray-300"
@@ -195,7 +194,7 @@ const PedidoAdd = () => {
                   <label className="block ml-1 text-sm font-medium leading-6 text-black">Total Pedido(R$)</label>
                   <input
                     type="text"
-                    name="TPedido"
+                    name="totalPedido"
                     value={formData.totalPedido}
                     onChange={handleInputChange}
                     className="w-[20rem] h-11 px-3 py-2 rounded-md ring-inset focus:ring-2 focus:ring-indigo-600 disabled:bg-gray-300"
@@ -216,7 +215,7 @@ const PedidoAdd = () => {
                       <label className="block ml-1 text-sm font-medium leading-6 text-black">Intervalo</label>
                       <input
                         type="text"
-                        name="Nparcela"
+                        name="dia"
                         value={formData.dia}
                         onChange={handleInputChange}
                         className="w-[14rem] h-11 px-3 py-2 rounded-md ring-inset focus:ring-2 focus:ring-indigo-600 disabled:bg-gray-300"
@@ -228,7 +227,7 @@ const PedidoAdd = () => {
                   <label className="block ml-1 text-sm font-medium leading-6 text-black">Nº Parcelas</label>
                   <input
                     type="text"
-                    name="Nparcela"
+                    name="NParcela"
                     value={formData.NParcela}
                     onChange={handleInputChange}
                     className="w-[20rem] h-11 px-3 py-2 rounded-md ring-inset focus:ring-2 focus:ring-indigo-600 disabled:bg-gray-300"
