@@ -60,7 +60,6 @@ const PedidoAdd = () => {
           previsao: '',
           produto: '',
           totalPedido:'',
-          desconto:'',
           NParcela: '',
           OpVcto: '',
           dia:'',

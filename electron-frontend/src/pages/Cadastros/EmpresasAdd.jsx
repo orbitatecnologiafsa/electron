@@ -328,7 +328,7 @@ function EmpresasAdd() {
                     value={formData.nomeFantasia}
                     onChange={handleInputChange}
                     disabled={documentoValue === 'CPF'}
-                    className="w-[66rem] h-11 px-3 py-2 rounded-md ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-indigo-600 disabled:bg-gray-300"
+                    className="w-[1063px] h-11 px-3 py-2 rounded-md ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-indigo-600 disabled:bg-gray-300"
                   />
                 </div>
 
@@ -380,7 +380,7 @@ function EmpresasAdd() {
                           name="contato"
                           value={formData.contato}
                           onChange={handleInputChange}
-                          className="w-[10rem] h-11 px-3 py-2 rounded-md ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-indigo-600"
+                          className="w-[150px] h-11 px-3 py-2 rounded-md ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-indigo-600"
                         />
                       </div>
                     </div>
@@ -402,19 +402,19 @@ function EmpresasAdd() {
                             name="celular"
                             value={formData.celular}
                             onChange={handleInputChange}
-                            className="w-[16rem] h-11 px-3 py-2 rounded-md ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-indigo-600"
+                            className="w-[245px] h-11 px-3 py-2 rounded-md ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-indigo-600"
                           />
                         </div>
                       </div>
                     </div>
-                    <div className="flex flex-col max-w-fit relative left-[4rem]">
+                    <div className="flex flex-col max-w-fit relative left-[72px]">
                     <label className="block ml-1 text-sm font-medium leading-6 text-black">Observação</label>
                       <textarea
                         type="text"
                         name="observacoes"
                         value={formData.observacoes}
                         onChange={handleInputChange}
-                        className="w-[32rem] h-[128px] resize-none px-3 py-2 rounded-md ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-indigo-600"
+                        className="w-[32rem] h-[136px] resize-none px-3 py-2 rounded-md ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-indigo-600"
                       />
                     </div>
                   </div>
@@ -495,7 +495,7 @@ function EmpresasAdd() {
                     name="complemento"
                     value={formData.complemento}
                     onChange={handleInputChange}
-                    className="w-[66rem] h-11 px-3 py-2 rounded-md ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-indigo-600"
+                    className="w-[1063px] h-11 px-3 py-2 rounded-md ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-indigo-600"
                   />
                 </div>
               </div>
