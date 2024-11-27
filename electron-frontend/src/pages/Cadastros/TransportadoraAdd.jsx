@@ -54,9 +54,6 @@ function TransportadorasAdd() {
         formsData.uf = (item);
         setUf(item);
     }
-    console.log(formsData.cpf_cnpj);
-    console.log(formsData.ufv);
-    console.log(formsData.uf);
   };
 
   
@@ -132,8 +129,6 @@ function TransportadorasAdd() {
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
-
-    // Atualiza o estado normalmente
     setFormsData((prevData) => ({ ...prevData, [name]: value }));
 };
 

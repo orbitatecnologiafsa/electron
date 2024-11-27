@@ -4,6 +4,7 @@ import Sidebar from '../../partials/Sidebar';
 import Header from '../../partials/Header';
 import axios from 'axios';
 import DropDown from '../../components/DropDown';
+import InputWBtn from '../../components/InputWBtn';
 
 
 function ProdutosAdd() {
@@ -12,7 +13,7 @@ function ProdutosAdd() {
 
   const [documentoValue, setDocumentoValue] = useState('');
   const [cep, setCep] = useState('');
-  const [formsData, setFormsData] = useState({
+  const [formData, setFormData] = useState({
     index: "",
     codigo: '',
     nome: '',
@@ -42,52 +43,56 @@ function ProdutosAdd() {
   const [UnTributacao, setUnTributacao] = useState("");
   const [TControle, setTControle] = useState("");
 
+  const [grupoModal, setGrupoModal]= useState([{codigo:'1',name_fantasia:'Grupo A'},{codigo:'2',name_fantasia:'Grupo B'}]);
+  const [cestModal, setCestModal]= useState([{codigo:'1',tributo_cest_codigo:'12345678'},
+    {codigo:'2',tributo_cest_codigo:'12349999'}]);
+
   const handleMenuItemClick = (item, index) => {
 
     if (index == "UN"){
 
       setUnSelected(item);
       if(item == "KILOGRAMA"){
-        formsData.un = ("KG_KILOGRAMA");
+        formData.un = ("KG_KILOGRAMA");
       }else if(item == "LITRO"){
-        formsData.un = ("LT_LITRO");
+        formData.un = ("LT_LITRO");
       }else{
-        formsData.un = ("MT_METRO");
+        formData.un = ("MT_METRO");
       }
 
     }else if( index == "Classficacao"){
 
       setClassified(item);
-      formsData.classificacao = (item);
+      formData.classificacao = (item);
 
     }else if( index == "UnEntrada"){
 
       setUnEntrada(item);
-      formsData.unEntrada = (item);
+      formData.unEntrada = (item);
 
     }else if( index == "UnSaída"){
 
       setUnSaida(item);
-      formsData.unSaida = (item);
+      formData.unSaida = (item);
       
     }else if(index == 'UnTributacao'){
 
       setUnTributacao(item);
-      formsData.UnTributacao = (item);
+      formData.UnTributacao = (item);
 
     }else if(index == 'TControle'){
 
       setTControle(item);
       if(item == 'Controla grade'){
 
-        formsData.tControle = ("Controla_Grade");
+        formData.tControle = ("Controla_Grade");
 
       }else if(item == 'Vende Francionado'){
 
-        formsData.tControle = ("Vende_Fracionado");
+        formData.tControle = ("Vende_Fracionado");
       }else{
 
-        formsData.tControle = (item);
+        formData.tControle = (item);
         
       }
     }
@@ -98,8 +103,8 @@ function ProdutosAdd() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-        const response = await axios.post("http://localhost:8080/produtos/89", formsData);
-        setFormsData({
+        const response = await axios.post("http://localhost:8080/produtos", formData);
+        setFormData({
           index: "",
           codigo: '',
           nome: '',
@@ -123,8 +128,8 @@ function ProdutosAdd() {
           tribFederal: '',
         });
     } catch (error) {
-        console.log(formsData);
-        console.error('Erro ao cadastrar empresa:', error.response ? error.response.data : error.message);
+        console.log(formData);
+        console.error('Erro ao cadastrar produtos:', error.response ? error.response.data : error.message);
     }
   };
 
@@ -134,21 +139,57 @@ function ProdutosAdd() {
   };
   const navigate = useNavigate();
 
+  useEffect(() => {
+    // Função para pegar os dados da API
+    const fetchData = async () => {
+      try {
+        const response = await axios.get('http://localhost:8080/grupos-prod-serv');
+        console.log("Antes:",response.data);
+
+        const gruposTransformados = response.data.map(item => ({
+          codigo: item.id,
+          nome: item.nome
+        }));
+
+        setGrupoModal(gruposTransformados);
+
+
+      } catch (error) {
+        console.error('Erro ao buscar os dados', error);
+      }
+    };
+
+    fetchData();
+  }, []); 
+
   const handleInputChange = (e) => {
     const { name, value } = e.target;
-    setFormsData((prevData) => {
+    setFormData((prevData) => {
       return { ...prevData, [name]: value };
     });
   };
-  
 
-const unidadesEmbList = ["KILOGRAMA", "LITRO", "METRO"];
+  const onSelectedOptionModal = (tipo,option) => {
+    console.log("Option:",option);
+    console.log("tipo:",tipo);
 
-const ClassificacaoList = ["Despesa", "Imobilizado", "Produto"];
+    if(tipo=='Grupo'){
+      formData.grupo = option;
+      console.log("Grupo:",formData.grupo);
+    }else if(tipo=='Cest'){
+      formData.cest = option;
+    }else if(tipo == 'Produto'){
+      formData.produto = option;
+    }
+  }
 
-const unidadeSaidaEntradaTributação = ["AM","AMPOLA","AR","BALDE","BANDEJ","BARRA","BISNAG","BLOCO","CART","CD","CENTO","CJ","CM","CM2","CX","DISP","DZ","FARDO","FRASCO","GAL","GALÃO","GF","GR","HR","JOGO","K","KG","KIT","LATAO","LT","M2","M3","MC","MI","MILHEI","ML","MT","ND","PACOTE","PARES","PC","RESMA","ROLO","SACO","SACOLA","ST","TAMBOR","TON","TUBO","UN"];
+  const unidadesEmbList = ["KILOGRAMA", "LITRO", "METRO"];
 
-const tipoControle = [ "Composição", "Controla grade", "Pesável","Vende Francionado"];
+  const ClassificacaoList = ["Despesa", "Imobilizado", "Produto"];
+
+  const unidadeSaidaEntradaTributação = ["AM","AMPOLA","AR","BALDE","BANDEJ","BARRA","BISNAG","BLOCO","CART","CD","CENTO","CJ","CM","CM2","CX","DISP","DZ","FARDO","FRASCO","GAL","GALÃO","GF","GR","HR","JOGO","K","KG","KIT","LATAO","LT","M2","M3","MC","MI","MILHEI","ML","MT","ND","PACOTE","PARES","PC","RESMA","ROLO","SACO","SACOLA","ST","TAMBOR","TON","TUBO","UN"];
+
+  const tipoControle = [ "Composição", "Controla grade", "Pesável","Vende Francionado"];
 
   {/* Tela principal do administrador */}
   return (
@@ -168,8 +209,8 @@ const tipoControle = [ "Composição", "Controla grade", "Pesável","Vende Franc
                   <input
                     type="checkbox"
                     name="ativo"
-                    checked={formsData.ativo}
-                    onChange={() => setFormsData({ ...formsData, ativo: !formsData.ativo })}
+                    checked={formData.ativo}
+                    onChange={() => setFormData({ ...formData, ativo: !formData.ativo })}
                     className="mr-2 rounded"
                   />
                   <label className="text-base">Ativo</label>
@@ -187,7 +228,7 @@ const tipoControle = [ "Composição", "Controla grade", "Pesável","Vende Franc
                   <input
                     type="text"
                     name="codigo"
-                    value={formsData.codigo}
+                    value={formData.codigo}
                     onChange={handleInputChange}
                     className=" w-[13rem] h-11 px-3 py-2 rounded-md  ring-inset focus:ring-2 focus:ring-indigo-600"
                     required
@@ -198,7 +239,7 @@ const tipoControle = [ "Composição", "Controla grade", "Pesável","Vende Franc
                   <input
                     type="text"
                     name="nome"
-                    value={formsData.nome}
+                    value={formData.nome}
                     onChange={handleInputChange}
                     className=" w-[23rem] h-11 px-3 py-2 rounded-md  ring-inset focus:ring-2 focus:ring-indigo-600"
                     required
@@ -206,14 +247,7 @@ const tipoControle = [ "Composição", "Controla grade", "Pesável","Vende Franc
                 </div>
                 <div className="flex flex-col">
                   <label className="block ml-1 text-sm font-medium leading-6 text-black">Grupo</label>
-                  <input
-                    type="text"
-                    name="grupo"
-                    value={formsData.grupo}
-                    onChange={handleInputChange}
-                    className=" w-[13rem] h-11 px-3 py-2 rounded-md ring-inset focus:ring-2 focus:ring-indigo-600"
-                    required
-                  />
+                  <InputWBtn widthValue={8.5} options={grupoModal} modalTitle="Escolha o grupo" onSelect={onSelectedOptionModal} tipo={"Grupo"}/>
                 </div>
 
                 <div className="flex flex-col">
@@ -228,7 +262,7 @@ const tipoControle = [ "Composição", "Controla grade", "Pesável","Vende Franc
                 <textarea
                         type="text"
                         name="descricao"
-                        value={formsData.descricao}
+                        value={formData.descricao}
                         onChange={handleInputChange}
                         className="w-[66rem] h-[45px] resize-none px-3 py-2 rounded-md ring-inset focus:ring-2 focus:ring-indigo-600"
                     />
@@ -266,7 +300,7 @@ const tipoControle = [ "Composição", "Controla grade", "Pesável","Vende Franc
                   <input
                     type="text"
                     name="quantidade"
-                    value={formsData.quantidade}
+                    value={formData.quantidade}
                     onChange={handleInputChange}
                     maxLength={documentoValue === 'CPF' ? 14 : 18}
                     className="w-[32.5rem] h-11 px-3 py-2 rounded-md ring-inset focus:ring-2 focus:ring-indigo-600 disabled:bg-gray-300"
@@ -285,7 +319,7 @@ const tipoControle = [ "Composição", "Controla grade", "Pesável","Vende Franc
                   <input
                     type="text"
                     name="bloqueada"
-                    value={formsData.bloqueada}
+                    value={formData.bloqueada}
                     onChange={handleInputChange}
                     className="w-[32.5rem] h-11 px-3 py-2 rounded-md ring-inset focus:ring-2 focus:ring-indigo-600 disabled:bg-gray-300"
                   />
@@ -295,7 +329,7 @@ const tipoControle = [ "Composição", "Controla grade", "Pesável","Vende Franc
                   <input
                     type="text"
                     name="disponivel"
-                    value={formsData.disponivel}
+                    value={formData.disponivel}
                     onChange={handleInputChange}
                     className="w-[32.5rem] h-11 px-3 py-2 rounded-md ring-inset focus:ring-2 focus:ring-indigo-600 disabled:bg-gray-300"
                   />
@@ -314,7 +348,7 @@ const tipoControle = [ "Composição", "Controla grade", "Pesável","Vende Franc
                   <input
                     type="text"
                     name="custo"
-                    value={formsData.custo}
+                    value={formData.custo}
                     onChange={handleInputChange}
                     className="w-[32.5rem] h-11 px-3 py-2 rounded-md ring-inset focus:ring-2 focus:ring-indigo-600 disabled:bg-gray-300"
                   />
@@ -324,7 +358,7 @@ const tipoControle = [ "Composição", "Controla grade", "Pesável","Vende Franc
                   <input
                     type="text"
                     name="custoMedio"
-                    value={formsData.custoMedio}
+                    value={formData.custoMedio}
                     onChange={handleInputChange}
                     className="w-[32.5rem] h-11 px-3 py-2 rounded-md ring-inset focus:ring-2 focus:ring-indigo-600 disabled:bg-gray-300"
                   />
@@ -338,7 +372,7 @@ const tipoControle = [ "Composição", "Controla grade", "Pesável","Vende Franc
                   <input
                     type="text"
                     name="precoVenda"
-                    value={formsData.precoVenda}
+                    value={formData.precoVenda}
                     onChange={handleInputChange}
                     className="w-[32.5rem] h-11 px-3 py-2 rounded-md ring-inset focus:ring-2 focus:ring-indigo-600 disabled:bg-gray-300"
                   />
@@ -348,7 +382,7 @@ const tipoControle = [ "Composição", "Controla grade", "Pesável","Vende Franc
                   <input
                     type="text"
                     name="precoRevenda"
-                    value={formsData.precoRevenda}
+                    value={formData.precoRevenda}
                     onChange={handleInputChange}
                     className="w-[32.5rem] h-11 px-3 py-2 rounded-md ring-inset focus:ring-2 focus:ring-indigo-600 disabled:bg-gray-300"
                   />
@@ -367,7 +401,7 @@ const tipoControle = [ "Composição", "Controla grade", "Pesável","Vende Franc
                   <input
                     type="text"
                     name="ncm"
-                    value={formsData.ncm}
+                    value={formData.ncm}
                     onChange={handleInputChange}
                     className="w-[44rem] px-3 py-2 rounded-md ring-inset focus:ring-2 focus:ring-indigo-600"
                   />
@@ -377,10 +411,11 @@ const tipoControle = [ "Composição", "Controla grade", "Pesável","Vende Franc
                   <input
                     type="text"
                     name="cest"
-                    value={formsData.cest}
+                    value={formData.cest}
                     onChange={handleInputChange}
                     className="w-[21rem] px-3 py-2 rounded-md ring-inset focus:ring-2 focus:ring-indigo-600"
                   />
+                  <InputWBtn widthValue={18} options={grupoModal} modalTitle="Escolha o Cest" onSelect={onSelectedOptionModal} tipo={"Cest"}/>
                 </div>
               </div>
               
@@ -391,7 +426,7 @@ const tipoControle = [ "Composição", "Controla grade", "Pesável","Vende Franc
                   <input
                     type="text"
                     name="tribEstadual"
-                    value={formsData.tribEstadual}
+                    value={formData.tribEstadual}
                     onChange={handleInputChange}
                     className="w-[66rem] px-3 py-2 rounded-md ring-inset focus:ring-2 focus:ring-indigo-600"
                   />
@@ -405,7 +440,7 @@ const tipoControle = [ "Composição", "Controla grade", "Pesável","Vende Franc
                   <input
                     type="text"
                     name="tribFederal"
-                    value={formsData.tribFederal}
+                    value={formData.tribFederal}
                     onChange={handleInputChange}
                     className="w-[66rem] px-3 py-2 rounded-md ring-inset focus:ring-2 focus:ring-indigo-600"
                   />

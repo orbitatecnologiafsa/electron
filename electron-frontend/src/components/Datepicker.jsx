@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import Flatpickr from 'react-flatpickr';
 
-function Datepicker({ align, onDateChange }) {
+function Datepicker({ align, onDateChange, tipo }) {
   const [selectedDate, setSelectedDate] = useState([]);
 
   const options = {
@@ -9,7 +9,7 @@ function Datepicker({ align, onDateChange }) {
     static: true,
     monthSelectorType: 'static',
     dateFormat: 'M j, Y',
-    defaultDate: [new Date().setDate(new Date().getDate() - 6), new Date()],
+    defaultDate: new Date(),
     prevArrow: '<svg class="fill-current" width="7" height="11" viewBox="0 0 7 11"><path d="M5.4 10.8l1.4-1.4-4-4 4-4L5.4 0 0 5.4z" /></svg>',
     nextArrow: '<svg class="fill-current" width="7" height="11" viewBox="0 0 7 11"><path d="M1.4 10.8L0 9.4l4-4-4-4L1.4 0l5.4 5.4z" /></svg>',
     onReady: (selectedDates, dateStr, instance) => {
@@ -19,9 +19,9 @@ function Datepicker({ align, onDateChange }) {
     },
     onChange: (selectedDates, dateStr, instance) => {
       instance.element.value = dateStr.replace('to', '-');
-      setSelectedDate(selectedDates); // Armazena a data selecionada
+      setSelectedDate(selectedDates);
       if (onDateChange) {
-        onDateChange(selectedDates); // Chama o callback com a data selecionada
+        onDateChange(selectedDates,tipo);
       }
     },
   };

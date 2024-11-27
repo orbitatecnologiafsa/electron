@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Sidebar from '../../../partials/Sidebar';
 import Header from '../../../partials/Header';
@@ -14,9 +14,9 @@ const PedidoAdd = () => {
   const [opDia,setOpDia] = useState('');
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const modalOptions = [
-    { id: 1, name: "Laranja", quantidade: 1, preco: 9.30},
-    { id: 2, name: "Enchaguante", quantidade: 1, preco: 12.32},
-    { id: 3, name: "Vassoura", quantidade: 1, preco: 10.65 },
+    { codigo: 1, nome: "Laranja", quantidade: 1, preco: 9.30},
+    { codigo: 2, nome: "Enchaguante", quantidade: 1, preco: 12.32},
+    { codigo: 3, nome: "Vassoura", quantidade: 1, preco: 10.65 },
   ];
 
   const [formData, setFormData] = useState({
@@ -31,7 +31,6 @@ const PedidoAdd = () => {
     OpVcto: '',
     dia:'',
     peso:'',
-    desconto:'',
     observacao: '',
   });
   
@@ -51,6 +50,7 @@ const PedidoAdd = () => {
   {/* Post ADD Tabela */}
   const handleSubmit = async (e) => {
     e.preventDefault();
+    console.log(formData);
     try {
         const response = await axios.post("http://localhost:8080/empresas-proprietarias/", formData);
         setFormData({
@@ -65,7 +65,6 @@ const PedidoAdd = () => {
           OpVcto: '',
           dia:'',
           peso:'',
-          desconto:'',
           observacao: '',
         });
     } catch (error) {
@@ -87,13 +86,16 @@ const PedidoAdd = () => {
     }
   };
 
-  const onSelectedOptionModal = (option,tipo) => {
+  const onSelectedOptionModal = (tipo,option) => {
+    console.log("Option:",option);
+    console.log("tipo:",tipo);
     if(tipo=='Fornecedor'){
-      formData.Fornecedor = option.id;
+      formData.Fornecedor = option;
+      console.log("Fornecedor:",formData.Fornecedor);
     }else if(tipo=='Transportadora'){
-      formData.trasnportadora = option.id;
+      formData.trasnportadora = option;
     }else if(tipo == 'Produto'){
-      formData.produto = option.id;
+      formData.produto = option;
     }
   }
 
@@ -110,6 +112,7 @@ const PedidoAdd = () => {
   };
 
   const handleDateChange = (dates,tipo) => {
+    console.log("Data: ",dates, " Tipo: ",tipo);
     if(tipo == 'Emissao'){
       formData.emissao = dates[0].toLocaleDateString('pt-BR');
     }else if(tipo == 'Previsao'){
@@ -117,8 +120,20 @@ const PedidoAdd = () => {
     }
   };
 
-  const optionModalF = [{id:'1',name:'Froz da mota', ceep:'12345-678'},{id:'2',name:'FELIX Amaral', ceep:'12215-628'}];
-  const optionModalT = [{id:'1',name:'Moto', ceep:'12345-678'},{id:'2',name:'BUS', ceep:'12215-628'}];
+  const optionModalF = [
+    { codigo: '1', name_fantasia: 'Froz da mota', nome_razao: 'FELIX Amaral', documento: '12345-678', cidade: 'Belo Horizonte' },
+    { codigo: '2', name_fantasia: 'Gabriel ltda', nome_razao: 'Gabriel Monteiro', documento: '17435-658', cidade: 'Belém' },
+    { codigo: '3', name_fantasia: 'Alpha Tech', nome_razao: 'Carlos Silva', documento: '87546-230', cidade: 'São Paulo' },
+    { codigo: '4', name_fantasia: 'Omega Construções', nome_razao: 'Maria Oliveira', documento: '34856-983', cidade: 'Rio de Janeiro' },
+    { codigo: '5', name_fantasia: 'Beta Indústria', nome_razao: 'João Souza', documento: '87456-234', cidade: 'Curitiba' },
+    { codigo: '6', name_fantasia: 'Tech World', nome_razao: 'Luciana Santos', documento: '25468-198', cidade: 'Fortaleza' },
+    { codigo: '7', name_fantasia: 'Móveis Top', nome_razao: 'Roberto Costa', documento: '98765-123', cidade: 'Recife' },
+    { codigo: '8', name_fantasia: 'Supermercados Good', nome_razao: 'Patricia Alves', documento: '23145-876', cidade: 'Salvador' },
+    { codigo: '9', name_fantasia: 'Café Central', nome_razao: 'Eduardo Martins', documento: '78346-234', cidade: 'Porto Alegre' },
+    { codigo: '10', name_fantasia: 'Fashion Trends', nome_razao: 'Ana Pereira', documento: '19348-376', cidade: 'Brasília' }
+  ];
+  
+  const optionModalT = [{codigo:'1',name_fantasia:'Moto', documento:'12345-678'},{codigo:'2',name_fantasia:'BUS', documento:'12215-628'}];
   const optionDia= ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12', '13', '14', '15', '16', '17', '18', '19', '20', '21', '22', '23', '24', '25', '26', '27', '28', '29', '30', '31']
 
   {/* Tela principal do administrador */}
@@ -144,28 +159,28 @@ const PedidoAdd = () => {
               <div className="flex flex-col md:flex-row gap-4 justify-between">
                 <div className="flex flex-col">
                     <label className="block ml-1 text-sm font-medium leading-6 text-black">Emissão</label>
-                    <Datepicker align="center" onDateChange={handleDateChange('Emissao')}/>
+                    <Datepicker align="center" onDateChange={handleDateChange} tipo={'Emissao'}/>
                 </div>
                 <div className="flex flex-col">
                     <label className="block ml-1 text-sm font-medium leading-6 text-black">Previsão</label>
-                    <Datepicker align="center" onDateChange={handleDateChange('Previsao')}/>
+                    <Datepicker align="center" onDateChange={handleDateChange} tipo={'Previsao'}/>
                 </div>
               </div>
 
               <div className="flex flex-col md:flex-row gap-4">
                 <div className="flex flex-col">
                   <label className="block text-sm font-medium leading-6 text-black">Fornecedor</label>
-                  <InputWBtn widthValue={29} options={optionModalF} onSelect={onSelectedOptionModal('Fornecedor')} modalTitle="Escolha um fornecedor"/>
+                  <InputWBtn widthValue={39} options={optionModalF} modalTitle="Escolha um fornecedor" onSelect={onSelectedOptionModal} tipo={'Fornecedor'}/>
                 </div>
                 <div className="flex flex-col">
                   <label className="block text-sm font-medium leading-6 text-black">Transportadora</label>
-                  <InputWBtn widthValue={29} options={optionModalT} onSelect={onSelectedOptionModal('Transportadora')} modalTitle="Escolha uma transportadora"/>
+                  <InputWBtn widthValue={39} options={optionModalT} modalTitle="Escolha uma transportadora" onSelect={onSelectedOptionModal} tipo={'Transportadora'}/>
                 </div>
               </div>
 
               <div className="flex flex-col md:flex-row gap-4 justify-between">
                 <div className="flex flex-col">
-                  <TabelaWBtn modalOptions={modalOptions}></TabelaWBtn>
+                  <TabelaWBtn modalOptions={modalOptions} onSelect={onSelectedOptionModal}/>
                 </div>
               </div>
 
@@ -177,7 +192,7 @@ const PedidoAdd = () => {
                     name="peso"
                     value={formData.peso}
                     onChange={handleInputChange}
-                    className="w-[20rem] h-11 px-3 py-2 rounded-md ring-inset focus:ring-2 focus:ring-indigo-600 disabled:bg-gray-300"
+                    className="w-[25rem] h-11 px-3 py-2 rounded-md ring-inset focus:ring-2 focus:ring-indigo-600 disabled:bg-gray-300"
                   />
                 </div>
                 <div className="flex flex-col">
@@ -187,7 +202,7 @@ const PedidoAdd = () => {
                     name="desconto"
                     value={formData.desconto}
                     onChange={handleInputChange}
-                    className="w-[20rem] h-11 px-3 py-2 rounded-md ring-inset focus:ring-2 focus:ring-indigo-600 disabled:bg-gray-300"
+                    className="w-[25rem] h-11 px-3 py-2 rounded-md ring-inset focus:ring-2 focus:ring-indigo-600 disabled:bg-gray-300"
                   />
                 </div>
                 <div className="flex flex-col">
@@ -197,7 +212,7 @@ const PedidoAdd = () => {
                     name="totalPedido"
                     value={formData.totalPedido}
                     onChange={handleInputChange}
-                    className="w-[20rem] h-11 px-3 py-2 rounded-md ring-inset focus:ring-2 focus:ring-indigo-600 disabled:bg-gray-300"
+                    className="w-[25rem] h-11 px-3 py-2 rounded-md ring-inset focus:ring-2 focus:ring-indigo-600 disabled:bg-gray-300"
                   />
                 </div>
               </div>
@@ -218,7 +233,7 @@ const PedidoAdd = () => {
                         name="dia"
                         value={formData.dia}
                         onChange={handleInputChange}
-                        className="w-[14rem] h-11 px-3 py-2 rounded-md ring-inset focus:ring-2 focus:ring-indigo-600 disabled:bg-gray-300"
+                        className="w-[23rem] h-11 px-3 py-2 rounded-md ring-inset focus:ring-2 focus:ring-indigo-600 disabled:bg-gray-300"
                       />
                     </div>
                   )}
@@ -243,7 +258,7 @@ const PedidoAdd = () => {
                           name="observacao"
                           value={formData.observacao}
                           onChange={handleInputChange}
-                          className="w-[66rem] h-[45px] resize-none px-3 py-2 rounded-md ring-inset focus:ring-2 focus:ring-indigo-600"
+                          className="w-[86rem] h-[45px] resize-none px-3 py-2 rounded-md ring-inset focus:ring-2 focus:ring-indigo-600"
                       />
                 </div>
               </div>
