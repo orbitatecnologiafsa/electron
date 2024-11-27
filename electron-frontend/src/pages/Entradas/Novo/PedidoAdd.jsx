@@ -31,7 +31,6 @@ const PedidoAdd = () => {
     OpVcto: '',
     dia:'',
     peso:'',
-    desconto:'',
     observacao: '',
   });
   
@@ -60,7 +59,6 @@ const PedidoAdd = () => {
           previsao: '',
           produto: '',
           totalPedido:'',
-          desconto:'',
           NParcela: '',
           OpVcto: '',
           dia:'',

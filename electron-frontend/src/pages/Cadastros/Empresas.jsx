@@ -11,6 +11,8 @@ import DropDown from '../../components/DropDown';
 function Empresas() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [campoValue, setCampoValue] = useState('Todos');
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+  const [currentData, setCurrentData] = useState(null);
 
   {/* Const de modal */}
   const [isModalLegendaOpen, setIsModalLegendaOpen] = useState(false);
@@ -43,7 +45,6 @@ function Empresas() {
     setIsModalLegendaOpen(!isModalLegendaOpen);
   };
 
-  {/* Filtragem da Tabela */}
   {/* Consumindo API Empresas */}
   const getPosts = async () => {
     try {
@@ -55,6 +56,15 @@ function Empresas() {
       console.error("Erro ao buscar dados: ", error);
     }
     
+  };
+
+  const handleEditClick = (data) => {
+    setCurrentData(data);
+    setIsEditModalOpen(true);
+  };
+  
+  const handleCloseEditModal = () => {
+    setIsEditModalOpen(false);
   };
 
   const handleMenuItemClick = (value) => {
@@ -244,7 +254,11 @@ function Empresas() {
                               <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700 text-center">{data.ativo ? 'Sim' : 'Não'}</td>
                               <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700 text-center">{data.dataCriacao}</td>
                               <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700 text-center">
-                                <FontAwesomeIcon icon={faPenToSquare} className="cursor-pointer" />
+                                <FontAwesomeIcon
+                                  icon={faPenToSquare}
+                                  className="cursor-pointer"
+                                  onClick={() => handleEditClick(data)}
+                                />
                               </td>
                             </tr>
                           ))}
@@ -294,6 +308,136 @@ function Empresas() {
           </div>
         </form>
       </div>
+
+      {isEditModalOpen && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
+          <div className="bg-white rounded-lg p-6 w-[34rem] h-auto">
+            <h3 className="text-lg font-semibold">Editar Empresa</h3>
+            {/* Exemplo de campos de formulário, você pode customizar com base nos dados */}
+            {currentData && (
+              <form>
+                <div className="flex flex-col md:flex-row gap-4">
+                  <div className="mt-4">
+                    <label htmlFor="razaoSocial" className="block text-sm font-medium text-gray-900">Razão Social</label>
+                    <input
+                      type="text"
+                      id="razaoSocial"
+                      value={currentData.razaoSocial}
+                      className="mt-2 block w-full rounded-md border-gray-300 shadow-sm"
+                    />
+                  </div>
+                  <div className="mt-4">
+                    <label htmlFor="cpfCnpj" className="block text-sm font-medium text-gray-900">CNPJ</label>
+                    <input
+                      type="text"
+                      id="cpfCnpj"
+                      value={currentData.cpfCnpj}
+                      className="mt-2 block w-full rounded-md border-gray-300 shadow-sm"
+                    />
+                  </div>
+                </div>
+                <div className="mt-4">
+                  <label htmlFor="nomeFantasia" className="block text-sm font-medium text-gray-900">Nome Fantasia</label>
+                  <input
+                    type="text"
+                    id="nomeFantasia"
+                    value={currentData.nomeFantasia}
+                    className="mt-2 block w-full rounded-md border-gray-300 shadow-sm"
+                  />
+                </div>
+                <div className="flex flex-col md:flex-row gap-4">
+                  <div className="mt-4">
+                    <label className="block text-sm font-medium text-gray-900">RG Inscrição Estadual</label>
+                    <input
+                      type="text"
+                      name="rgInscricaoEstadual"
+                      value={currentData.rgInscricaoEstadual}
+                      className="mt-2 block w-full rounded-md border-gray-300 shadow-sm"
+                    />
+                    </div>
+                    <div className="mt-4">
+                    <label className="block text-sm font-medium text-gray-900">Inscrição Estadual Municipal</label>
+                    <input
+                      type="text"
+                      name="inscricaoEstadualMunicipal"
+                      value={currentData.inscricaoEstadualMunicipal}
+                      className="mt-2 block w-full rounded-md border-gray-300 shadow-sm"
+                    />
+                  </div>
+                </div>
+                <div className="flex flex-col md:flex-row gap-4">
+                  <div className="mt-4">
+                    <label className="block text-sm font-medium text-gray-900">Email</label>
+                    <input
+                      type="text"
+                      name="rgInscricaoEstadual"
+                      value={currentData.email}
+                      className="mt-2 block w-full rounded-md border-gray-300 shadow-sm"
+                    />
+                    </div>
+                    <div className="mt-4">
+                    <label className="block text-sm font-medium text-gray-900">Contato</label>
+                    <input
+                      type="text"
+                      name="inscricaoEstadualMunicipal"
+                      value={currentData.contato}
+                      className="mt-2 block w-full rounded-md border-gray-300 shadow-sm"
+                    />
+                  </div>
+                </div>
+                <div className="flex flex-col md:flex-row gap-4">
+                  <div className="mt-4">
+                    <label className="block text-sm font-medium text-gray-900">Telefone</label>
+                    <input
+                      type="text"
+                      name="rgInscricaoEstadual"
+                      value={currentData.telefone}
+                      className="mt-2 block w-full rounded-md border-gray-300 shadow-sm"
+                    />
+                    </div>
+                    <div className="mt-4">
+                    <label className="block text-sm font-medium text-gray-900">Celular</label>
+                    <input
+                      type="text"
+                      name="inscricaoEstadualMunicipal"
+                      value={currentData.celular}
+                      className="mt-2 block w-full rounded-md border-gray-300 shadow-sm"
+                    />
+                  </div>
+                </div>
+                <div className="flex flex-col md:flex-row gap-4">
+                  <div className="mt-4">
+                    <label className="block text-sm font-medium text-gray-900">Observação</label>
+                    <textarea
+                      type="text"
+                      name="rgInscricaoEstadual"
+                      value={currentData.observacoes}
+                      className="mt-2 block w-[31rem] h-[96px] rounded-md border-gray-300 shadow-sm resize-none"
+                    />
+                  </div>
+                </div>
+                {/* Adicione mais campos conforme necessário */}
+                <div className="mt-6 flex justify-end">
+                  <button
+                    type="button"
+                    className="bg-blue-500 text-white px-4 py-2 rounded-md"
+                    onClick={() => handleCloseEditModal()}
+                  >
+                    Fechar
+                  </button>
+                  <button
+                    type="submit"
+                    className="ml-4 bg-green-500 text-white px-4 py-2 rounded-md"
+                    // Aqui você pode adicionar a lógica de salvar as alterações
+                  >
+                    Salvar
+                  </button>
+                </div>
+              </form>
+            )}
+          </div>
+        </div>
+      )}
     </div>
   );
 }
