@@ -1,5 +1,6 @@
 package com.electron.mappers;
 
+import com.electron.domain.EmpresaProprietaria;
 import com.electron.domain.Municipio;
 import com.electron.domain.Transportadora;
 import com.electron.domain.dtos.TransportadoraDTO;
@@ -12,9 +13,11 @@ public class TransportadoraMapper implements GenericMapper<TransportadoraDTO, Tr
     public Transportadora toEntity(TransportadoraDTO dto) {
         if (dto == null) return null;
 
-        // Criar uma instância de Municipio usando o ID do DTO
         Municipio municipio = new Municipio();
         municipio.setId(dto.getMunicipioId());
+
+        EmpresaProprietaria empresa = new EmpresaProprietaria();
+        empresa.setId(dto.getEmpresaId());
 
         return new Transportadora(
                 dto.getTipo(),
@@ -38,7 +41,7 @@ public class TransportadoraMapper implements GenericMapper<TransportadoraDTO, Tr
                 dto.getEmail(),
                 dto.getDataDeNascimento(),
                 dto.getObservacoes(),
-                null,
+                empresa,
                 dto.getPlacaVeiculo(),
                 dto.getAnttVeiculo()
         );
@@ -66,6 +69,7 @@ public class TransportadoraMapper implements GenericMapper<TransportadoraDTO, Tr
                 entity.getBairro(),
                 entity.getComplemento(),
                 entity.getMunicipio() != null ? entity.getMunicipio().getId() : null, // Extrai o ID do Municipio
+                entity.getEmpresa() != null ? entity.getEmpresa().getId() : null, // Extrai o ID do Empresa
                 entity.getTelefone(),
                 entity.getCelular(),
                 entity.getEmail(),

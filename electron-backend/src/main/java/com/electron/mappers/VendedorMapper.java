@@ -1,5 +1,7 @@
 package com.electron.mappers;
 
+import com.electron.domain.EmpresaProprietaria;
+import com.electron.domain.Municipio;
 import org.springframework.stereotype.Component;
 
 import com.electron.domain.Vendedor;
@@ -11,7 +13,13 @@ public class VendedorMapper implements GenericMapper<VendedorDTO, Vendedor> {
     @Override
     public Vendedor toEntity(VendedorDTO dto) {
         if (dto == null) return null;
-        
+
+        Municipio municipio = new Municipio();
+        municipio.setId(dto.getMunicipioId());
+
+        EmpresaProprietaria empresa = new EmpresaProprietaria();
+        empresa.setId(dto.getEmpresaId());
+
         Vendedor vendedor = new Vendedor(
             dto.getTipo(),
             dto.getFoto(),
@@ -28,13 +36,13 @@ public class VendedorMapper implements GenericMapper<VendedorDTO, Vendedor> {
             dto.getNumero(),
             dto.getBairro(),
             dto.getComplemento(),
-            null,
+            municipio,
             dto.getTelefone(),
             dto.getCelular(),
             dto.getEmail(),
             dto.getDataDeNascimento(),
-            null,
-            null,
+            dto.getObservacoes(),
+            empresa,
             dto.getDesconto(),
             dto.getComissao(),
             dto.getTipoComissao(),
@@ -72,6 +80,7 @@ public class VendedorMapper implements GenericMapper<VendedorDTO, Vendedor> {
         dto.setCelular(entity.getCelular());
         dto.setEmail(entity.getEmail());
         dto.setDataDeNascimento(entity.getDataDeNascimento());
+        dto.setObservacoes(entity.getObservacoes());
         dto.setEmpresaId(entity.getEmpresa() != null ? entity.getEmpresa().getId() : null);
         dto.setDesconto(entity.getDesconto());
         dto.setComissao(entity.getComissao());

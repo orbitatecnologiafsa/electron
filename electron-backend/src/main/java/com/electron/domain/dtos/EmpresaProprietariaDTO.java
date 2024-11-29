@@ -43,7 +43,7 @@ public class EmpresaProprietariaDTO {
     @Size(max = 100, message = "Razão social não pode ter mais que 100 caracteres")
     private String razaoSocial;
 
-    @Size(max = 10, message = "Número filial não pode ter mais que 10 caracteres")
+    @Size(max = 4, message = "Número filial não pode ter mais que 4 caracteres")
     private String numeroFilial;
 
     @Size(max = 2, message = "Dígito verificador não pode ter mais que 2 caracteres")
