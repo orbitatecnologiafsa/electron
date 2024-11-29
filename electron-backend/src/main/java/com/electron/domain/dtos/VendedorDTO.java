@@ -102,6 +102,7 @@ public class VendedorDTO {
 
     private LocalDate dataDeNascimento;
 
+    @NotNull(message = "Empresa proprietária é obrigatório")
     private Long empresaId;
 
 }

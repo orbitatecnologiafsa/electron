@@ -68,6 +68,9 @@ public class TransportadoraDTO {
     @NotNull(message = "Município é obrigatório")
     private Long municipioId;
 
+    @NotNull(message = "Empresa proprietária é obrigatório")
+    private Long empresaId;
+
     @Pattern(regexp = "\\(\\d{2}\\) \\d{4}-\\d{4}|\\(\\d{2}\\) \\d{5}-\\d{4}",
             message = "Telefone deve estar no formato (XX) XXXX-XXXX ou (XX) XXXXX-XXXX")
     private String telefone;
