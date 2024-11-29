@@ -9,10 +9,7 @@ import InputWBtn from '../../components/InputWBtn';
 
 function ProdutosAdd() {
 
-  const [docDigitado, setDocDigitado] = useState('');
-
   const [documentoValue, setDocumentoValue] = useState('');
-  const [cep, setCep] = useState('');
   const [formData, setFormData] = useState({
     index: "",
     codigo: '',
@@ -44,8 +41,10 @@ function ProdutosAdd() {
   const [TControle, setTControle] = useState("");
 
   const [grupoModal, setGrupoModal]= useState([{codigo:'1',name_fantasia:'Grupo A'},{codigo:'2',name_fantasia:'Grupo B'}]);
-  const [cestModal, setCestModal]= useState([{codigo:'1',tributo_cest_codigo:'12345678'},
-    {codigo:'2',tributo_cest_codigo:'12349999'}]);
+  const [cestModal, setCestModal]= useState([{codigo:'1',tributo_cest_codigo:'12345678'},{codigo:'2',tributo_cest_codigo:'12349999'}]);
+  const [ncmModal, setNcmModal]= useState([]);
+  const [tribEstadualModal, setTribEstadualModal]= useState([{codigo:'1',nome:'Nome da Tributação Estadual Exemplo'},{codigo:'2',nome:'Nome da Tributação Estadual Exemplo'}]);
+  const [tribFederalModal, setTribFederalModal]= useState([{codigo:'1',nome:'Exemplo1'},{codigo:'2',nome:'Exemplo2'}]);
 
   const handleMenuItemClick = (item, index) => {
 
@@ -144,23 +143,33 @@ function ProdutosAdd() {
     const fetchData = async () => {
       try {
         const response = await axios.get('http://localhost:8080/grupos-prod-serv');
-        console.log("Antes:",response.data);
-
-        const gruposTransformados = response.data.map(item => ({
+        console.log("Antes Grupo:", response.data);
+  
+        let gruposTransformados = response.data.map(item => ({
           codigo: item.id,
           nome: item.nome
         }));
-
+  
         setGrupoModal(gruposTransformados);
-
-
+  
+        const responseT = await axios.get('http://localhost:8080/tributo-ncm');
+        console.log("Antes NCM:", responseT.data);
+  
+        gruposTransformados = responseT.data.map(item => ({
+          codigo: item.id,
+          cest: item.codigo
+        }));
+  
+        setNcmModal(gruposTransformados);
+  
       } catch (error) {
         console.error('Erro ao buscar os dados', error);
       }
     };
-
+  
     fetchData();
-  }, []); 
+  }, []);
+  
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -178,8 +187,19 @@ function ProdutosAdd() {
       console.log("Grupo:",formData.grupo);
     }else if(tipo=='Cest'){
       formData.cest = option;
+      console.log("Cest:",formData.cest);
     }else if(tipo == 'Produto'){
       formData.produto = option;
+      console.log("Produto:",formData.produto);
+    }else if(tipo == 'Ncm'){
+      formData.ncm = option;
+      console.log("Ncm:",formData.ncm);
+    }else if(tipo == 'Trib. Estadual'){
+      formData.tribEstadual = option;
+      console.log("Trib. Estadual:",formData.tribEstadual);
+    } else if(tipo == 'Trib. Federal'){
+      formData.tribFederal = option;
+      console.log("Trib. Federal:",formData.tribFederal);
     }
   }
 
@@ -398,23 +418,10 @@ function ProdutosAdd() {
               <div className="flex flex-col md:flex-row gap-4">
                 <div className="flex flex-col">
                   <label className="block ml-1 text-sm font-medium leading-6 text-black">NCM</label>
-                  <input
-                    type="text"
-                    name="ncm"
-                    value={formData.ncm}
-                    onChange={handleInputChange}
-                    className="w-[44rem] px-3 py-2 rounded-md ring-inset focus:ring-2 focus:ring-indigo-600"
-                  />
+                  <InputWBtn widthValue={40.5} options={ncmModal} modalTitle="Escolha o NCM" onSelect={onSelectedOptionModal} tipo={"ncm"}/>
                 </div>
                 <div className="flex flex-col">
                   <label className="block ml-1 text-sm font-medium leading-6 text-black">CEST</label>
-                  <input
-                    type="text"
-                    name="cest"
-                    value={formData.cest}
-                    onChange={handleInputChange}
-                    className="w-[21rem] px-3 py-2 rounded-md ring-inset focus:ring-2 focus:ring-indigo-600"
-                  />
                   <InputWBtn widthValue={18} options={grupoModal} modalTitle="Escolha o Cest" onSelect={onSelectedOptionModal} tipo={"Cest"}/>
                 </div>
               </div>
@@ -423,13 +430,7 @@ function ProdutosAdd() {
               <div className="flex flex-col md:flex-row gap-4">
               <div className="flex flex-col">
                   <label className="block ml-1 text-sm font-medium leading-6 text-black">Trib. Estadual</label>
-                  <input
-                    type="text"
-                    name="tribEstadual"
-                    value={formData.tribEstadual}
-                    onChange={handleInputChange}
-                    className="w-[66rem] px-3 py-2 rounded-md ring-inset focus:ring-2 focus:ring-indigo-600"
-                  />
+                  <InputWBtn widthValue={63} options={tribEstadualModal} modalTitle="Escolha o Trib. Estadual" onSelect={onSelectedOptionModal} tipo={"Trib. Estadual"}/>
                 </div>
               </div>
 
@@ -437,13 +438,7 @@ function ProdutosAdd() {
               <div className="flex flex-col md:flex-row gap-4">
                 <div className="flex flex-col">
                   <label className="block ml-1 text-sm font-medium leading-6 text-black">Trib. Federal</label>
-                  <input
-                    type="text"
-                    name="tribFederal"
-                    value={formData.tribFederal}
-                    onChange={handleInputChange}
-                    className="w-[66rem] px-3 py-2 rounded-md ring-inset focus:ring-2 focus:ring-indigo-600"
-                  />
+                   <InputWBtn widthValue={63} options={tribFederalModal} modalTitle="Escolha o Trib. Federal" onSelect={onSelectedOptionModal} tipo={"Trib. Federal"}/>
                 </div>
               </div>
               <div className="flex justify-end gap-4">

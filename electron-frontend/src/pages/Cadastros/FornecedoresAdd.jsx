@@ -1,15 +1,9 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Sidebar from '../../partials/Sidebar';
 import Header from '../../partials/Header';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faImage } from '@fortawesome/free-solid-svg-icons';
 import axios from 'axios';
 import DropDown from '../../components/DropDown';
-import Fornecedores from './Fornecedores';
-import Button from 'react-bootstrap/Button';
-import Form from 'react-bootstrap/Form';
-import InputGroup from 'react-bootstrap/InputGroup';
 
 function FornecesoresAdd() {
 
@@ -18,8 +12,9 @@ function FornecesoresAdd() {
   const [documentoValue, setDocumentoValue] = useState('');
   const [isDocumentoSelected, setIsDocumentoSelected] = useState(false);
   const [tipoCliente, setTipoCliente] = useState('-');
-  const [cep, setCep] = useState('');
+  const [uf, setUf] = useState('');
   const [cepCnpj, setCepCnpj] = useState('');
+  const [valueCnpj, setValueCnpj] = useState('');
 
   const [formsData, setFormsData] = useState({
     index: "",
@@ -47,15 +42,17 @@ function FornecesoresAdd() {
   const handleMenuItemClick = (item) => {
     if(item === 'Fisica'){
         setCepCnpj('CPF');
+        formsData.cpf_cnpj = (item);
     }else if(item === 'Juridica'){
         setCepCnpj('CNPJ');
+        formsData.cpf_cnpj = (item);
+    }else if(item === 'UF'){
+        formsData.uf = (item);
+        setUf(item);
     }
-    formsData.cpf_cnpj = (item);
   };
 
-
   const [error, setError] = useState(null);
-
 
   const [sidebarOpen, setSidebarOpen] = useState(false);
   {/* Post ADD Tabela */}
@@ -64,59 +61,29 @@ function FornecesoresAdd() {
     try {
         const response = await axios.post("http://localhost:8080/empresas-proprietarias", formData);
         setFormsData({
-            tipo: '',
-            razaoSocial: '',
-            nomeFantasia: '',
-            cpfCnpj: '',
+            cpf_cnpj: '',
+            ativo: true,
+            nome_razao: '',
+            fantasia: '',
+            rg_inscricao_estadual: '',
+            inscricao_estadual_municipal: '',
+            contato: '',
             cep: '',
-            nomeExibicao: '',
-            municipio: '',
-            uf: '',
-            bairro: '',
             logradouro: '',
             numero: '',
+            uf: '',
+            município: '',
+            bairro: '',
             complemento: '',
-            email: '',
-            telefone: '',
             celular: '',
-            contato: '',
-            rgInscricaoEstadual: '',
-            inscricaoEstadualMunicipal: '',
+            telefone: '',
+            email: '',
             observacao: '',
-            ativo: true,
         });
     } catch (error) {
         console.error('Erro ao cadastrar empresa:', error.response ? error.response.data : error.message);
     }
   };
-
-
-  {/* Pegando dados da API ao digitar o CEP */}
-  const getDadosEnderecoCEP = async (cepDigitado) => {
-    try {
-        const responseCEP = await axios.get(`https://viacep.com.br/ws/${cepDigitado}/json/`);
-        if (responseCEP.data.erro) {
-            throw new Error('CEP não encontrado.');
-        }
-        setFormData((prevData) => ({
-            ...prevData,
-            logradouro: responseCEP.data.logradouro,
-            bairro: responseCEP.data.bairro,
-            municipio: responseCEP.data.localidade,
-            uf: responseCEP.data.uf
-        }));
-        setError(null);
-    } catch (error) {
-        setError('Erro ao buscar CEP: ' + error.message);
-        setFormData((prevData) => ({
-            ...prevData,
-            logradouro: '',
-            bairro: '',
-            municipio: '',
-            uf: ''
-        }));
-    }
-  }; 
 
   {/* Redireciona para Empresas */}
   const handleRedirect = () => {
@@ -126,11 +93,37 @@ function FornecesoresAdd() {
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
-
-    // Atualiza o estado normalmente
     setFormsData((prevData) => ({ ...prevData, [name]: value }));
-};
+    setValueCnpj(value);
+  };
 
+  const getCNPJ = async (value) => {
+    try {
+      const responseCnpj = await axios.get('https://open.cnpja.com/office/' + value);
+      
+      // Atualiza os dados no estado
+      setFormsData((prevData) => ({
+        ...prevData,
+        nome_razao: responseCnpj.data.company.name,
+        fantasia: responseCnpj.data.alias,
+        cep: responseCnpj.data.address.zip,
+        cpf_cnpj: value,
+        numero: responseCnpj.data.address.number,
+        email: responseCnpj.data.emails[0]?.address || '',
+        telefone: responseCnpj.data.phones[0]?.area + responseCnpj.data.phones[0]?.number || '',
+        bairro: responseCnpj.data.address.district,
+        logradouro: responseCnpj.data.address.street,
+      }));
+    } catch (error) {
+      console.error('Erro ao buscar dados do CNPJ:', error);
+    }
+  };
+
+  const handleCnpjBlur = () => {
+    if (cepCnpj =='CNPJ') {
+      getCNPJ(valueCnpj);
+    }
+  };
 
   {/* Tela principal do administrador */}
   return (
@@ -154,6 +147,10 @@ function FornecesoresAdd() {
 
               <div className="flex flex-col md:flex-row gap-4 justify-between">
                 <div className="flex flex-col">
+                  <label className="block ml-1 text-sm font-medium leading-6 text-black">Tipo de Fornecedor</label>
+                   <DropDown title={"Tipo de Fornecedor"} ValorBtn={cepCnpj} listItens={["Fisica", "Juridica"]} onSelect={(item) => handleMenuItemClick(item)}/>
+                </div>
+                <div className="flex flex-col">
                 <label className="block ml-1 text-sm font-medium leading-6 text-black">{ cepCnpj ? cepCnpj : 'CPF'}</label>
                   <input
                     type="text"
@@ -162,11 +159,8 @@ function FornecesoresAdd() {
                     onChange={handleInputChange}
                     className=" w-[20rem] h-11 px-3 py-2 rounded-md  ring-inset focus:ring-2 focus:ring-indigo-600"
                     required
+                    onBlur={handleCnpjBlur}
                   />
-                </div>
-                <div className="flex flex-col">
-                  <label className="block ml-1 text-sm font-medium leading-6 text-black">Tipo de Fornecedor</label>
-                   <DropDown title={"Tipo de Fornecedor"} ValorBtn={formsData.cpf_cnpj} listItens={["Fisica", "Juridica"]} onSelect={(item) => handleMenuItemClick(item)}/>
                 </div>
                 <div className="flex items-center">
                     <input
@@ -187,7 +181,7 @@ function FornecesoresAdd() {
                   <label className="block ml-1 text-sm font-medium leading-6 text-black">Nome/Razão Social</label>
                   <input
                     type="text"
-                    name="nome/RazaoSocial"
+                    name="nome_razao"
                     value={formsData.nome_razao}
                     onChange={handleInputChange}
                     className=" w-[32.5rem] h-11 px-3 py-2 rounded-md  ring-inset focus:ring-2 focus:ring-indigo-600"
@@ -198,7 +192,7 @@ function FornecesoresAdd() {
                   <label className="block ml-1 text-sm font-medium leading-6 text-black">Fantasia</label>
                   <input
                     type="text"
-                    name="grupo"
+                    name="fantasia"
                     value={formsData.fantasia}
                     onChange={handleInputChange}
                     className=" w-[32.5rem] h-11 px-3 py-2 rounded-md ring-inset focus:ring-2 focus:ring-indigo-600"
@@ -297,7 +291,7 @@ function FornecesoresAdd() {
                   <input
                     type="text"
                     name="cep"
-                    value={formsData.cepCnpj}
+                    value={formsData.cep}
                     onChange={handleInputChange}
                     className="w-[21.3rem] h-11 px-3 py-2 rounded-md ring-inset focus:ring-2 focus:ring-indigo-600 disabled:bg-gray-300"
                   />
@@ -325,29 +319,7 @@ function FornecesoresAdd() {
               </div>
 
               <div className="flex flex-col md:flex-row gap-4">
-                <div className="flex flex-col">
-                  <label className="block ml-1 text-sm font-medium leading-6 text-black">UF</label>
-                  <input
-                    type="text"
-                    name="uf"
-                    value={formsData.uf}
-                    onChange={handleInputChange}
-                    className="w-[32.5rem] h-11 px-3 py-2 rounded-md ring-inset focus:ring-2 focus:ring-indigo-600 disabled:bg-gray-300"
-                  />
-                </div>
-                <div className="flex flex-col">
-                  <label className="block ml-1 text-sm font-medium leading-6 text-black">Municipio</label>
-                  <input
-                    type="text"
-                    name="municipio"
-                    value={formsData.município}
-                    onChange={handleInputChange}
-                    className="w-[32.5rem] h-11 px-3 py-2 rounded-md ring-inset focus:ring-2 focus:ring-indigo-600 disabled:bg-gray-300"
-                  />
-                </div>
-              </div>
 
-              <div className="flex flex-col md:flex-row gap-4">
                 <div className="flex flex-col">
                   <label className="block ml-1 text-sm font-medium leading-6 text-black">Bairro</label>
                   <input
@@ -355,9 +327,33 @@ function FornecesoresAdd() {
                     name="bairro"
                     value={formsData.bairro}
                     onChange={handleInputChange}
-                    className="w-[32.5rem] h-11 px-3 py-2 rounded-md ring-inset focus:ring-2 focus:ring-indigo-600 disabled:bg-gray-300"
+                    className="w-[40.5rem] h-11 px-3 py-2 rounded-md ring-inset focus:ring-2 focus:ring-indigo-600 disabled:bg-gray-300"
                   />
                 </div>
+
+                <div className="flex flex-col">
+                  <label className="block ml-1 text-sm font-medium leading-6 text-black">Municipio</label>
+                  <input
+                    type="text"
+                    name="município"
+                    value={formsData.município}
+                    onChange={handleInputChange}
+                    className="w-[20.5rem] h-11 px-3 py-2 rounded-md ring-inset focus:ring-2 focus:ring-indigo-600 disabled:bg-gray-300"
+                  />
+                </div>
+                <div className="flex flex-col">
+                  <label className="block ml-1 text-sm font-medium leading-6 text-black">UF</label>
+                  <input
+                    type="text"
+                    name="uf"
+                    value={formsData.uf}
+                    onChange={handleInputChange}
+                    className="w-[3rem] h-11 px-3 py-2 rounded-md ring-inset focus:ring-2 focus:ring-indigo-600 disabled:bg-gray-300"
+                  />
+                </div>
+              </div>
+
+              <div className="flex flex-col md:flex-row gap-4">
                 <div className="flex flex-col">
                   <label className="block ml-1 text-sm font-medium leading-6 text-black">Complemento</label>
                   <input
@@ -368,18 +364,14 @@ function FornecesoresAdd() {
                     className="w-[32.5rem] h-11 px-3 py-2 rounded-md ring-inset focus:ring-2 focus:ring-indigo-600 disabled:bg-gray-300"
                   />
                 </div>
-              </div>
-
-              {/*Observação*/}
-              <div className="flex flex-col md:flex-row gap-4">
-              <div className="flex flex-col">
+                <div className="flex flex-col">
                 <label className="block ml-1 text-sm font-medium leading-6 text-black">Observação</label>
                 <textarea
                         type="text"
-                        name="descricao"
+                        name="observacao"
                         value={formsData.observacao}
                         onChange={handleInputChange}
-                        className="w-[66rem] h-[45px] resize-none px-3 py-2 rounded-md ring-inset focus:ring-2 focus:ring-indigo-600"
+                        className="w-[33rem] h-[45px] resize-none px-3 py-2 rounded-md ring-inset focus:ring-2 focus:ring-indigo-600"
                     />
               </div>
               </div>

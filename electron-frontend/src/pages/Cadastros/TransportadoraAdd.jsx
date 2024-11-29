@@ -11,8 +11,7 @@ function TransportadorasAdd() {
 
   const [documentoValue, setDocumentoValue] = useState('');
   const [cepCnpj, setCepCnpj] = useState('');
-  const [cepUfv, setUfv] = useState('');
-  const [cepUf, setUf] = useState('');
+  const [valueCnpj, setValueCnpj] = useState('');
 
   const [formsData, setFormsData] = useState({
     index: "",
@@ -47,12 +46,6 @@ function TransportadorasAdd() {
             setCepCnpj('CNPJ');
         }
         formsData.cpf_cnpj = (item);
-    }else if(tipo === 'UFV'){
-        formsData.ufv = (item);
-        setUfv(item);
-    }else if(tipo === 'UF'){
-        formsData.uf = (item);
-        setUf(item);
     }
   };
 
@@ -93,34 +86,6 @@ function TransportadorasAdd() {
     }
   };
 
-
-  {/* Pegando dados da API ao digitar o CEP */}
-  const getDadosEnderecoCEP = async (cepDigitado) => {
-    try {
-        const responseCEP = await axios.get(`https://viacep.com.br/ws/${cepDigitado}/json/`);
-        if (responseCEP.data.erro) {
-            throw new Error('CEP não encontrado.');
-        }
-        setFormData((prevData) => ({
-            ...prevData,
-            logradouro: responseCEP.data.logradouro,
-            bairro: responseCEP.data.bairro,
-            municipio: responseCEP.data.localidade,
-            uf: responseCEP.data.uf
-        }));
-        setError(null);
-    } catch (error) {
-        setError('Erro ao buscar CEP: ' + error.message);
-        setFormData((prevData) => ({
-            ...prevData,
-            logradouro: '',
-            bairro: '',
-            municipio: '',
-            uf: ''
-        }));
-    }
-  }; 
-
   {/* Redireciona para Empresas */}
   const handleRedirect = () => {
     navigate('/cadastro/transportadoras');
@@ -130,7 +95,36 @@ function TransportadorasAdd() {
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setFormsData((prevData) => ({ ...prevData, [name]: value }));
-};
+    setValueCnpj(value);
+  };
+
+  const getCNPJ = async (value) => {
+    try {
+      const responseCnpj = await axios.get('https://open.cnpja.com/office/' + value);
+      
+      // Atualiza os dados no estado
+      setFormsData((prevData) => ({
+        ...prevData,
+        nome_razao: responseCnpj.data.company.name,
+        fantasia: responseCnpj.data.alias,
+        cep: responseCnpj.data.address.zip,
+        cpf_cnpj: value,
+        numero: responseCnpj.data.address.number,
+        email: responseCnpj.data.emails[0]?.address || '',
+        telefone: responseCnpj.data.phones[0]?.area + responseCnpj.data.phones[0]?.number || '',
+        bairro: responseCnpj.data.address.district,
+        logradouro: responseCnpj.data.address.street,
+      }));
+    } catch (error) {
+      console.error('Erro ao buscar dados do CNPJ:', error);
+    }
+  };
+
+  const handleCnpjBlur = () => {
+    if (cepCnpj =='CNPJ') {
+      getCNPJ(valueCnpj);
+    }
+  };
 
 
   {/* Tela principal do administrador */}
@@ -154,6 +148,10 @@ function TransportadorasAdd() {
               </h2>
 
               <div className="flex flex-col md:flex-row gap-4 justify-between">
+                <div className="flex flex-col mr-4">
+                    <DropDown labelDrop={"Tipo de Fornecedor"} title= 'Selecione a UF' ValorBtn={formsData.cpf_cnpj} listItens={['Fisica', 'Juridica']} onSelect={(item) => handleMenuItemClick(item, "Pessoa")} />
+                </div>
+                
                 <div className="flex flex-col">
                 <label className="block ml-1 text-sm font-medium leading-6 text-black">{ cepCnpj ? cepCnpj : 'CPF'}</label>
                   <input
@@ -163,12 +161,8 @@ function TransportadorasAdd() {
                     onChange={handleInputChange}
                     className=" w-[20rem] h-11 px-3 py-2 rounded-md  ring-inset focus:ring-2 focus:ring-indigo-600"
                     required
+                    onBlur={handleCnpjBlur}
                   />
-                </div>
-
-                <div className="flex flex-col mr-4">
-                    <DropDown labelDrop={"Tipo de Fornecedor"} title= 'Selecione a UF' ValorBtn={formsData.cpf_cnpj} listItens={['Fisica', 'Juridica']} onSelect={(item) => handleMenuItemClick(item, "Pessoa")} />
-
                 </div>
                 
                 <div className="flex items-center mt-5">
@@ -269,7 +263,7 @@ function TransportadorasAdd() {
                     name="telefone"
                     value={formsData.telefone}
                     onChange={handleInputChange}
-                    className="w-[22rem] h-11 px-3 py-2 rounded-md ring-inset focus:ring-2 focus:ring-indigo-600 disabled:bg-gray-300"
+                    className="w-[21rem] h-11 px-3 py-2 rounded-md ring-inset focus:ring-2 focus:ring-indigo-600 disabled:bg-gray-300"
                   />
                 </div>
               </div>
@@ -302,7 +296,7 @@ function TransportadorasAdd() {
                     name="cep"
                     value={formsData.cepCnpj}
                     onChange={handleInputChange}
-                    className="w-[25rem] h-11 px-3 py-2 rounded-md ring-inset focus:ring-2 focus:ring-indigo-600 disabled:bg-gray-300"
+                    className="w-[21.3rem] h-11 px-3 py-2 rounded-md ring-inset focus:ring-2 focus:ring-indigo-600 disabled:bg-gray-300"
                   />
                 </div>
                 <div className="flex flex-col">
@@ -312,16 +306,9 @@ function TransportadorasAdd() {
                     name="logradouro"
                     value={formsData.logradouro}
                     onChange={handleInputChange}
-                    className="w-[25rem] h-11 px-3 py-2 rounded-md ring-inset focus:ring-2 focus:ring-indigo-600 disabled:bg-gray-300"
+                    className="w-[21.3rem] h-11 px-3 py-2 rounded-md ring-inset focus:ring-2 focus:ring-indigo-600 disabled:bg-gray-300"
                   />
                 </div>
-
-                <div className="flex flex-col">
-                    <DropDown labelDrop="UF" title= 'Selecione a UF' ValorBtn={cepUf} listItens={["US", "MX", "BA"]} onSelect={(item) => handleMenuItemClick(item,'UF')} />
-                </div>
-              </div>
-
-              <div className="flex flex-col md:flex-row gap-4 justify-between">
 
                 <div className="flex flex-col">
                   <label className="block ml-1 text-sm font-medium leading-6 text-black">Numero</label>
@@ -330,7 +317,21 @@ function TransportadorasAdd() {
                     name="numero"
                     value={formsData.numero}
                     onChange={handleInputChange}
-                    className="w-[32.5rem] h-11 px-3 py-2 rounded-md ring-inset focus:ring-2 focus:ring-indigo-600 disabled:bg-gray-300"
+                    className="w-[20.5rem] h-11 px-3 py-2 rounded-md ring-inset focus:ring-2 focus:ring-indigo-600 disabled:bg-gray-300"
+                  />
+                </div>
+              </div>
+
+              <div className="flex flex-col md:flex-row gap-4">
+
+                <div className="flex flex-col">
+                  <label className="block ml-1 text-sm font-medium leading-6 text-black">Bairro</label>
+                  <input
+                    type="text"
+                    name="bairro"
+                    value={formsData.bairro}
+                    onChange={handleInputChange}
+                    className="w-[39.5rem] h-11 px-3 py-2 rounded-md ring-inset focus:ring-2 focus:ring-indigo-600 disabled:bg-gray-300"
                   />
                 </div>
 
@@ -341,22 +342,25 @@ function TransportadorasAdd() {
                     name="municipio"
                     value={formsData.município}
                     onChange={handleInputChange}
-                    className="w-[32.5rem] h-11 px-3 py-2 rounded-md ring-inset focus:ring-2 focus:ring-indigo-600 disabled:bg-gray-300"
+                    className="w-[20.5rem] h-11 px-3 py-2 rounded-md ring-inset focus:ring-2 focus:ring-indigo-600 disabled:bg-gray-300"
                   />
                 </div>
+
+                <div className="flex flex-col">
+                  <label className="block ml-1 text-sm font-medium leading-6 text-black">UF</label>
+                  <input
+                    type="text"
+                    name="uf"
+                    value={formsData.uf}
+                    onChange={handleInputChange}
+                    className="w-[3rem] h-11 px-3 py-2 rounded-md ring-inset focus:ring-2 focus:ring-indigo-600 disabled:bg-gray-300"
+                  />
+                </div>
+
               </div>
 
               <div className="flex flex-col md:flex-row gap-4">
-                <div className="flex flex-col">
-                  <label className="block ml-1 text-sm font-medium leading-6 text-black">Bairro</label>
-                  <input
-                    type="text"
-                    name="bairro"
-                    value={formsData.bairro}
-                    onChange={handleInputChange}
-                    className="w-[32.5rem] h-11 px-3 py-2 rounded-md ring-inset focus:ring-2 focus:ring-indigo-600 disabled:bg-gray-300"
-                  />
-                </div>
+
                 <div className="flex flex-col">
                   <label className="block ml-1 text-sm font-medium leading-6 text-black">Complemento</label>
                   <input
@@ -364,7 +368,7 @@ function TransportadorasAdd() {
                     name="complemento"
                     value={formsData.complemento}
                     onChange={handleInputChange}
-                    className="w-[32.5rem] h-11 px-3 py-2 rounded-md ring-inset focus:ring-2 focus:ring-indigo-600 disabled:bg-gray-300"
+                    className="w-[66rem] h-11 px-3 py-2 rounded-md ring-inset focus:ring-2 focus:ring-indigo-600 disabled:bg-gray-300"
                   />
                 </div>
               </div>
@@ -376,7 +380,7 @@ function TransportadorasAdd() {
               </h2>
 
               {/* Aréa do veículo*/}
-              <div className="flex flex-col md:flex-row gap-4 ">
+              <div className="flex flex-col md:flex-row gap-4 justify-between">
                 <div className="flex flex-col">
                   <label className="block ml-1 text-sm font-medium leading-6 text-black">Placa</label>
                   <input
@@ -399,8 +403,15 @@ function TransportadorasAdd() {
                   />
                 </div>
 
-                <div className="flex flex-col ">
-                    <DropDown labelDrop="UF" title= 'Selecione a UF' ValorBtn={cepUfv} listItens={["US", "MX", "BA"]} onSelect={(item) => handleMenuItemClick(item,'UFV')}/>
+                <div className="flex flex-col">
+                  <label className="block ml-1 text-sm font-medium leading-6 text-black">UF</label>
+                  <input
+                    type="text"
+                    name="ufv"
+                    value={formsData.ufv}
+                    onChange={handleInputChange}
+                    className="w-[3rem] h-11 px-3 py-2 rounded-md ring-inset focus:ring-2 focus:ring-indigo-600 disabled:bg-gray-300"
+                  />
                 </div>
 
                 <div className="flex flex-col ">
