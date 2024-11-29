@@ -12,7 +12,29 @@ function Empresas() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [campoValue, setCampoValue] = useState('Todos');
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
-  const [currentData, setCurrentData] = useState(null);
+  const [currentData, setCurrentData] = useState({
+    razaoSocial: '',
+    cpfCnpj: '',
+    nomeFantasia: '',
+    email: '',
+    contato: '',
+    telefone: '',
+    celular: '',
+    cep: '',
+    logradouro: '',
+    numero: '',
+    bairro: '',
+    municipio: '',
+    estado: '',
+    complemento: '',
+    observacoes: ''
+  });
+
+  const openEditModal = (empresaData) => {
+    setCurrentData(empresaData);
+    setIsEditModalOpen(true);
+  };
+
 
   {/* Const de modal */}
   const [isModalLegendaOpen, setIsModalLegendaOpen] = useState(false);
@@ -171,7 +193,7 @@ function Empresas() {
       {/* Sidebar */}
       <Sidebar sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} />
       {/* Conteúdo */}
-      <div className="relative flex flex-col flex-1 overflow-y-auto overflow-x-hidden">
+      <div className="relative flex flex-col flex-1 overflow-x-hidden">
         <Header sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} />
         {/* Form Empresas */}
         <form>
@@ -222,11 +244,11 @@ function Empresas() {
                   </div>
 
                   {/* Tabela */}
-                  <div className="overflow-x-auto overflow-y-auto mt-5">
-                    <div className="max-h-[24rem] overflow-y-auto">
+                  <div className="mt-5">
+                    <div className="max-h-[24rem] ">
                       <table className="min-w-full max-w-full divide-y divide-gray-200">
                         <thead className="bg-gray-100">
-                          <tr>
+                          <tr className='overflow-y-auto'>
                             {tableColumns.map((column, index) => (
                               <th key={index} className="px-6 py-3 text-center text-sm font-medium text-gray-700">
                                 <div className="flex items-center justify-center cursor-pointer" onClick={() => handleSort(column.key)}>
@@ -311,7 +333,7 @@ function Empresas() {
 
       {isEditModalOpen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
-          <div className="bg-white rounded-lg p-6 w-[34rem] h-auto">
+          <div className="bg-white rounded-lg p-6 w-[65rem] h-auto">
             <h3 className="text-lg font-semibold">Editar Empresa</h3>
             {/* Exemplo de campos de formulário, você pode customizar com base nos dados */}
             {currentData && (
@@ -323,15 +345,37 @@ function Empresas() {
                       type="text"
                       id="razaoSocial"
                       value={currentData.razaoSocial}
+                      onChange={(e) => setCurrentData({ ...currentData, razaoSocial: e.target.value })}
                       className="mt-2 block w-full rounded-md border-gray-300 shadow-sm"
                     />
                   </div>
                   <div className="mt-4">
-                    <label htmlFor="cpfCnpj" className="block text-sm font-medium text-gray-900">CNPJ</label>
+                    <label htmlFor="cpfCnpj" className="block text-sm font-medium text-gray-900">Documento</label>
                     <input
                       type="text"
                       id="cpfCnpj"
                       value={currentData.cpfCnpj}
+                      onChange={(e) => setCurrentData({ ...currentData, cpfCnpj: e.target.value })}
+                      className="mt-2 block w-full rounded-md border-gray-300 shadow-sm"
+                    />
+                  </div>
+                  <div className="mt-4">
+                    <label className="block text-sm font-medium text-gray-900">RG Inscrição Estadual</label>
+                    <input
+                      type="text"
+                      name="rgInscricaoEstadual"
+                      value={currentData.rgInscricaoEstadual}
+                      onChange={(e) => setCurrentData({ ...currentData, rgInscricaoEstadual: e.target.value })}
+                      className="mt-2 block w-full rounded-md border-gray-300 shadow-sm"
+                    />
+                    </div>
+                    <div className="mt-4">
+                    <label className="block text-sm font-medium text-gray-900">Inscrição Estadual Municipal</label>
+                    <input
+                      type="text"
+                      name="inscricaoEstadualMunicipal"
+                      value={currentData.inscricaoEstadualMunicipal}
+                      onChange={(e) => setCurrentData({ ...currentData, inscricaoEstadualMunicipal: e.target.value })}
                       className="mt-2 block w-full rounded-md border-gray-300 shadow-sm"
                     />
                   </div>
@@ -342,28 +386,9 @@ function Empresas() {
                     type="text"
                     id="nomeFantasia"
                     value={currentData.nomeFantasia}
+                    onChange={(e) => setCurrentData({ ...currentData, nomeFantasia: e.target.value })}
                     className="mt-2 block w-full rounded-md border-gray-300 shadow-sm"
                   />
-                </div>
-                <div className="flex flex-col md:flex-row gap-4">
-                  <div className="mt-4">
-                    <label className="block text-sm font-medium text-gray-900">RG Inscrição Estadual</label>
-                    <input
-                      type="text"
-                      name="rgInscricaoEstadual"
-                      value={currentData.rgInscricaoEstadual}
-                      className="mt-2 block w-full rounded-md border-gray-300 shadow-sm"
-                    />
-                    </div>
-                    <div className="mt-4">
-                    <label className="block text-sm font-medium text-gray-900">Inscrição Estadual Municipal</label>
-                    <input
-                      type="text"
-                      name="inscricaoEstadualMunicipal"
-                      value={currentData.inscricaoEstadualMunicipal}
-                      className="mt-2 block w-full rounded-md border-gray-300 shadow-sm"
-                    />
-                  </div>
                 </div>
                 <div className="flex flex-col md:flex-row gap-4">
                   <div className="mt-4">
@@ -372,6 +397,7 @@ function Empresas() {
                       type="text"
                       name="rgInscricaoEstadual"
                       value={currentData.email}
+                      onChange={(e) => setCurrentData({ ...currentData, email: e.target.value })}
                       className="mt-2 block w-full rounded-md border-gray-300 shadow-sm"
                     />
                     </div>
@@ -381,17 +407,17 @@ function Empresas() {
                       type="text"
                       name="inscricaoEstadualMunicipal"
                       value={currentData.contato}
+                      onChange={(e) => setCurrentData({ ...currentData, contato: e.target.value })}
                       className="mt-2 block w-full rounded-md border-gray-300 shadow-sm"
                     />
                   </div>
-                </div>
-                <div className="flex flex-col md:flex-row gap-4">
                   <div className="mt-4">
                     <label className="block text-sm font-medium text-gray-900">Telefone</label>
                     <input
                       type="text"
                       name="rgInscricaoEstadual"
                       value={currentData.telefone}
+                      onChange={(e) => setCurrentData({ ...currentData, telefone: e.target.value })}
                       className="mt-2 block w-full rounded-md border-gray-300 shadow-sm"
                     />
                     </div>
@@ -401,7 +427,82 @@ function Empresas() {
                       type="text"
                       name="inscricaoEstadualMunicipal"
                       value={currentData.celular}
+                      onChange={(e) => setCurrentData({ ...currentData, celular: e.target.value })}
                       className="mt-2 block w-full rounded-md border-gray-300 shadow-sm"
+                    />
+                  </div>
+                </div>
+                <div className="flex flex-col md:flex-row gap-4">
+                  <div className="mt-4">
+                    <label className="block text-sm font-medium text-gray-900">CEP</label>
+                    <input
+                      type="text"
+                      name="cep"
+                      value={currentData.cep}
+                      onChange={(e) => setCurrentData({ ...currentData, cep: e.target.value })}
+                      className="mt-2 block w-full rounded-md border-gray-300 shadow-sm"
+                    />
+                    </div>
+                    <div className="mt-4">
+                    <label className="block text-sm font-medium text-gray-900">Logradouro</label>
+                    <input
+                      type="text"
+                      name="logradouro"
+                      value={currentData.logradouro}
+                      onChange={(e) => setCurrentData({ ...currentData, logradouro: e.target.value })}
+                      className="mt-2 block w-full rounded-md border-gray-300 shadow-sm"
+                    />
+                  </div>
+                  <div className="mt-4">
+                    <label className="block text-sm font-medium text-gray-900">Número</label>
+                    <input
+                      type="text"
+                      name="numero"
+                      value={currentData.numero}
+                      onChange={(e) => setCurrentData({ ...currentData, numero: e.target.value })}
+                      className="mt-2 block w-full rounded-md border-gray-300 shadow-sm"
+                    />
+                    </div>
+                    <div className="mt-4">
+                    <label className="block text-sm font-medium text-gray-900">Bairro</label>
+                    <input
+                      type="text"
+                      name="bairro"
+                      value={currentData.bairro}
+                      onChange={(e) => setCurrentData({ ...currentData, bairro: e.target.value })}
+                      className="mt-2 block w-full rounded-md border-gray-300 shadow-sm"
+                    />
+                  </div>
+                </div>
+                <div className="flex flex-col md:flex-row gap-4">
+                  <div className="mt-4">
+                    <label className="block text-sm font-medium text-gray-900">Município</label>
+                    <input
+                      type="text"
+                      name="municipio"
+                      value={currentData.municipio}
+                      onChange={(e) => setCurrentData({ ...currentData, municipio: e.target.value })}
+                      className="mt-2 block w-[14.4rem] rounded-md border-gray-300 shadow-sm"
+                    />
+                    </div>
+                    <div className="mt-4">
+                    <label className="block text-sm font-medium text-gray-900">UF</label>
+                    <input
+                      type="text"
+                      name="estado"
+                      value={currentData.estado}
+                      onChange={(e) => setCurrentData({ ...currentData, estado: e.target.value })}
+                      className="mt-2 block w-[14.4rem] rounded-md border-gray-300 shadow-sm"
+                    />
+                  </div>
+                  <div className="mt-4">
+                    <label className="block text-sm font-medium text-gray-900">Complemento</label>
+                    <input
+                      type="text"
+                      name="complemento"
+                      value={currentData.complemento}
+                      onChange={(e) => setCurrentData({ ...currentData, complemento: e.target.value })}
+                      className="mt-2 block w-[30.25rem] rounded-md border-gray-300 shadow-sm"
                     />
                   </div>
                 </div>
@@ -412,25 +513,26 @@ function Empresas() {
                       type="text"
                       name="rgInscricaoEstadual"
                       value={currentData.observacoes}
-                      className="mt-2 block w-[31rem] h-[96px] rounded-md border-gray-300 shadow-sm resize-none"
+                      onChange={(e) => setCurrentData({ ...currentData, observacoes: e.target.value })}
+                      className="mt-2 block w-[62rem] h-[96px] rounded-md border-gray-300 shadow-sm resize-none"
                     />
                   </div>
                 </div>
                 {/* Adicione mais campos conforme necessário */}
                 <div className="mt-6 flex justify-end">
                   <button
-                    type="button"
-                    className="bg-blue-500 text-white px-4 py-2 rounded-md"
-                    onClick={() => handleCloseEditModal()}
-                  >
-                    Fechar
-                  </button>
-                  <button
                     type="submit"
-                    className="ml-4 bg-green-500 text-white px-4 py-2 rounded-md"
+                    className="bg-green-500 text-white px-4 py-2 rounded-md"
                     // Aqui você pode adicionar a lógica de salvar as alterações
                   >
                     Salvar
+                  </button>
+                  <button
+                    type="button"
+                    className="ml-4 bg-blue-500 text-white px-4 py-2 rounded-md"
+                    onClick={() => handleCloseEditModal()}
+                  >
+                    Fechar
                   </button>
                 </div>
               </form>
