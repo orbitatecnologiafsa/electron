@@ -121,7 +121,4 @@ public class EmpresaProprietaria {
 
     @Column(name = "empresa_observacoes", columnDefinition = "TEXT")
     private String observacoes;
-
-    @OneToMany(mappedBy = "empresaProprietaria", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Caixa> caixas;
 }
