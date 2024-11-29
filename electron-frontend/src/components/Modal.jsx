@@ -6,14 +6,25 @@ import { faMagnifyingGlass } from '@fortawesome/free-solid-svg-icons';
 function ModalWithOptions({ options, onSelect, modalTitle }) {
   const [isOpen, setIsOpen] = useState(false);
   const [selectedOption, setSelectedOption] = useState(""); 
+  const [searchQuery, setSearchQuery] = useState("");
 
   const handleOptionClick = (option) => {
-    setSelectedOption(option.name); // Exibe o nome da opção selecionada
-    onSelect(option); // Chama a função onSelect que foi passada para atualizar o input
-    setIsOpen(false); // Fecha o modal
+    setSelectedOption(option.name);
+    if (typeof onSelect === 'function') {
+      onSelect(option);
+    } else {
+      console.error('onSelect is not a function');
+    }
+    setIsOpen(false);
   };
 
   const columnHeaders = options.length > 0 ? Object.keys(options[0]) : [];
+
+  const filteredOptions = options.filter(option => {
+    return columnHeaders.some(header => {
+      return option[header].toString().toLowerCase().includes(searchQuery.toLowerCase());
+    });
+  });
 
   return (
     <div className="flex flex-col">
@@ -28,8 +39,17 @@ function ModalWithOptions({ options, onSelect, modalTitle }) {
 
       {isOpen && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
-          <div className="bg-white p-4 rounded-md text-center w-96 max-w-full max-h-[80vh] overflow-hidden relative z-60">
+          <div className="bg-white p-4 rounded-md text-center w-[900px]  max-w-full max-h-[180vh] overflow-hidden relative z-60">
             <h2 className="text-lg font-semibold mb-4">{modalTitle}</h2>
+
+            <input
+              type="text"
+              placeholder="Pesquisar..."
+              className="w-full h-12 px-3 py-2 rounded-md ring-inset focus:ring-2 focus:ring-indigo-600"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+            />
+            
             <div className="flex justify-between border-b-2 py-2 mb-2 font-bold">
               {columnHeaders.map((header, index) => (
                 <div key={index} className="w-1/2 text-center">
@@ -39,9 +59,9 @@ function ModalWithOptions({ options, onSelect, modalTitle }) {
             </div>
 
             <ul className="list-none p-0 m-0 max-h-60 overflow-y-auto">
-              {options.map((option) => (
+              {filteredOptions.map((option) => (
                 <li
-                  key={option.id}
+                  key={option.codigo}
                   className="cursor-pointer flex justify-between items-center py-2 px-3 hover:bg-gray-100"
                   onClick={() => handleOptionClick(option)}
                 >

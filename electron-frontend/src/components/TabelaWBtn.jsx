@@ -1,50 +1,54 @@
+//TabelaWBtn.jsx
 import React, { useState } from "react";
 import InputWBtn from "./InputWBtn";
 
-const TabelaWBtn = ({ modalOptions }) => {
+const TabelaWBtn = ({ modalOptions, onSelect }) => {
   const [dados, setDados] = useState([
     { name: "", quantidade: 1, precoUnitario: 0, preco: 0 }, // Inicializando com precoUnitario 0
   ]);
 
-  // Função para selecionar um produto e adicionar a linha com o nome e preço
   const handleSelectOption = (option) => {
+  if (!option || !Object.values(option)[1] || !option.preco) {
+    console.error("Invalid option selected:", option);
+    return;
+  }
+
     setDados((prevDados) => [
       ...prevDados.slice(0, -1),
       { 
-        name: option.name, 
+        name: Object.values(option)[1], 
         quantidade: 1, 
-        precoUnitario: option.preco, // Armazenando o preco unitario
-        preco: option.preco, // Inicializando o preco com o precoUnitario
+        precoUnitario: option.preco, 
+        preco: option.preco, 
       },
-      { name: "", quantidade: 1, precoUnitario: 0, preco: 0 }, // Nova linha em branco
+      { name: "", quantidade: 1, precoUnitario: 0, preco: 0 },
     ]);
+
+    onSelect('Produto',option.codigo);
   };
 
-  // Função para excluir ou limpar a linha
+
   const handleDeleteRow = (index) => {
     if (dados.length === 1) {
-      // Se for a última linha, apenas limpar os valores
       setDados([{ name: "", quantidade: 1, precoUnitario: 0, preco: 0 }]);
     } else {
-      // Caso contrário, excluir a linha
       setDados((prevDados) => prevDados.filter((_, i) => i !== index));
     }
   };
 
-  // Função para atualizar a quantidade e recalcular o preço
   const handleQuantidadeChange = (e, index) => {
-    const newQuantidade = e.target.value;
-
+    const newQuantidade = parseFloat(e.target.value);
+  
     if (isNaN(newQuantidade) || newQuantidade <= 0) return; // Impede valores não numéricos ou negativos
-
+  
     setDados((prevDados) => {
       const newData = [...prevDados];
       const produto = newData[index];
       produto.quantidade = newQuantidade;
-      produto.preco = produto.precoUnitario * newQuantidade; // Calculando o novo preço
+      produto.preco = produto.precoUnitario * newQuantidade;
       return newData;
     });
-  };
+  };  
 
   return (
     <div className="container mx-auto p-4 max-h-[64rem] overflow-y-auto">

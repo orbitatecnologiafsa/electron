@@ -1,24 +1,42 @@
-//InputWBtn.jsx
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Modal from "./Modal";
 import InputGroup from 'react-bootstrap/InputGroup';
 
-const InputWBtn = ({ widthValue, options, modalTitle, onSelect }) => {
-  const [inputValue, setInputValue] = useState(""); // Estado para controlar o valor do input
+const InputWBtn = ({ widthValue, options, modalTitle, onSelect, tipo }) => {
+  const [inputValue, setInputValue] = useState("");
 
-  // Função para atualizar o input quando uma opção é selecionada no modal
   const handleSelect = (option) => {
-    setInputValue(option.name); // Atualiza o valor do input com o nome da opção selecionada
-    onSelect(option); // Chama a função onSelect do componente pai
+    // Aqui, selecionamos o segundo valor de `option` (no caso, vamos supor que seja o segundo valor da linha).
+    const secondValue = Object.values(option)[1]; // Pega o segundo valor da linha.
+    
+    console.log('secondValue: ', secondValue);
+    
+    setInputValue(secondValue);
+
+    if (typeof onSelect === 'function') {
+      if (tipo) {
+        console.log('onSelect is a function 2');
+        onSelect(tipo, option.codigo); // Exemplo de quando você precisa passar a `codigo`
+      } else {
+        console.log(option);
+        onSelect(option); // Passa o objeto inteiro
+      }
+    } else {
+      console.error('onSelect is not a function');
+    }
   };
+
+  useEffect(() => {
+    // Você pode adicionar lógica aqui se necessário
+  }, [inputValue]);
 
   return (
     <div className="flex items-center">
       <InputGroup className="mb-3">
         <input
           type="text"
-          value={inputValue} // O valor do input é controlado por inputValue
-          onChange={(e) => setInputValue(e.target.value)} // Altera o valor do input manualmente
+          value={inputValue}
+          onChange={(e) => setInputValue(e.target.value)}
           className="w-[20rem] h-12 px-3 py-2 rounded-md ring-inset focus:ring-2 focus:ring-indigo-600 disabled:bg-gray-300"
           style={{ width: `${widthValue}rem` }} 
         />

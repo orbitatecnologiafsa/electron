@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import Sidebar from '../../partials/Sidebar';
 import Header from '../../partials/Header';
+import { useNavigate } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faUser, faSort, faCalendar, faMagnifyingGlass } from '@fortawesome/free-solid-svg-icons';
 import { Menu, MenuButton, MenuItems, MenuItem } from '@headlessui/react';
@@ -69,6 +70,11 @@ function Pedidos() {
       dataNascimento: '01/01/2000',
     },
   ];
+
+  const handleRedirect = () => {
+    navigate('/entradas/novopedido');
+  };
+  const navigate = useNavigate();
 
   return (
     <div className="flex h-screen overflow-hidden">
@@ -241,7 +247,7 @@ function Pedidos() {
                 )}
                 </div>
                 <div className="mr-10 mt-10 h-10">
-                <button className="w-auto float-end rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50">
+                <button type="button" onClick={handleRedirect} className="w-auto float-end px-3 py-2 rounded-md bg-indigo-600 text-white hover:bg-indigo-700">
                   Cadastrar
                 </button>
               </div>
