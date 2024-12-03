@@ -35,9 +35,21 @@ function Empresas() {
     bairro: '',
     municipioId: '',
     complemento: '' ,
+    dataCriacao: '' ,
     observacoes: ''
   });
 
+  const handleCepChange = (e) => {
+    // Remove tudo que não for número
+    const value = e.target.value.replace(/\D/g, '');
+  
+    // Aplica a formatação do CEP: 5 primeiros números seguidos de um traço e os 3 últimos números
+    const formattedValue = value.replace(/(\d{5})(\d{3})/, '$1-$2');
+  
+    // Atualiza o estado com o CEP formatado
+    setCurrentData({ ...currentData, cep: formattedValue });
+  };
+  
 
   {/* Const de modal */}
   const [isModalLegendaOpen, setIsModalLegendaOpen] = useState(false);
@@ -80,7 +92,6 @@ function Empresas() {
     } catch (error) {
       console.error("Erro ao buscar dados: ", error);
     }
-    
   };
 
   const handleEditClick = (data) => {
@@ -157,6 +168,7 @@ function Empresas() {
         },
         body: JSON.stringify(currentData),
       });
+      console.log('Dados que estão sendo enviados:', currentData);
 
       if (response.ok) {
         const updatedData = await response.json();
@@ -164,6 +176,7 @@ function Empresas() {
 
         // Fechar o modal após sucesso
         handleCloseEditModal();
+        getPosts();
       } else {
         console.error('Erro ao atualizar a empresa');
       }
@@ -557,11 +570,12 @@ function Empresas() {
                       type="text"
                       name="cep"
                       value={currentData.cep}
-                      onChange={(e) => setCurrentData({ ...currentData, cep: e.target.value })}
+                      onChange={handleCepChange}
+                      maxLength={9}
                       className="mt-2 block w-[10rem] rounded-md border-gray-300 shadow-sm"
                     />
-                    </div>
-                    <div className="mt-4">
+                  </div>
+                  <div className="mt-4">
                     <label className="block text-sm font-medium text-gray-900">Logradouro</label>
                     <input
                       type="text"
@@ -580,8 +594,8 @@ function Empresas() {
                       onChange={(e) => setCurrentData({ ...currentData, numero: e.target.value })}
                       className="mt-2 block w-[4rem] rounded-md border-gray-300 shadow-sm"
                     />
-                    </div>
-                    <div className="mt-4">
+                  </div>
+                  <div className="mt-4">
                     <label className="block text-sm font-medium text-gray-900">Bairro</label>
                     <input
                       type="text"
