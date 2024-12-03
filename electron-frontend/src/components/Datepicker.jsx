@@ -36,7 +36,7 @@ function Datepicker({ align, onDateChange, tipo }) {
         <svg
           className="fill-current text-gray-400 dark:text-black-500 ml-3"
           width="16"
-          height="16"
+          height="25"
           viewBox="0 0 16 16"
         >
           <path d="M5 4a1 1 0 0 0 0 2h6a1 1 0 1 0 0-2H5Z" />

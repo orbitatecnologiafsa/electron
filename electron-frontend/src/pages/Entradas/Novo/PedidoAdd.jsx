@@ -13,11 +13,7 @@ const PedidoAdd = () => {
   const [opSelected,setOpSelected] = useState('');
   const [opDia,setOpDia] = useState('');
   const [sidebarOpen, setSidebarOpen] = useState(false);
-  const modalOptions = [
-    { codigo: 1, nome: "Laranja", quantidade: 1, preco: 9.30},
-    { codigo: 2, nome: "Enchaguante", quantidade: 1, preco: 12.32},
-    { codigo: 3, nome: "Vassoura", quantidade: 1, preco: 10.65 },
-  ];
+  const [modalOptions,setModalOptions] =  useState([]);
 
   const [formData, setFormData] = useState({
     Fornecedor: '',
@@ -119,22 +115,44 @@ const PedidoAdd = () => {
     }
   };
 
-  const optionModalF = [
-    { codigo: '1', name_fantasia: 'Froz da mota', nome_razao: 'FELIX Amaral', documento: '12345-678', cidade: 'Belo Horizonte' },
-    { codigo: '2', name_fantasia: 'Gabriel ltda', nome_razao: 'Gabriel Monteiro', documento: '17435-658', cidade: 'Belém' },
-    { codigo: '3', name_fantasia: 'Alpha Tech', nome_razao: 'Carlos Silva', documento: '87546-230', cidade: 'São Paulo' },
-    { codigo: '4', name_fantasia: 'Omega Construções', nome_razao: 'Maria Oliveira', documento: '34856-983', cidade: 'Rio de Janeiro' },
-    { codigo: '5', name_fantasia: 'Beta Indústria', nome_razao: 'João Souza', documento: '87456-234', cidade: 'Curitiba' },
-    { codigo: '6', name_fantasia: 'Tech World', nome_razao: 'Luciana Santos', documento: '25468-198', cidade: 'Fortaleza' },
-    { codigo: '7', name_fantasia: 'Móveis Top', nome_razao: 'Roberto Costa', documento: '98765-123', cidade: 'Recife' },
-    { codigo: '8', name_fantasia: 'Supermercados Good', nome_razao: 'Patricia Alves', documento: '23145-876', cidade: 'Salvador' },
-    { codigo: '9', name_fantasia: 'Café Central', nome_razao: 'Eduardo Martins', documento: '78346-234', cidade: 'Porto Alegre' },
-    { codigo: '10', name_fantasia: 'Fashion Trends', nome_razao: 'Ana Pereira', documento: '19348-376', cidade: 'Brasília' }
-  ];
+  const [optionModalF, setOptionModalF] = useState([]);
   
   const optionModalT = [{codigo:'1',name_fantasia:'Moto', documento:'12345-678'},{codigo:'2',name_fantasia:'BUS', documento:'12215-628'}];
   const optionDia= ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12', '13', '14', '15', '16', '17', '18', '19', '20', '21', '22', '23', '24', '25', '26', '27', '28', '29', '30', '31']
 
+  useEffect(() => {
+    fetchData();
+  }, []);
+  const fetchData = async () => {
+    try {
+      const response = await axios.get('http://localhost:8080/produtos');
+      console.log("Antes Grupo:", response.data);
+
+      let Transformados = response.data.map(item => ({
+        codigo: item.id,
+        nome: item.nome,
+        quantidade: item.quantidadeEmbalagem,
+        preco: item.precoVenda
+      }));
+
+      setModalOptions(Transformados);
+
+      const responseT = await axios.get('http://localhost:8080/transportadoras');
+  
+      Transformados = responseT.data.map(item => ({
+          codigo: item.id,
+          name_fantasia: item.nomeFantasia,
+          nome_razao: item.nomeRazaoSocial,
+          documento: item.cpfCnpj
+        }));
+
+      console.log("Trans:", Transformados);
+      setOptionModalF(Transformados);
+
+    } catch (error) {
+      console.error('Erro ao buscar os dados', error);
+    }
+  };
   {/* Tela principal do administrador */}
   return (
     <div className="flex h-screen overflow-hidden">
