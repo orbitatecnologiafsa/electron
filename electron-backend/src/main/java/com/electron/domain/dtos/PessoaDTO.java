@@ -1,5 +1,8 @@
 package com.electron.domain.dtos;
 
+import com.electron.domain.enums.TipoPessoa;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
@@ -17,8 +20,9 @@ public class PessoaDTO {
 
     private Long id;
 
-    @NotBlank(message = "Tipo de pessoa é obrigatório")
-    private String tipo;
+    @Enumerated(EnumType.STRING)
+//    @NotBlank(message = "Tipo de pessoa é obrigatório")
+    private TipoPessoa tipo;
 
     private String foto;
 

@@ -45,6 +45,26 @@ public class VendedorService {
         vendedorExistente.setTipoComissao(vendedorAtualizado.getTipoComissao());
         vendedorExistente.setBaseCalculo(vendedorAtualizado.getBaseCalculo());
         vendedorExistente.setObservacoes(vendedorAtualizado.getObservacoes());
+        vendedorExistente.setTipo(vendedorAtualizado.getTipo());
+        vendedorExistente.setFoto(vendedorAtualizado.getFoto());
+        vendedorExistente.setEntidade(vendedorExistente.getEntidade());
+        vendedorExistente.setCpfCnpj(vendedorAtualizado.getCpfCnpj());
+        vendedorExistente.setNomeRazaoSocial(vendedorAtualizado.getNomeRazaoSocial());
+        vendedorExistente.setNomeFantasia(vendedorAtualizado.getNomeFantasia());
+        vendedorExistente.setPassaporte(vendedorAtualizado.getPassaporte());
+        vendedorExistente.setRgInscricaoEstadual(vendedorAtualizado.getRgInscricaoEstadual());
+        vendedorExistente.setInscricaoMunicipal(vendedorAtualizado.getInscricaoMunicipal());
+        vendedorExistente.setContato(vendedorAtualizado.getContato());
+        vendedorExistente.setCep(vendedorAtualizado.getCep());
+        vendedorExistente.setLogradouro(vendedorAtualizado.getLogradouro());
+        vendedorExistente.setNumero(vendedorAtualizado.getNumero());
+        vendedorExistente.setBairro(vendedorAtualizado.getBairro());
+        vendedorExistente.setComplemento(vendedorAtualizado.getComplemento());
+        vendedorExistente.setMunicipio(vendedorAtualizado.getMunicipio());
+        vendedorExistente.setTelefone(vendedorAtualizado.getTelefone());
+        vendedorExistente.setCelular(vendedorAtualizado.getCelular());
+        vendedorExistente.setEmail(vendedorAtualizado.getEmail());
+        vendedorExistente.setDataDeNascimento(vendedorAtualizado.getDataDeNascimento());
 
         return vendedorRepository.save(vendedorExistente);
     }

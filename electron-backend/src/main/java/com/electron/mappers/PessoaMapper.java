@@ -1,9 +1,11 @@
 package com.electron.mappers;
 
+import com.electron.domain.EmpresaProprietaria;
 import com.electron.domain.Pessoa;
 import com.electron.domain.dtos.PessoaDTO;
-import com.electron.domain.Municipio;
 import com.electron.domain.enums.TipoPessoa;
+import com.electron.domain.Municipio;
+import com.electron.repositories.EmpresaProprietariaRepository;
 import com.electron.repositories.MunicipioRepository;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,6 +16,9 @@ public class PessoaMapper implements GenericMapper<PessoaDTO, Pessoa> {
 
     @Autowired
     private MunicipioRepository municipioRepository;
+
+    @Autowired
+    private EmpresaProprietariaRepository empresaRepository;
 
     @Override
     public Pessoa toEntity(PessoaDTO dto) {
@@ -26,9 +31,14 @@ public class PessoaMapper implements GenericMapper<PessoaDTO, Pessoa> {
                         "Município não encontrado para o ID: " + dto.getMunicipioId()
                 ));
 
+        EmpresaProprietaria empresa = empresaRepository.findById(dto.getEmpresaId())
+                .orElseThrow(() -> new EntityNotFoundException(
+                        "Empresa não encontrado para o ID: " + dto.getEmpresaId()
+                ));
+
         Pessoa pessoa = new Pessoa();
         pessoa.setId(dto.getId());
-        pessoa.setTipo(TipoPessoa.valueOf(dto.getTipo()));
+        pessoa.setTipo(dto.getTipo());
         pessoa.setFoto(dto.getFoto());
         pessoa.setEntidade(dto.getEntidade());
         pessoa.setCpfCnpj(dto.getCpfCnpj());
@@ -49,6 +59,7 @@ public class PessoaMapper implements GenericMapper<PessoaDTO, Pessoa> {
         pessoa.setEmail(dto.getEmail());
         pessoa.setDataDeNascimento(dto.getDataDeNascimento());
         pessoa.setObservacoes(dto.getObservacoes());
+        pessoa.setEmpresa(empresa);
 
         return pessoa;
     }
@@ -61,7 +72,7 @@ public class PessoaMapper implements GenericMapper<PessoaDTO, Pessoa> {
 
         PessoaDTO dto = new PessoaDTO();
         dto.setId(entity.getId());
-        dto.setTipo(entity.getTipo().name());
+        dto.setTipo(entity.getTipo());
         dto.setFoto(entity.getFoto());
         dto.setEntidade(entity.getEntidade());
         dto.setCpfCnpj(entity.getCpfCnpj());
@@ -82,6 +93,7 @@ public class PessoaMapper implements GenericMapper<PessoaDTO, Pessoa> {
         dto.setEmail(entity.getEmail());
         dto.setDataDeNascimento(entity.getDataDeNascimento());
         dto.setObservacoes(entity.getObservacoes());
+        dto.setEmpresaId(entity.getEmpresa() != null ? entity.getEmpresa().getId() : null);
 
         return dto;
     }
