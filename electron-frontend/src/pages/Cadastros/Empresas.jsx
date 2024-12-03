@@ -15,6 +15,15 @@ function Empresas() {
   const [currentData, setCurrentData] = useState({
     razaoSocial: '',
     cpfCnpj: '',
+    rgInscricaoEstadual: '',
+    inscricaoEstadualMunicipal: '',
+    tipoUnidade: '',
+    numeroFilial: '',
+    chaveAcesso: '',
+    descricaoAtividades: '',
+    versao: '',
+    cnae: '',
+    naturezaJuridica: '',
     nomeFantasia: '',
     email: '',
     contato: '',
@@ -24,16 +33,10 @@ function Empresas() {
     logradouro: '',
     numero: '',
     bairro: '',
-    municipio: '',
-    estado: '',
-    complemento: '',
+    municipioId: '',
+    complemento: '' ,
     observacoes: ''
   });
-
-  const openEditModal = (empresaData) => {
-    setCurrentData(empresaData);
-    setIsEditModalOpen(true);
-  };
 
 
   {/* Const de modal */}
@@ -143,6 +146,32 @@ function Empresas() {
     console.log("Seache: ",searchInfo);
   };
 
+  const handleSubmit = async (e) => {
+    e.preventDefault(); // Evita o comportamento padrão de envio do formulário
+
+    try {
+      const response = await fetch(`http://localhost:8080/empresas-proprietarias/${currentData.id}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(currentData),
+      });
+
+      if (response.ok) {
+        const updatedData = await response.json();
+        console.log('Empresa atualizada com sucesso:', updatedData);
+
+        // Fechar o modal após sucesso
+        handleCloseEditModal();
+      } else {
+        console.error('Erro ao atualizar a empresa');
+      }
+    } catch (error) {
+      console.error('Erro de rede:', error);
+    }
+  };
+
   const sortedPosts = [...filteredPosts].sort((a, b) => { 
     const aValue = a[sortColumn];
     const bValue = b[sortColumn];
@@ -220,7 +249,7 @@ function Empresas() {
                       </div>
                       <div className="flex-auto w-full">
                         <label htmlFor="input1" className="block text-sm font-medium leading-6 text-gray-900">Filtros</label>
-                        <div className="flex rounded-md sm:max-w-md">
+                        <div className="flex rounded-md sm:max-w-md z-60">
                         <DropDown title={"Selecione um Campo"} ValorBtn={campoValue} listItens={["Todos","ID", "Razão Social", "Nome Fantasia", "CNPJ", "Matriz / Filial", "Município", "UF", "Telefone","Ativo","Data de Integração"]} onSelect={(item) => handleMenuItemClick(item)}/>
 
                         <button
@@ -245,18 +274,21 @@ function Empresas() {
 
                   {/* Tabela */}
                   <div className="mt-5">
-                    <div className="max-h-[24rem] ">
+                    <div className="max-h-[24rem] overflow-y-auto relative">
                       <table className="min-w-full max-w-full divide-y divide-gray-200">
                         <thead className="bg-gray-100">
-                          <tr className='overflow-y-auto'>
+                          <tr className="sticky top-0 z-20 bg-gray-100">
                             {tableColumns.map((column, index) => (
-                              <th key={index} className="px-6 py-3 text-center text-sm font-medium text-gray-700">
+                              <th key={index} className="px-6 py-3 text-center text-sm font-medium text-gray-700 ">
                                 <div className="flex items-center justify-center cursor-pointer" onClick={() => handleSort(column.key)}>
                                   <span className="mr-1">{column.label}</span>
                                   {index !== 0 && <FontAwesomeIcon icon={faSort} />}
                                 </div>
                               </th>
                             ))}
+                            <th className="px-6 py-3 text-center text-sm font-medium text-gray-700 bg-gray-100">
+                              {/* Coluna do ícone de edição */}
+                            </th>
                           </tr>
                         </thead>
                         <tbody className="bg-white divide-y divide-gray-200">
@@ -288,6 +320,7 @@ function Empresas() {
                       </table>
                     </div>
                   </div>
+
 
                   {/* Modal de legendas da tabela */}
                   {isModalLegendaOpen && (
@@ -333,11 +366,10 @@ function Empresas() {
 
       {isEditModalOpen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
-          <div className="bg-white rounded-lg p-6 w-[65rem] h-auto">
+          <div className="bg-white rounded-lg p-6 w-auto h-[44rem]">
             <h3 className="text-lg font-semibold">Editar Empresa</h3>
-            {/* Exemplo de campos de formulário, você pode customizar com base nos dados */}
             {currentData && (
-              <form>
+              <form className="h-[37.5rem]">
                 <div className="flex flex-col md:flex-row gap-4">
                   <div className="mt-4">
                     <label htmlFor="razaoSocial" className="block text-sm font-medium text-gray-900">Razão Social</label>
@@ -346,7 +378,7 @@ function Empresas() {
                       id="razaoSocial"
                       value={currentData.razaoSocial}
                       onChange={(e) => setCurrentData({ ...currentData, razaoSocial: e.target.value })}
-                      className="mt-2 block w-full rounded-md border-gray-300 shadow-sm"
+                      className="mt-2 block w-[18rem] rounded-md border-gray-300 shadow-sm"
                     />
                   </div>
                   <div className="mt-4">
@@ -356,7 +388,7 @@ function Empresas() {
                       id="cpfCnpj"
                       value={currentData.cpfCnpj}
                       onChange={(e) => setCurrentData({ ...currentData, cpfCnpj: e.target.value })}
-                      className="mt-2 block w-full rounded-md border-gray-300 shadow-sm"
+                      className="mt-2 block w-[14rem] rounded-md border-gray-300 shadow-sm"
                     />
                   </div>
                   <div className="mt-4">
@@ -366,7 +398,7 @@ function Empresas() {
                       name="rgInscricaoEstadual"
                       value={currentData.rgInscricaoEstadual}
                       onChange={(e) => setCurrentData({ ...currentData, rgInscricaoEstadual: e.target.value })}
-                      className="mt-2 block w-full rounded-md border-gray-300 shadow-sm"
+                      className="mt-2 block w-[15rem] rounded-md border-gray-300 shadow-sm"
                     />
                     </div>
                     <div className="mt-4">
@@ -376,19 +408,105 @@ function Empresas() {
                       name="inscricaoEstadualMunicipal"
                       value={currentData.inscricaoEstadualMunicipal}
                       onChange={(e) => setCurrentData({ ...currentData, inscricaoEstadualMunicipal: e.target.value })}
-                      className="mt-2 block w-full rounded-md border-gray-300 shadow-sm"
+                      className="mt-2 block w-[15rem] rounded-md border-gray-300 shadow-sm"
+                    />
+                  </div>
+                  <div className="mt-4">
+                    <label htmlFor="nomeFantasia" className="block text-sm font-medium text-gray-900">Natureza Jurídica</label>
+                    <input
+                      type="text"
+                      id="nomeFantasia"
+                      value={currentData.naturezaJuridica}
+                      onChange={(e) => setCurrentData({ ...currentData, naturezaJuridica: e.target.value })}
+                      className="mt-2 block w-[15rem] rounded-md border-gray-300 shadow-sm"
+                    />
+                  </div>
+                  <div className="mt-4">
+                    <label htmlFor="nomeFantasia" className="block text-sm font-medium text-gray-900">CNAE</label>
+                    <input
+                      type="text"
+                      id="nomeFantasia"
+                      value={currentData.cnae}
+                      onChange={(e) => setCurrentData({ ...currentData, cnae: e.target.value })}
+                      className="mt-2 block w-[12rem] rounded-md border-gray-300 shadow-sm"
                     />
                   </div>
                 </div>
-                <div className="mt-4">
-                  <label htmlFor="nomeFantasia" className="block text-sm font-medium text-gray-900">Nome Fantasia</label>
-                  <input
-                    type="text"
-                    id="nomeFantasia"
-                    value={currentData.nomeFantasia}
-                    onChange={(e) => setCurrentData({ ...currentData, nomeFantasia: e.target.value })}
-                    className="mt-2 block w-full rounded-md border-gray-300 shadow-sm"
-                  />
+                <div className="flex flex-col md:flex-row gap-4">
+                  <div className="mt-4">
+                    <label htmlFor="nomeFantasia" className="block text-sm font-medium text-gray-900">Nome Fantasia</label>
+                    <input
+                      type="text"
+                      id="nomeFantasia"
+                      value={currentData.nomeFantasia}
+                      onChange={(e) => setCurrentData({ ...currentData, nomeFantasia: e.target.value })}
+                      className="mt-2 block w-[50rem] rounded-md border-gray-300 shadow-sm"
+                    />
+                  </div>
+                  <div className="mt-4">
+                    <label htmlFor="nomeFantasia" className="block text-sm font-medium text-gray-900">Versão</label>
+                    <input
+                      type="text"
+                      id="nomeFantasia"
+                      value={currentData.versao}
+                      onChange={(e) => setCurrentData({ ...currentData, versao: e.target.value })}
+                      className="mt-2 block w-[15rem] rounded-md border-gray-300 shadow-sm"
+                    />
+                  </div>
+                  <div className="mt-4">
+                    <label htmlFor="nomeFantasia" className="block text-sm font-medium text-gray-900">Descrição</label>
+                    <input
+                      type="text"
+                      id="nomeFantasia"
+                      value={currentData.descricaoAtividades}
+                      onChange={(e) => setCurrentData({ ...currentData, descricaoAtividades: e.target.value })}
+                      className="mt-2 block w-[28.5rem] rounded-md border-gray-300 shadow-sm"
+                    />
+                  </div>
+                </div>
+                <div className="flex flex-col md:flex-row gap-4">
+                  
+                  <div className="mt-4">
+                    <label htmlFor="nomeFantasia" className="block text-sm font-medium text-gray-900">Regime Tributário</label>
+                    <input
+                      type="text"
+                      id="nomeFantasia"
+                      value={currentData.regimeTributario}
+                      onChange={(e) => setCurrentData({ ...currentData, regimeTributario: e.target.value })}
+                      className="mt-2 block w-[15rem] rounded-md border-gray-300 shadow-sm"
+                    />
+                  </div>
+                  <div className="mt-4">
+                    <label htmlFor="nomeFantasia" className="block text-sm font-medium text-gray-900">Tipo de Unidade</label>
+                    <input
+                      type="text"
+                      id="nomeFantasia"
+                      value={currentData.tipoUnidade}
+                      onChange={(e) => setCurrentData({ ...currentData, tipoUnidade: e.target.value })}
+                      className="mt-2 block w-[15rem] rounded-md border-gray-300 shadow-sm"
+                    />
+                  </div>
+                  <div className="mt-4">
+                    <label htmlFor="nomeFantasia" className="block text-sm font-medium text-gray-900">Número da Filial</label>
+                    <input
+                      type="text"
+                      id="nomeFantasia"
+                      value={currentData.numeroFilial}
+                      onChange={(e) => setCurrentData({ ...currentData, numeroFilial: e.target.value })}
+                      className="mt-2 block w-[8rem] rounded-md border-gray-300 shadow-sm"
+                    />
+                  </div>
+                  
+                  <div className="mt-4">
+                    <label htmlFor="nomeFantasia" className="block text-sm font-medium text-gray-900">Chave de Acesso</label>
+                    <input
+                      type="text"
+                      id="nomeFantasia"
+                      value={currentData.chaveAcesso}
+                      onChange={(e) => setCurrentData({ ...currentData, chaveAcesso: e.target.value })}
+                      className="mt-2 block w-[24rem] rounded-md border-gray-300 shadow-sm"
+                    />
+                  </div>
                 </div>
                 <div className="flex flex-col md:flex-row gap-4">
                   <div className="mt-4">
@@ -398,7 +516,7 @@ function Empresas() {
                       name="rgInscricaoEstadual"
                       value={currentData.email}
                       onChange={(e) => setCurrentData({ ...currentData, email: e.target.value })}
-                      className="mt-2 block w-full rounded-md border-gray-300 shadow-sm"
+                      className="mt-2 block w-[23rem] rounded-md border-gray-300 shadow-sm"
                     />
                     </div>
                     <div className="mt-4">
@@ -408,7 +526,7 @@ function Empresas() {
                       name="inscricaoEstadualMunicipal"
                       value={currentData.contato}
                       onChange={(e) => setCurrentData({ ...currentData, contato: e.target.value })}
-                      className="mt-2 block w-full rounded-md border-gray-300 shadow-sm"
+                      className="mt-2 block w-[18.95rem] rounded-md border-gray-300 shadow-sm"
                     />
                   </div>
                   <div className="mt-4">
@@ -418,7 +536,7 @@ function Empresas() {
                       name="rgInscricaoEstadual"
                       value={currentData.telefone}
                       onChange={(e) => setCurrentData({ ...currentData, telefone: e.target.value })}
-                      className="mt-2 block w-full rounded-md border-gray-300 shadow-sm"
+                      className="mt-2 block w-[10rem] rounded-md border-gray-300 shadow-sm"
                     />
                     </div>
                     <div className="mt-4">
@@ -428,7 +546,7 @@ function Empresas() {
                       name="inscricaoEstadualMunicipal"
                       value={currentData.celular}
                       onChange={(e) => setCurrentData({ ...currentData, celular: e.target.value })}
-                      className="mt-2 block w-full rounded-md border-gray-300 shadow-sm"
+                      className="mt-2 block w-[10rem] rounded-md border-gray-300 shadow-sm"
                     />
                   </div>
                 </div>
@@ -440,7 +558,7 @@ function Empresas() {
                       name="cep"
                       value={currentData.cep}
                       onChange={(e) => setCurrentData({ ...currentData, cep: e.target.value })}
-                      className="mt-2 block w-full rounded-md border-gray-300 shadow-sm"
+                      className="mt-2 block w-[10rem] rounded-md border-gray-300 shadow-sm"
                     />
                     </div>
                     <div className="mt-4">
@@ -450,7 +568,7 @@ function Empresas() {
                       name="logradouro"
                       value={currentData.logradouro}
                       onChange={(e) => setCurrentData({ ...currentData, logradouro: e.target.value })}
-                      className="mt-2 block w-full rounded-md border-gray-300 shadow-sm"
+                      className="mt-2 block w-[30rem] rounded-md border-gray-300 shadow-sm"
                     />
                   </div>
                   <div className="mt-4">
@@ -460,7 +578,7 @@ function Empresas() {
                       name="numero"
                       value={currentData.numero}
                       onChange={(e) => setCurrentData({ ...currentData, numero: e.target.value })}
-                      className="mt-2 block w-full rounded-md border-gray-300 shadow-sm"
+                      className="mt-2 block w-[4rem] rounded-md border-gray-300 shadow-sm"
                     />
                     </div>
                     <div className="mt-4">
@@ -470,31 +588,12 @@ function Empresas() {
                       name="bairro"
                       value={currentData.bairro}
                       onChange={(e) => setCurrentData({ ...currentData, bairro: e.target.value })}
-                      className="mt-2 block w-full rounded-md border-gray-300 shadow-sm"
+                      className="mt-2 block w-[18rem] rounded-md border-gray-300 shadow-sm"
                     />
                   </div>
                 </div>
                 <div className="flex flex-col md:flex-row gap-4">
-                  <div className="mt-4">
-                    <label className="block text-sm font-medium text-gray-900">Município</label>
-                    <input
-                      type="text"
-                      name="municipio"
-                      value={currentData.municipio}
-                      onChange={(e) => setCurrentData({ ...currentData, municipio: e.target.value })}
-                      className="mt-2 block w-[14.4rem] rounded-md border-gray-300 shadow-sm"
-                    />
-                    </div>
-                    <div className="mt-4">
-                    <label className="block text-sm font-medium text-gray-900">UF</label>
-                    <input
-                      type="text"
-                      name="estado"
-                      value={currentData.estado}
-                      onChange={(e) => setCurrentData({ ...currentData, estado: e.target.value })}
-                      className="mt-2 block w-[14.4rem] rounded-md border-gray-300 shadow-sm"
-                    />
-                  </div>
+                  
                   <div className="mt-4">
                     <label className="block text-sm font-medium text-gray-900">Complemento</label>
                     <input
@@ -502,11 +601,30 @@ function Empresas() {
                       name="complemento"
                       value={currentData.complemento}
                       onChange={(e) => setCurrentData({ ...currentData, complemento: e.target.value })}
-                      className="mt-2 block w-[30.25rem] rounded-md border-gray-300 shadow-sm"
+                      className="mt-2 block w-[33rem] rounded-md border-gray-300 shadow-sm"
+                    />
+                  </div>
+                  <div className="mt-4">
+                    <label className="block text-sm font-medium text-gray-900">Município</label>
+                    <input
+                      type="text"
+                      name="municipio"
+                      value={currentData.municipioId}
+                      onChange={(e) => setCurrentData({ ...currentData, municipioId: e.target.value })}
+                      className="mt-2 block w-[26.5rem] rounded-md border-gray-300 shadow-sm"
+                    />
+                  </div>
+                  <div className="mt-4">
+                    <label className="block text-sm font-medium text-gray-900">UF</label>
+                    <input
+                      type="text"
+                      name="estado"
+                      value={currentData.municipio?.estado}
+                      className="mt-2 block w-[4rem] rounded-md border-gray-300 shadow-sm"
                     />
                   </div>
                 </div>
-                <div className="flex flex-col md:flex-row gap-4">
+                <div className="w-[28.5rem] flex flex-col md:flex-row gap-4 relative bottom-[24rem] left-[68rem]">
                   <div className="mt-4">
                     <label className="block text-sm font-medium text-gray-900">Observação</label>
                     <textarea
@@ -514,22 +632,22 @@ function Empresas() {
                       name="rgInscricaoEstadual"
                       value={currentData.observacoes}
                       onChange={(e) => setCurrentData({ ...currentData, observacoes: e.target.value })}
-                      className="mt-2 block w-[62rem] h-[96px] rounded-md border-gray-300 shadow-sm resize-none"
+                      className="mt-2 block w-[28.5rem] h-[20.65rem] rounded-md border-gray-300 shadow-sm resize-none"
                     />
                   </div>
                 </div>
                 {/* Adicione mais campos conforme necessário */}
-                <div className="mt-6 flex justify-end">
+                <div className="mt-6 flex justify-end relative bottom-[24rem]">
                   <button
                     type="submit"
-                    className="bg-green-500 text-white px-4 py-2 rounded-md"
-                    // Aqui você pode adicionar a lógica de salvar as alterações
+                    className="bg-indigo-600 text-white hover:bg-indigo-700 px-4 py-2 rounded-md"
+                    onClick={handleSubmit}
                   >
                     Salvar
                   </button>
                   <button
                     type="button"
-                    className="ml-4 bg-blue-500 text-white px-4 py-2 rounded-md"
+                    className="ml-4 bg-gray-50 font-sm text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 px-4 py-2 rounded-md"
                     onClick={() => handleCloseEditModal()}
                   >
                     Fechar

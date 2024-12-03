@@ -10,7 +10,7 @@ function DropDown({ labelDrop, ValorBtn, title, listItens = [], onSelect }) {
     const buttonWidth = title === 'Status' ? 'w-44' : 'w-56';
 
     return (
-        <div className="flex flex-col">
+        <div className="flex flex-col z-30">
             <label className="block text-sm font-medium leading-6 text-black">{labelDrop}</label>
             <Menu as="div" className="flex rounded-md">
                 <div>
