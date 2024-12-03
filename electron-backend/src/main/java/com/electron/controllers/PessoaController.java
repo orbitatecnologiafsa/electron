@@ -24,7 +24,6 @@ public class PessoaController {
     @Autowired
     private PessoaMapper pessoaMapper;
 
-    // List all Pessoas with pagination
     @GetMapping
     public ResponseEntity<Page<PessoaDTO>> listarTodas(Pageable pageable) {
         Page<Pessoa> pessoas = pessoaService.listarTodas(pageable);
@@ -32,7 +31,6 @@ public class PessoaController {
         return ResponseEntity.ok(pessoaDTOs);
     }
 
-    // Get a single Pessoa by ID
     @GetMapping("/{id}")
     public ResponseEntity<PessoaDTO> listarPorId(@PathVariable Long id) {
         Pessoa pessoa = pessoaService.listarPorId(id);
@@ -40,7 +38,6 @@ public class PessoaController {
         return ResponseEntity.ok(pessoaDTO);
     }
 
-    // Create a new Pessoa
     @PostMapping
     public ResponseEntity<PessoaDTO> criar(@RequestBody @Valid PessoaDTO pessoaDTO) {
         Pessoa pessoa = pessoaMapper.toEntity(pessoaDTO);
@@ -49,7 +46,6 @@ public class PessoaController {
         return ResponseEntity.status(HttpStatus.CREATED).body(createdPessoaDTO);
     }
 
-    // Update an existing Pessoa
     @PutMapping("/{id}")
     public ResponseEntity<PessoaDTO> atualizar(@PathVariable Long id, @RequestBody @Valid PessoaDTO pessoaDTO) {
         Pessoa pessoa = pessoaMapper.toEntity(pessoaDTO);
@@ -58,7 +54,6 @@ public class PessoaController {
         return ResponseEntity.ok(updatedPessoaDTO);
     }
 
-    // Delete a Pessoa
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deletar(@PathVariable Long id) {
         pessoaService.deletar(id);

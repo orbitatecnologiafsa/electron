@@ -6,7 +6,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Entity
-@Table(name = "imposto_cst_csosn")
+@Table(name = "imposto_cst")
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
