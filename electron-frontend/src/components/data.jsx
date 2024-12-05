@@ -1,9 +1,8 @@
 import React, { useState } from 'react';
 import Flatpickr from 'react-flatpickr';
-import "flatpickr/dist/themes/light.css"; 
-import { Portuguese } from 'flatpickr/dist/l10n/pt.js'; // Importando o idioma português
+import "flatpickr/dist/themes/light.css"; // Importando o estilo do Flatpickr
 
-function Datepicker({ align, onDateChange, tipo }) {
+function YearPicker({ align, onDateChange, tipo }) {
   const [selectedDate, setSelectedDate] = useState(new Date());
   const [showYearSelector, setShowYearSelector] = useState(false); // Controla a exibição do seletor de ano
   const [selectedYear, setSelectedYear] = useState(new Date().getFullYear()); // Armazena o ano selecionado
@@ -15,7 +14,6 @@ function Datepicker({ align, onDateChange, tipo }) {
     defaultDate: selectedDate,
     prevArrow: '<svg class="fill-current" width="7" height="11" viewBox="0 0 7 11"><path d="M5.4 10.8l1.4-1.4-4-4 4-4L5.4 0 0 5.4z" /></svg>',
     nextArrow: '<svg class="fill-current" width="7" height="11" viewBox="0 0 7 11"><path d="M1.4 10.8L0 9.4l4-4-4-4L1.4 0l5.4 5.4z" /></svg>',
-    locale: Portuguese, // Definindo o idioma para português
     onReady: (selectedDates, dateStr, instance) => {
       instance.element.value = dateStr.replace('to', '-');
       const customClass = align ? align : '';
@@ -72,7 +70,7 @@ function Datepicker({ align, onDateChange, tipo }) {
       </div>
 
       {/* Customizando a cor do dia selecionado usando Tailwind CSS */}
-      <style>{`
+      <style jsx>{`
         .flatpickr-day.selected {
           background-color: #5E16ED !important;
           color: white !important;
@@ -86,4 +84,4 @@ function Datepicker({ align, onDateChange, tipo }) {
   );
 }
 
-export default Datepicker;
+export default YearPicker;
