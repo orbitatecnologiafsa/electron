@@ -4,6 +4,8 @@ import Sidebar from '../../partials/Sidebar';
 import Header from '../../partials/Header';
 import axios from 'axios';
 import DropDown from '../../components/DropDown';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faCircleInfo } from '@fortawesome/free-solid-svg-icons';
 
 function EmpresasAdd() {
 
@@ -297,17 +299,6 @@ function EmpresasAdd() {
 
               <div className="flex flex-col md:flex-row gap-4">
                 <div className="flex flex-col">
-                  <label className="block ml-1 text-sm font-medium leading-6 text-black">Razão Social</label>
-                  <input
-                    type="text"
-                    name="nomeRazao"
-                    value={formData.nomeRazao}
-                    onChange={handleInputChange}
-                    className=" w-[50rem] h-11 px-3 py-2 rounded-md ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-indigo-600"
-                    required
-                  />
-                </div>
-                <div className="flex flex-col">
                 <label className="block ml-1 text-sm font-medium leading-6 text-black">Documento</label>
                   <input
                     type="text"
@@ -316,6 +307,17 @@ function EmpresasAdd() {
                     onChange={handleInputChange}
                     maxLength={18}
                     className="w-[15rem] h-11 px-3 py-2 rounded-md ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-indigo-600"
+                  />
+                </div>
+                <div className="flex flex-col">
+                  <label className="block ml-1 text-sm font-medium leading-6 text-black">Razão Social</label>
+                  <input
+                    type="text"
+                    name="nomeRazao"
+                    value={formData.nomeRazao}
+                    onChange={handleInputChange}
+                    className=" w-[50rem] h-11 px-3 py-2 rounded-md ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-indigo-600"
+                    required
                   />
                 </div>
               </div>

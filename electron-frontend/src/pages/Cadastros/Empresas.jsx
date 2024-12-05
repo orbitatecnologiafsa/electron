@@ -33,23 +33,46 @@ function Empresas() {
     logradouro: '',
     numero: '',
     bairro: '',
-    municipioId: '',
-    complemento: '' ,
-    dataCriacao: '' ,
+    complemento: '',
+    dataCriacao: '',
     observacoes: ''
   });
 
   const handleCepChange = (e) => {
-    // Remove tudo que não for número
     const value = e.target.value.replace(/\D/g, '');
   
-    // Aplica a formatação do CEP: 5 primeiros números seguidos de um traço e os 3 últimos números
     const formattedValue = value.replace(/(\d{5})(\d{3})/, '$1-$2');
   
-    // Atualiza o estado com o CEP formatado
     setCurrentData({ ...currentData, cep: formattedValue });
   };
-  
+
+  useEffect(() => {
+    if (currentData.municipioId) {
+      fetchMunicipioAndEstado(currentData.municipioId);
+    }
+  }, [currentData.municipioId]);
+
+  const fetchMunicipioAndEstado = async (municipioId) => {
+    try {
+      const response = await axios.get(`http://localhost:8080/municipios/${municipioId}`);
+      if (response) {
+        setCurrentData({
+          ...currentData,
+          municipio: {
+            nome: response.data.nome,
+            estado: {
+              nome: response.data.estado?.nome
+            }
+          }
+        });
+      } else {
+        console.error('Município não encontrado');
+      }
+    } catch (error) {
+      console.error('Erro ao buscar dados:', error);
+    }
+  };
+
 
   {/* Const de modal */}
   const [isModalLegendaOpen, setIsModalLegendaOpen] = useState(false);
@@ -158,7 +181,7 @@ function Empresas() {
   };
 
   const handleSubmit = async (e) => {
-    e.preventDefault(); // Evita o comportamento padrão de envio do formulário
+    e.preventDefault();
 
     try {
       const response = await fetch(`http://localhost:8080/empresas-proprietarias/${currentData.id}`, {
@@ -174,9 +197,9 @@ function Empresas() {
         const updatedData = await response.json();
         console.log('Empresa atualizada com sucesso:', updatedData);
 
-        // Fechar o modal após sucesso
         handleCloseEditModal();
         getPosts();
+        window.location.reload();
       } else {
         console.error('Erro ao atualizar a empresa');
       }
@@ -339,18 +362,9 @@ function Empresas() {
                   {isModalLegendaOpen && (
                     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
                       <div className="bg-white rounded-lg p-6 w-96">
-                        <h3 className="text-lg font-semibold">Legenda da tabela</h3>
+                        <h3 className="text-lg font-semibold">Filtros da Tabela</h3>
                         <ul className="mt-4 space-y-2">
-                          <li>Documento: Número de identificação do cliente.</li>
-                          <li>Nome: Nome completo do cliente.</li>
-                          <li>Fantasia: Nome fantasia do cliente.</li>
-                          <li>Contato: Nome da pessoa de contato.</li>
-                          <li>Município: Cidade onde o cliente reside.</li>
-                          <li>UF: Unidade Federativa.</li>
-                          <li>Telefone/Celular: Números de contato.</li>
-                          <li>Ativo: Indica se o cliente está ativo.</li>
-                          <li>Última compra: Data da última compra realizada.</li>
-                          <li>Data de Nascimento: Data de nascimento do cliente.</li>
+                          <li>Selecione o campo no qual você quer filtrar a busca e clique em Pesquisar para aplicar.</li>
                         </ul>
                         <div className="mt-4 flex justify-end">
                           <button
@@ -615,7 +629,7 @@ function Empresas() {
                       name="complemento"
                       value={currentData.complemento}
                       onChange={(e) => setCurrentData({ ...currentData, complemento: e.target.value })}
-                      className="mt-2 block w-[33rem] rounded-md border-gray-300 shadow-sm"
+                      className="mt-2 block w-[28rem] rounded-md border-gray-300 shadow-sm"
                     />
                   </div>
                   <div className="mt-4">
@@ -623,18 +637,37 @@ function Empresas() {
                     <input
                       type="text"
                       name="municipio"
-                      value={currentData.municipioId}
-                      onChange={(e) => setCurrentData({ ...currentData, municipioId: e.target.value })}
-                      className="mt-2 block w-[26.5rem] rounded-md border-gray-300 shadow-sm"
+                      value={currentData.municipio?.nome}
+                      /*onChange={(e) => setCurrentData({
+                        ...currentData,
+                        municipio: {
+                          ...currentData.municipio,
+                          nome: e.target.value
+                        }
+                      })}
+                        */
+                      readOnly
+                      className="mt-2 block w-[26rem] rounded-md border-gray-300 shadow-sm"
                     />
                   </div>
                   <div className="mt-4">
-                    <label className="block text-sm font-medium text-gray-900">UF</label>
+                    <label className="block text-sm font-medium text-gray-900">Estado</label>
                     <input
                       type="text"
                       name="estado"
-                      value={currentData.municipio?.estado}
-                      className="mt-2 block w-[4rem] rounded-md border-gray-300 shadow-sm"
+                      value={currentData.municipio?.estado?.nome}
+                      /*onChange={(e) => setCurrentData({
+                        ...currentData,
+                        municipio: {
+                          ...currentData.municipio,
+                          estado: {
+                            ...currentData.municipio.estado,
+                            nome: e.target.value
+                          }
+                        }
+                      })} */
+                      readOnly
+                      className="mt-2 block w-[9.5rem] rounded-md border-gray-300 shadow-sm"
                     />
                   </div>
                 </div>
