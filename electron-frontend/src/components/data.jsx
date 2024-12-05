@@ -37,15 +37,6 @@ function YearPicker({ align, onDateChange, tipo }) {
     years.push(year);
   }
 
-  const handleYearChange = (e) => {
-    const year = parseInt(e.target.value);
-    if (year) {
-      setSelectedYear(year);
-      setShowYearSelector(false); // Fecha o seletor de ano
-      setSelectedDate(new Date(year, selectedDate.getMonth(), selectedDate.getDate())); // Atualiza a data com o ano selecionado
-    }
-  };
-
   return (
     <div className="relative flex flex-col items-center">
       {/* Exibe o calendário Flatpickr */}

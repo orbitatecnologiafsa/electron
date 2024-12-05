@@ -130,7 +130,7 @@ function Vendedores() {
     'Nome Fantasia': 'nomeFantasia',
     'CNPJ': 'cpfCnpj',
     'Matriz / Filial': 'matrizOuFilial',
-    'Município': 'municipio',
+    'Município': 'municipioId',
     'UF': 'estado',
     'Telefone': 'telefone',
     'E-mail': 'email',

@@ -50,31 +50,28 @@ const VendedoresAdd = () => {
     email: '',
     telefone: '',
     entidade: '',
+    dataDeNascimento: '',
     celular: '',
     contato: '',
     rgInscricaoEstadual: '',
     inscricaoMunicipal: '',
     observacao: '',
     empresaId: '',
-    ativo: true,
   });
   
-  const handleMenuItemClick = (tipo,item) => {
+  const handleMenuItemClick = (item,tipo) => {
 
-   
     if(tipo === 'Pessoa'){
-        if(item === 'Fisica' || item === 'Estrangeira'){
-            setCepCnpj('CPF');
-            formsData.tipo = 'PESSOA_FISICA';
-            if(item === 'Estrangeira'){
-                formsData.tipo = 'ESTRANGEIRO';
-            }
+      setCepCnpj('CPF');
+        if(item === 'Fisica'){
+            formsData.tipo = ("PESSOA_FISICA");
         }else if(item === 'Juridica'){
             setCepCnpj('CNPJ');
-            formsData.tipo = 'PESSOA_JURIDICA';
+            formsData.tipo = ("PESSOA_JURIDICA");
+        }else{
+            formsData.tipo = ("ESTRANGEIRO");
         }
         setTipoPessoa(item);
-
     }else if(tipo === 'TipoComissao'){
       if(item === 'Total da venda'){
         formsData.tipoComissao = 'TOTAL_DA_VENDA';
@@ -96,13 +93,15 @@ const VendedoresAdd = () => {
             setBaseCal('Total');
             formsData.baseCalculo = "TOTAL";
         }
-    }else if(tipo === 'Municiopio'){
-        formsData.municipioId = (item);
+    }else if(tipo === 'Municipio'){
+        formsData.municipioId = (item.codigo);
         console.log("Municipio:",formsData.municipioId);
     }else if(tipo === 'Empresa'){
-        formsData.empresaId = (item);
+        formsData.empresaId = (item.codigo);
         console.log("Empresa:",formsData.empresaId);
     }
+    console.log("Tipo:",tipo);
+    console.log("Item:",item);
   };
 
   useEffect(() => {
@@ -127,10 +126,11 @@ const VendedoresAdd = () => {
   }, []);
 
   const handleDateChange = (dates) => {
-    formsData.nascimento = dates[0].toLocaleDateString('pt-BR');
-    console.log("Data selecionada:", formsData.nascimento);
+    // Convert the selected date to ISO string format (yyyy-MM-dd)
+    const formattedDate = dates[0].toISOString().split('T')[0];
+    formsData.dataDeNascimento = formattedDate;
+    console.log("Data selecionada:", formsData.dataDeNascimento);
   };
-
   const [error, setError] = useState(null);
 
   const [sidebarOpen, setSidebarOpen] = useState(false);
@@ -142,29 +142,31 @@ const VendedoresAdd = () => {
     try {
         const response = await axios.post("http://localhost:8080/vendedor", formsData);
         setFormsData({
-            tipo: '',
-            nomeRazaoSocial: '',
-            nomeFantasia: '',
-            cpfCnpj: '',
-            cep: '',
-            nomeExibicao: '',
-            municipioId: '',
-            uf: '',
-            desconto:'',
-            bairro: '',
-            logradouro: '',
-            numero: '',
-            complemento: '',
-            entidade: '',
-            email: '',
-            telefone: '',
-            celular: '',
-            contato: '',
-            rgInscricaoEstadual: '',
-            inscricaoMunicipal: '',
-            observacao: '',
-            empresaId: '',
-            ativo: true,
+          tipo: '',
+          nomeRazaoSocial: '',
+          nomeFantasia: '',
+          cpfCnpj: '',
+          cep: '',
+          nomeExibicao: '',
+          municipioId: '',
+          uf: '',
+          desconto:'',
+          comissao:'',
+          tipoComissao: '',
+          bairro: '',
+          logradouro: '',
+          numero: '',
+          complemento: '',
+          email: '',
+          telefone: '',
+          entidade: '',
+          dataDeNascimento: '',
+          celular: '',
+          contato: '',
+          rgInscricaoEstadual: '',
+          inscricaoMunicipal: '',
+          observacao: '',
+          empresaId: '',
         });
     } catch (error) {
         console.error('Erro ao cadastrar empresa:', error.response ? error.response.data : error.message);
@@ -180,9 +182,29 @@ const VendedoresAdd = () => {
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
-    // Atualiza o estado normalmente
-    setFormsData((prevData) => ({ ...prevData, [name]: value }));
-};
+
+    // Se o campo for "celular"
+    if (name === "celular" || name === "telefone") {
+      // Remove todos os caracteres não numéricos
+      let formattedValue = value.replace(/\D/g, "");
+
+      // Limita o número de caracteres a 11 (no formato (XX) XXXXX-XXXX) ou 10 (no formato (XX) XXXX-XXXX)
+      if (formattedValue.length > 11) {
+        formattedValue = formattedValue.slice(0, 11); // Limita a 11 caracteres
+      }
+
+      // Aplica a formatação conforme o número de caracteres
+      if (formattedValue.length <= 10) {
+        formattedValue = formattedValue.replace(/^(\d{2})(\d{0,4})(\d{0,4})$/, "($1) $2-$3");
+      } else {
+        formattedValue = formattedValue.replace(/^(\d{2})(\d{0,5})(\d{0,4})$/, "($1) $2-$3");
+      }
+
+      setFormsData((prevData) => ({ ...prevData, [name]: formattedValue }));
+    } else {
+      setFormsData((prevData) => ({ ...prevData, [name]: value }));
+    }
+  };
 
 
   {/* Tela principal do administrador */}
@@ -206,7 +228,11 @@ const VendedoresAdd = () => {
               </h2>
 
               <div className="flex flex-col md:flex-row gap-4 justify-between">
-                
+
+                <div className="flex flex-col mr-4">
+                    <DropDown labelDrop={"Tipo de Fornecedor"} title= 'Selecione o fornecedor' ValorBtn={tipoPessoa} listItens={['Fisica', 'Estrangeiro','Juridica']} onSelect={(item) => handleMenuItemClick(item, "Pessoa")} />
+                </div>
+
                 <div className="flex flex-col">
                   <label className="block ml-1 text-sm font-medium leading-6 text-black">{ cepCnpj ? cepCnpj : 'CPF'}</label>
                   <input
@@ -217,21 +243,6 @@ const VendedoresAdd = () => {
                     className=" w-[20rem] h-11 px-3 py-2 rounded-md  ring-inset focus:ring-2 focus:ring-indigo-600"
                     required
                   />
-                </div>
-
-                <div className="flex flex-col mr-4">
-                    <DropDown labelDrop={"Tipo de Fornecedor"} title= 'Selecione o tipo' ValorBtn={tipoPessoa} listItens={['Fisica', 'Estrangeira', 'Juridica']} onSelect={(item) => handleMenuItemClick(item, "Pessoa")} />
-                </div>
-                
-                <div className="flex items-center">
-                    <input
-                      type="checkbox"
-                      name="ativo"
-                      checked={formsData.ativo}
-                      onChange={() => formsData.ativo ? setFormsData({ ...formsData, ativo: false }) : setFormsData({ ...formsData, ativo: true })}
-                      className="mr-2 rounded"
-                    />
-                    <label className="text-base">Ativo</label>
                 </div>
               </div>
 
@@ -280,7 +291,7 @@ const VendedoresAdd = () => {
 
                 <div className="flex flex-col">
                   <label className="block ml-1 text-sm font-medium leading-6 text-black">Empresa</label>
-                  <InputWBtn widthValue={29.5} options={empresa} modalTitle="Escolha a empresa" onSelect={handleMenuItemClick} tipo={"Empresa"}/>
+                  <InputWBtn widthValue={29.5} options={empresa} modalTitle="Escolha a empresa" onSelect={(item) => handleMenuItemClick(item,'Empresa')}/>
                 </div>
                 
               </div>
@@ -410,7 +421,7 @@ const VendedoresAdd = () => {
 
                 <div className="flex flex-col">
                   <label className="block ml-1 text-sm font-medium leading-6 text-black">Municipio</label>
-                  <InputWBtn widthValue={30} options={monucipioModal} modalTitle="Escolha o Municipio" onSelect={handleMenuItemClick} tipo={"Municiopio"}/>
+                  <InputWBtn widthValue={30} options={monucipioModal} modalTitle="Escolha o Municipio" onSelect={(item) => handleMenuItemClick(item,'Municipio')}/>
                 </div>
               </div>
 
@@ -468,11 +479,11 @@ const VendedoresAdd = () => {
                 </div>
 
                 <div className="flex flex-col ">
-                    <DropDown labelDrop="Tipo de Comissão" title='Selecione o tipo de comissão' ValorBtn={tipoDrop} listItens={dropTipoComissao} onSelect={(item) => handleMenuItemClick('TipoComissao',item)}/>
+                    <DropDown labelDrop="Tipo de Comissão" title='Selecione o tipo de comissão' ValorBtn={tipoDrop} listItens={dropTipoComissao} onSelect={(item) => handleMenuItemClick(item,'TipoComissao')}/>
                 </div>
 
                 <div className="flex flex-col ">
-                  <DropDown labelDrop="Base de Calculo" title="Selecione a base de calculo" ValorBtn={baseCal} listItens={dropBaseCalculo} onSelect={(item) => handleMenuItemClick('BaseCal',item)}/>
+                  <DropDown labelDrop="Base de Calculo" title="Selecione a base de calculo" ValorBtn={baseCal} listItens={dropBaseCalculo} onSelect={(item) => handleMenuItemClick(item,'BaseCal')}/>
                 </div>
               </div>
 

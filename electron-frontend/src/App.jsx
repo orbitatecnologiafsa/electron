@@ -27,6 +27,7 @@ import VendedoresAdd from './pages/Cadastros/VendedoresAdd';
 import Pedidos from './pages/Entradas/Pedidos';
 import PedidoAdd from './pages/Entradas/Novo/PedidoAdd';
 import NotaEntrada from './pages/Entradas/NotaEntrada';
+import NotaEntradaAdd from './pages/Entradas/Novo/NotasEntradaAdd';
 // Import pages Saídas
 import Orcamento from './pages/Saidas/Orcamento';
 import Pedido from './pages/Saidas/Pedido';
@@ -82,6 +83,7 @@ function App() {
         <Route exact path="/entradas/pedidos" element={<Pedidos/>} />
         <Route exact path="/entradas/novopedido" element={<PedidoAdd/>} />
         <Route exact path="/entradas/NotaEntrada" element={<NotaEntrada/>} />
+        <Route exact path='/entradas/novonotaentrada' element={<NotaEntradaAdd/>} />
 
         <Route exact path="/saidas/orcamento" element={<Orcamento/>} />
         <Route exact path="/saidas/pedido" element={<Pedido/>} />
