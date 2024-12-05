@@ -11,12 +11,9 @@ public class EstadoMapper implements GenericMapper<EstadoDTO, Estado> {
     public Estado toEntity(EstadoDTO dto) {
         if (dto == null) return null;
 
-        // Agora mapeamos todos os campos
         return new Estado(
-                dto.getId(),  // Mapeando o ID
-                dto.getNome(),  // Nome do estado
-                dto.getUf(),  // UF
-                dto.getCodigoIbge()  // Código IBGE
+                dto.getId(),
+                dto.getNome()
         );
     }
 
@@ -24,12 +21,9 @@ public class EstadoMapper implements GenericMapper<EstadoDTO, Estado> {
     public EstadoDTO toDTO(Estado entity) {
         if (entity == null) return null;
 
-        // Agora retornamos todos os campos no DTO
         return new EstadoDTO(
-                entity.getId(),  // ID do estado
-                entity.getNome(),  // Nome do estado
-                entity.getUf(),  // UF
-                entity.getCodigoIbge()  // Código IBGE
+                entity.getId(),
+                entity.getNome()
         );
     }
 } 

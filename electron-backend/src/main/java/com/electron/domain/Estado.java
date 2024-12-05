@@ -19,9 +19,4 @@ public class Estado {
     @Column(name = "estados_nome", nullable = false, length = 100)
     private String nome;
 
-    @Column(name = "estados_uf", nullable = false, length = 2)
-    private String uf;  // Campo UF
-
-    @Column(name = "estados_codigo_ibge", nullable = false)
-    private Integer codigoIbge;  // Campo código IBGE
 }
