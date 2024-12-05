@@ -2,6 +2,7 @@ package com.electron.services;
 
 import com.electron.domain.Estado;
 import com.electron.repositories.EstadoRepository;
+import com.electron.services.exceptions.NotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -31,7 +32,6 @@ public class EstadoService {
         var estadoExistente = buscarPorId(id);
 
         estadoExistente.setNome(estado.getNome());
-        estadoExistente.setUf(estado.getUf());
 
         return estadoRepository.save(estadoExistente);
     }
