@@ -13,7 +13,9 @@ public class EstadoMapper implements GenericMapper<EstadoDTO, Estado> {
 
         return new Estado(
                 dto.getId(),
-                dto.getNome()
+                dto.getNome(),
+                dto.getCodigoIBGE(),
+                dto.getUf()
         );
     }
 
@@ -23,7 +25,9 @@ public class EstadoMapper implements GenericMapper<EstadoDTO, Estado> {
 
         return new EstadoDTO(
                 entity.getId(),
-                entity.getNome()
+                entity.getNome(),
+                entity.getCodigoIBGE(),
+                entity.getUf()
         );
     }
 } 

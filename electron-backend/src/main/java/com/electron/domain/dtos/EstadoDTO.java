@@ -18,4 +18,10 @@ public class EstadoDTO {
     @Size(max = 100, message = "Nome não pode ter mais que 100 caracteres")
     private String nome;
 
+    @NotBlank(message = "Código IBGE é obrigatório")
+    private int codigoIBGE;
+
+    @NotBlank(message = "UF é obrigatório")
+    @Size(max = 2, message = "UF não pode ter mais que 2 caracteres")
+    private String uf;
 }
