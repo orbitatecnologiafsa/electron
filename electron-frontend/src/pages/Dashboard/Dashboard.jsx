@@ -120,19 +120,6 @@ function Dashboard() {
               <DashboardCard07/>
               {/* Comissão de vendedores por mês*/}
               <DashboardCard10 />
-
-               {/* Doughnut chart (Top Countries) */}
-              {/*<DashboardCard06 />*/}
-              {/* Line chart (Sales Over Time) */}
-              {/*<DashboardCard08 />*/}
-              {/* Stacked bar chart (Sales VS Refunds) */}
-              {/*<DashboardCard09 />*/}
-              {/* Card (Reasons for Refunds) */}
-              {/*<DashboardCard11 />*/}
-              {/* Card (Recent Activity) */}
-              {/*<DashboardCard12 />*/}
-              {/* Card (Income/Expenses) */}
-              {/*<DashboardCard13 /> */}
               
             </div>
 

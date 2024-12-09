@@ -48,7 +48,7 @@ const InputWBtn = ({ widthValue, heightValue, options, modalTitle, onSelect, tip
           value={inputValue}
           onChange={(e) => setInputValue(e.target.value)}
           className="w-[20rem] h-12 px-3 py-2 rounded-md ring-inset focus:ring-2 focus:ring-indigo-600 disabled:bg-gray-300"
-          style={{ width: `${widthValue}rem`, height: `${heightValue}rem` }}
+          style={{ width: `${widthValue}rem`, height: `${heightValue}rem`, textTransform: 'uppercase'  }}
         />
         <Modal
           options={options} 

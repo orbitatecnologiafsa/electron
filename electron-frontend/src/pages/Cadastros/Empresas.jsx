@@ -7,7 +7,6 @@ import { faUser, faSort, faCircleInfo, faMagnifyingGlass, faPenToSquare } from '
 import axios from 'axios';
 import DropDown from '../../components/DropDown';
 
-
 function Empresas() {
   const [Muni, setMuni] = useState([]);
   const [sidebarOpen, setSidebarOpen] = useState(false);
@@ -249,6 +248,7 @@ function Empresas() {
     }
   };
 
+  
   const sortedPosts = [...filteredPosts].sort((a, b) => { 
     const aValue = a[sortColumn];
     const bValue = b[sortColumn];

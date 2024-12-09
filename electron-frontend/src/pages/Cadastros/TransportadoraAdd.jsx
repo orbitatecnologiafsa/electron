@@ -152,7 +152,6 @@ function TransportadorasAdd() {
         formattedValue = formattedValue.slice(0, 11); // Limita a 11 caracteres
       }
 
-      // Aplica a formatação conforme o número de caracteres
       if (formattedValue.length <= 10) {
         formattedValue = formattedValue.replace(/^(\d{2})(\d{0,4})(\d{0,4})$/, "($1) $2-$3");
       } else {
@@ -163,12 +162,13 @@ function TransportadorasAdd() {
     } else {
       setFormsData((prevData) => ({ ...prevData, [name]: value }));
     }
+    setValueCnpj(value);
   };
 
   const getCNPJ = async (value) => {
     try {
       const responseCnpj = await axios.get('https://open.cnpja.com/office/' + value);
-      
+      console.log(responseCnpj.data);
       // Atualiza os dados no estado
       setFormsData((prevData) => ({
         ...prevData,
@@ -181,7 +181,10 @@ function TransportadorasAdd() {
         telefone: responseCnpj.data.phones[0]?.area + responseCnpj.data.phones[0]?.number || '',
         bairro: responseCnpj.data.address.district,
         logradouro: responseCnpj.data.address.street,
+        uf: responseCnpj.data.address.state,
       }));
+
+      const responseUF = await axios.get(''+value)
     } catch (error) {
       console.error('Erro ao buscar dados do CNPJ:', error);
     }
@@ -210,6 +213,7 @@ function TransportadorasAdd() {
 
   const handleCnpjBlur = () => {
     if (cepCnpj =='CNPJ') {
+      console.log("Entrou:", valueCnpj);
       getCNPJ(valueCnpj);
     }
   };
@@ -250,6 +254,7 @@ function TransportadorasAdd() {
                     className=" w-[20rem] h-11 px-3 py-2 rounded-md  ring-inset focus:ring-2 focus:ring-indigo-600"
                     required
                     onBlur={handleCnpjBlur}
+                    style={{ textTransform: 'uppercase' }}
                   />
                 </div>
 
@@ -271,6 +276,7 @@ function TransportadorasAdd() {
                     onChange={handleInputChange}
                     className=" w-[32.5rem] h-11 px-3 py-2 rounded-md  ring-inset focus:ring-2 focus:ring-indigo-600"
                     required
+                    style={{ textTransform: 'uppercase' }}
                   />
                 </div>
                 <div className="flex flex-col">
@@ -282,6 +288,7 @@ function TransportadorasAdd() {
                     onChange={handleInputChange}
                     className=" w-[32rem] h-11 px-3 py-2 rounded-md ring-inset focus:ring-2 focus:ring-indigo-600"
                     required
+                    style={{ textTransform: 'uppercase' }}
                   />
                 </div>
               </div>
@@ -295,6 +302,7 @@ function TransportadorasAdd() {
                     value={formsData.entidade}
                     onChange={handleInputChange}
                     className="w-[32.5rem] h-11 px-3 py-2 rounded-md ring-inset focus:ring-2 focus:ring-indigo-600 disabled:bg-gray-300"
+                    style={{ textTransform: 'uppercase' }}
                   />
                 </div>
                 <div className="flex flex-col">
@@ -314,6 +322,7 @@ function TransportadorasAdd() {
                     onChange={handleInputChange}
                     maxLength={documentoValue === 'CPF' ? 14 : 18}
                     className="w-[32.5rem] h-11 px-3 py-2 rounded-md ring-inset focus:ring-2 focus:ring-indigo-600 disabled:bg-gray-300"
+                    style={{ textTransform: 'uppercase' }}
                   />
                 </div>
                 <div className="flex flex-col">
@@ -324,6 +333,7 @@ function TransportadorasAdd() {
                     value={formsData.inscricaoMunicipal}
                     onChange={handleInputChange}
                     className="w-[32rem] h-11 px-3 py-2 rounded-md ring-inset focus:ring-2 focus:ring-indigo-600 disabled:bg-gray-300"
+                    style={{ textTransform: 'uppercase' }}
                   />
                 </div>
               </div>
@@ -343,6 +353,7 @@ function TransportadorasAdd() {
                     value={formsData.contato}
                     onChange={handleInputChange}
                     className="w-[20rem] h-11 px-3 py-2 rounded-md ring-inset focus:ring-2 focus:ring-indigo-600 disabled:bg-gray-300"
+                    style={{ textTransform: 'uppercase' }}
                   />
                 </div>
                 <div className="flex flex-col">
@@ -353,6 +364,7 @@ function TransportadorasAdd() {
                     value={formsData.celular}
                     onChange={handleInputChange}
                     className="w-[22rem] h-11 px-3 py-2 rounded-md ring-inset focus:ring-2 focus:ring-indigo-600 disabled:bg-gray-300"
+                    style={{ textTransform: 'uppercase' }}
                   />
                 </div>
 
@@ -364,6 +376,7 @@ function TransportadorasAdd() {
                     value={formsData.telefone}
                     onChange={handleInputChange}
                     className="w-[21rem] h-11 px-3 py-2 rounded-md ring-inset focus:ring-2 focus:ring-indigo-600 disabled:bg-gray-300"
+                    style={{ textTransform: 'uppercase' }}
                   />
                 </div>
               </div>
@@ -377,6 +390,7 @@ function TransportadorasAdd() {
                     value={formsData.email}
                     onChange={handleInputChange}
                     className="w-[66rem] h-11 px-3 py-2 rounded-md ring-inset focus:ring-2 focus:ring-indigo-600 disabled:bg-gray-300"
+                    style={{ textTransform: 'uppercase' }}
                   />
                 </div>
               </div>
@@ -397,6 +411,7 @@ function TransportadorasAdd() {
                     value={formsData.cep}
                     onChange={handleInputChange}
                     className="w-[21.3rem] h-11 px-3 py-2 rounded-md ring-inset focus:ring-2 focus:ring-indigo-600 disabled:bg-gray-300"
+                    style={{ textTransform: 'uppercase' }}
                   />
                 </div>
                 <div className="flex flex-col">
@@ -407,6 +422,7 @@ function TransportadorasAdd() {
                     value={formsData.logradouro}
                     onChange={handleInputChange}
                     className="w-[21.3rem] h-11 px-3 py-2 rounded-md ring-inset focus:ring-2 focus:ring-indigo-600 disabled:bg-gray-300"
+                    style={{ textTransform: 'uppercase' }}
                   />
                 </div>
 
@@ -418,6 +434,7 @@ function TransportadorasAdd() {
                     value={formsData.numero}
                     onChange={handleInputChange}
                     className="w-[20.5rem] h-11 px-3 py-2 rounded-md ring-inset focus:ring-2 focus:ring-indigo-600 disabled:bg-gray-300"
+                    style={{ textTransform: 'uppercase' }}
                   />
                 </div>
               </div>
@@ -432,6 +449,7 @@ function TransportadorasAdd() {
                     value={formsData.bairro}
                     onChange={handleInputChange}
                     className="w-[35rem] h-11 px-3 py-2 rounded-md ring-inset focus:ring-2 focus:ring-indigo-600 disabled:bg-gray-300"
+                    style={{ textTransform: 'uppercase' }}
                   />
                 </div>
 
@@ -448,6 +466,7 @@ function TransportadorasAdd() {
                     value={formsData.uf}
                     onChange={handleInputChange}
                     className="w-[4rem] h-11 px-3 py-2 rounded-md ring-inset focus:ring-2 focus:ring-indigo-600 disabled:bg-gray-300"
+                    style={{ textTransform: 'uppercase' }}
                   />
                 </div>
 
@@ -463,6 +482,7 @@ function TransportadorasAdd() {
                     value={formsData.complemento}
                     onChange={handleInputChange}
                     className="w-[66rem] h-11 px-3 py-2 rounded-md ring-inset focus:ring-2 focus:ring-indigo-600 disabled:bg-gray-300"
+                    style={{ textTransform: 'uppercase' }}
                   />
                 </div>
               </div>
@@ -483,6 +503,7 @@ function TransportadorasAdd() {
                     value={formsData.placaVeiculo}
                     onChange={handleInputChange}
                     className="w-[12rem] h-11 px-3 py-2 rounded-md ring-inset focus:ring-2 focus:ring-indigo-600 disabled:bg-gray-300"
+                    style={{ textTransform: 'uppercase' }}
                   />
                 </div>
                 
@@ -494,6 +515,7 @@ function TransportadorasAdd() {
                     value={formsData.anttVeiculo}
                     onChange={handleInputChange}
                     className="w-[12rem] h-11 px-3 py-2 rounded-md ring-inset focus:ring-2 focus:ring-indigo-600 disabled:bg-gray-300"
+                    style={{ textTransform: 'uppercase' }}
                   />
                 </div>
               </div>
@@ -508,6 +530,7 @@ function TransportadorasAdd() {
                         value={formsData.observacoes}
                         onChange={handleInputChange}
                         className="w-[66rem] h-[45px] resize-none px-3 py-2 rounded-md ring-inset focus:ring-2 focus:ring-indigo-600"
+                        style={{ textTransform: 'uppercase' }}
                     />
               </div>
               </div>

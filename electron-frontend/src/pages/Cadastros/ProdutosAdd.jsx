@@ -262,6 +262,7 @@ function ProdutosAdd() {
                     onChange={handleInputChange}
                     className=" w-[13rem] h-11 px-3 py-2 rounded-md  ring-inset focus:ring-2 focus:ring-indigo-600"
                     required
+                    style={{ textTransform: 'uppercase' }}
                   />
                 </div>
 
@@ -281,6 +282,7 @@ function ProdutosAdd() {
                     onChange={handleInputChange}
                     className=" w-[30rem] h-11 px-3 py-2 rounded-md  ring-inset focus:ring-2 focus:ring-indigo-600"
                     required
+                    style={{ textTransform: 'uppercase' }}
                   />
                 </div>
 
@@ -316,6 +318,7 @@ function ProdutosAdd() {
                           value={formData.descricao}
                           onChange={handleInputChange}
                           className="w-[66rem] h-[45px] resize-none px-3 py-2 rounded-md ring-inset focus:ring-2 focus:ring-indigo-600"
+                          style={{ textTransform: 'uppercase' }}
                       />
                 </div>
               </div>
@@ -355,11 +358,11 @@ function ProdutosAdd() {
                     onChange={handleInputChange}
                     maxLength={documentoValue === 'CPF' ? 14 : 18}
                     className="w-[32.5rem] h-11 px-3 py-2 rounded-md ring-inset focus:ring-2 focus:ring-indigo-600 disabled:bg-gray-300"
+                    style={{ textTransform: 'uppercase' }}
                   />
                 </div>
                 <div className="flex flex-col">
                    <DropDown labelDrop={"Unidade de Medida"} title={"Selecione a unidade"} ValorBtn={UnSelected} listItens={unidadesEmbList} onSelect={(item) => handleMenuItemClick(item,"UN")}/>
-
                 </div>
               </div>
 
@@ -373,6 +376,7 @@ function ProdutosAdd() {
                     value={formData.bloqueado}
                     onChange={handleInputChange}
                     className="w-[32.5rem] h-11 px-3 py-2 rounded-md ring-inset focus:ring-2 focus:ring-indigo-600 disabled:bg-gray-300"
+                    style={{ textTransform: 'uppercase' }}
                   />
                 </div>
                 <div className="flex flex-col">
@@ -383,6 +387,7 @@ function ProdutosAdd() {
                     value={formData.disponivel}
                     onChange={handleInputChange}
                     className="w-[32.5rem] h-11 px-3 py-2 rounded-md ring-inset focus:ring-2 focus:ring-indigo-600 disabled:bg-gray-300"
+                    style={{ textTransform: 'uppercase' }}
                   />
                 </div>
               </div>
@@ -402,6 +407,7 @@ function ProdutosAdd() {
                     value={formData.precoCusto}
                     onChange={handleInputChange}
                     className="w-[32.5rem] h-11 px-3 py-2 rounded-md ring-inset focus:ring-2 focus:ring-indigo-600 disabled:bg-gray-300"
+                    style={{ textTransform: 'uppercase' }}
                   />
                 </div>
                 <div className="flex flex-col">
@@ -412,6 +418,7 @@ function ProdutosAdd() {
                     value={formData.precoCustoMedio}
                     onChange={handleInputChange}
                     className="w-[32.5rem] h-11 px-3 py-2 rounded-md ring-inset focus:ring-2 focus:ring-indigo-600 disabled:bg-gray-300"
+                    style={{ textTransform: 'uppercase' }}
                   />
                 </div>
               </div>
@@ -426,6 +433,7 @@ function ProdutosAdd() {
                     value={formData.precoVenda}
                     onChange={handleInputChange}
                     className="w-[32.5rem] h-11 px-3 py-2 rounded-md ring-inset focus:ring-2 focus:ring-indigo-600 disabled:bg-gray-300"
+                    style={{ textTransform: 'uppercase' }}
                   />
                 </div>
                 <div className="flex flex-col">
@@ -436,6 +444,7 @@ function ProdutosAdd() {
                     value={formData.precoRevenda}
                     onChange={handleInputChange}
                     className="w-[32.5rem] h-11 px-3 py-2 rounded-md ring-inset focus:ring-2 focus:ring-indigo-600 disabled:bg-gray-300"
+                    style={{ textTransform: 'uppercase' }}
                   />
                 </div>
               </div>

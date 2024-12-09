@@ -210,6 +210,7 @@ const PedidoAdd = () => {
                     value={formData.peso}
                     onChange={handleInputChange}
                     className="w-[25rem] h-11 px-3 py-2 rounded-md ring-inset focus:ring-2 focus:ring-indigo-600 disabled:bg-gray-300"
+                    style={{ textTransform: 'uppercase' }}
                   />
                 </div>
                 <div className="flex flex-col">
@@ -220,6 +221,7 @@ const PedidoAdd = () => {
                     value={formData.desconto}
                     onChange={handleInputChange}
                     className="w-[25rem] h-11 px-3 py-2 rounded-md ring-inset focus:ring-2 focus:ring-indigo-600 disabled:bg-gray-300"
+                    style={{ textTransform: 'uppercase' }}
                   />
                 </div>
                 <div className="flex flex-col">
@@ -230,6 +232,7 @@ const PedidoAdd = () => {
                     value={formData.totalPedido}
                     onChange={handleInputChange}
                     className="w-[25rem] h-11 px-3 py-2 rounded-md ring-inset focus:ring-2 focus:ring-indigo-600 disabled:bg-gray-300"
+                    style={{ textTransform: 'uppercase' }}
                   />
                 </div>
               </div>
@@ -251,6 +254,7 @@ const PedidoAdd = () => {
                         value={formData.dia}
                         onChange={handleInputChange}
                         className="w-[23rem] h-11 px-3 py-2 rounded-md ring-inset focus:ring-2 focus:ring-indigo-600 disabled:bg-gray-300"
+                        style={{ textTransform: 'uppercase' }}
                       />
                     </div>
                   )}
@@ -263,6 +267,7 @@ const PedidoAdd = () => {
                     value={formData.NParcela}
                     onChange={handleInputChange}
                     className="w-[20rem] h-11 px-3 py-2 rounded-md ring-inset focus:ring-2 focus:ring-indigo-600 disabled:bg-gray-300"
+                    style={{ textTransform: 'uppercase' }}
                   />
                 </div>
               </div>
@@ -276,6 +281,7 @@ const PedidoAdd = () => {
                           value={formData.observacao}
                           onChange={handleInputChange}
                           className="w-[86rem] h-[45px] resize-none px-3 py-2 rounded-md ring-inset focus:ring-2 focus:ring-indigo-600"
+                          style={{ textTransform: 'uppercase' }}
                       />
                 </div>
               </div>
