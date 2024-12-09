@@ -19,6 +19,8 @@ const VendedoresAdd = () => {
   const [tipoPessoa, setTipoPessoa] = useState('');
   const [empresa,setEmpresa] = useState([]);
   const monucipioModal = [{codigo:'1', nome:'São Paulo'},{codigo:'2', nome:'Rio de Janeiro'},{codigo:'3', nome:'Belo Horizonte'}];
+  const [valueCnpj, setValueCnpj] = useState('');
+  const [municipio,setMunicipio] = useState('');
 
   const dropTipoComissao = [
     'Total da venda',
@@ -79,9 +81,6 @@ const VendedoresAdd = () => {
         formsData.tipoComissao = 'PARCELA_RECEBIDA';
       }
       setTipoDrop(item);
-    }else if(tipo === 'UF'){
-        formsData.uf = (item);
-        setUf(item);
     }else if(tipo == "BaseCal"){
         if(item === 'Total Líquido (Total + Impostos)'){
             setBaseCal('Total Líquido');
@@ -100,8 +99,7 @@ const VendedoresAdd = () => {
         formsData.empresaId = (item.codigo);
         console.log("Empresa:",formsData.empresaId);
     }
-    console.log("Tipo:",tipo);
-    console.log("Item:",item);
+    console.log(formsData);
   };
 
   useEffect(() => {
@@ -121,9 +119,60 @@ const VendedoresAdd = () => {
         console.error('Erro ao buscar os dados', error);
       }
     };
-  
     fetchData();
+
+    
   }, []);
+
+  const getCNPJ = async (value) => {
+    try {
+      // Fazer as requisições de forma assíncrona
+      const responseCnpj = await axios.get('https://open.cnpja.com/office/' + value);
+      const municipio = await axios.get('http://localhost:8080/municipios');
+      const MuniAPI = await axios.get('https://servicodados.ibge.gov.br/api/v1/localidades/distritos');
+      
+      let Apiselecionado
+      let municipioSelecionado = null;
+  
+      // Buscar o estado correspondente ao CNPJ
+      for (let i = 0; i < MuniAPI.data.length; i++) {
+        if (MuniAPI.data[i].municipio.id === responseCnpj.data.address.municipality) {
+          Apiselecionado = MuniAPI.data[i];
+          console.log(MuniAPI.data[i]);
+          break;
+        }
+      }
+
+      // Atualizar o estado do formulário
+      setFormsData((prevData) => ({
+        ...prevData,
+        nome_razao: responseCnpj.data.company.name,
+        fantasia: responseCnpj.data.alias,
+        cep: responseCnpj.data.address.zip,
+        cpf_cnpj: value,
+        numero: responseCnpj.data.address.number,
+        email: responseCnpj.data.emails[0]?.address || '',
+        telefone: responseCnpj.data.phones[0]?.area + responseCnpj.data.phones[0]?.number || '',
+        bairro: responseCnpj.data.address.district,
+        logradouro: responseCnpj.data.address.street,
+        uf: responseCnpj.data.address.state,
+        municipioId: Apiselecionado.nome
+      }));
+      console.log("Municipio:", Apiselecionado.nome);
+
+      setMunicipio(Apiselecionado.nome);
+    } catch (error) {
+      console.error('Erro ao buscar dados do CNPJ:', error);
+    }
+  };
+  
+  
+
+  const handleCnpjBlur = () => {
+    if (cepCnpj =='CNPJ') {
+      getCNPJ(valueCnpj);
+    }
+  };
 
   const handleDateChange = (dates) => {
     // Convert the selected date to ISO string format (yyyy-MM-dd)
@@ -188,12 +237,10 @@ const VendedoresAdd = () => {
       // Remove todos os caracteres não numéricos
       let formattedValue = value.replace(/\D/g, "");
 
-      // Limita o número de caracteres a 11 (no formato (XX) XXXXX-XXXX) ou 10 (no formato (XX) XXXX-XXXX)
       if (formattedValue.length > 11) {
         formattedValue = formattedValue.slice(0, 11); // Limita a 11 caracteres
       }
 
-      // Aplica a formatação conforme o número de caracteres
       if (formattedValue.length <= 10) {
         formattedValue = formattedValue.replace(/^(\d{2})(\d{0,4})(\d{0,4})$/, "($1) $2-$3");
       } else {
@@ -204,6 +251,7 @@ const VendedoresAdd = () => {
     } else {
       setFormsData((prevData) => ({ ...prevData, [name]: value }));
     }
+    setValueCnpj(value);
   };
 
 
@@ -242,6 +290,8 @@ const VendedoresAdd = () => {
                     onChange={handleInputChange}
                     className=" w-[20rem] h-11 px-3 py-2 rounded-md  ring-inset focus:ring-2 focus:ring-indigo-600"
                     required
+                    onBlur={handleCnpjBlur}
+                    style={{ textTransform: 'uppercase' }}
                   />
                 </div>
               </div>
@@ -257,6 +307,7 @@ const VendedoresAdd = () => {
                     value={formsData.entidade}
                     onChange={handleInputChange}
                     className=" w-[24rem] h-11 px-3 py-2 rounded-md  ring-inset focus:ring-2 focus:ring-indigo-600"
+                    style={{ textTransform: 'uppercase' }}
                   />
                 </div>
 
@@ -268,6 +319,7 @@ const VendedoresAdd = () => {
                     value={formsData.nomeRazaoSocial}
                     onChange={handleInputChange}
                     className=" w-[23.5rem] h-11 px-3 py-2 rounded-md  ring-inset focus:ring-2 focus:ring-indigo-600"
+                    style={{ textTransform: 'uppercase' }}
                   />
                 </div>
 
@@ -286,6 +338,7 @@ const VendedoresAdd = () => {
                     value={formsData.nomeFantasia}
                     onChange={handleInputChange}
                     className=" w-[32rem] h-11 px-3 py-2 rounded-md ring-inset focus:ring-2 focus:ring-indigo-600"
+                    style={{ textTransform: 'uppercase' }}
                   />
                 </div>
 
@@ -306,6 +359,7 @@ const VendedoresAdd = () => {
                     value={formsData.inscricaoMunicipal}
                     onChange={handleInputChange}
                     className="w-[32rem] h-11 px-3 py-2 rounded-md ring-inset focus:ring-2 focus:ring-indigo-600 disabled:bg-gray-300"
+                    style={{ textTransform: 'uppercase' }}
                   />
                 </div>
                 <div className="flex flex-col">
@@ -317,6 +371,7 @@ const VendedoresAdd = () => {
                     onChange={handleInputChange}
                     maxLength={documentoValue === 'CPF' ? 14 : 18}
                     className="w-[32.5rem] h-11 px-3 py-2 rounded-md ring-inset focus:ring-2 focus:ring-indigo-600 disabled:bg-gray-300"
+                    style={{ textTransform: 'uppercase' }}
                   />
                 </div>
               </div>
@@ -336,6 +391,7 @@ const VendedoresAdd = () => {
                     value={formsData.contato}
                     onChange={handleInputChange}
                     className="w-[20rem] h-11 px-3 py-2 rounded-md ring-inset focus:ring-2 focus:ring-indigo-600 disabled:bg-gray-300"
+                    style={{ textTransform: 'uppercase' }}
                   />
                 </div>
               <div className="flex flex-col">
@@ -346,6 +402,7 @@ const VendedoresAdd = () => {
                     value={formsData.celular}
                     onChange={handleInputChange}
                     className="w-[21rem] h-11 px-3 py-2 rounded-md ring-inset focus:ring-2 focus:ring-indigo-600 disabled:bg-gray-300"
+                    style={{ textTransform: 'uppercase' }}
                   />
                 </div>
                 <div className="flex flex-col">
@@ -356,6 +413,7 @@ const VendedoresAdd = () => {
                     value={formsData.telefone}
                     onChange={handleInputChange}
                     className="w-[22rem] h-11 px-3 py-2 rounded-md ring-inset focus:ring-2 focus:ring-indigo-600 disabled:bg-gray-300"
+                    style={{ textTransform: 'uppercase' }}
                   />
                 </div>
               </div>
@@ -369,6 +427,7 @@ const VendedoresAdd = () => {
                     value={formsData.email}
                     onChange={handleInputChange}
                     className="w-[66rem] h-11 px-3 py-2 rounded-md ring-inset focus:ring-2 focus:ring-indigo-600 disabled:bg-gray-300"
+                    style={{ textTransform: 'uppercase' }}
                   />
                 </div>
               </div>
@@ -389,6 +448,7 @@ const VendedoresAdd = () => {
                     value={formsData.cep}
                     onChange={handleInputChange}
                     className="w-[24rem] h-11 px-3 py-2 rounded-md ring-inset focus:ring-2 focus:ring-indigo-600 disabled:bg-gray-300"
+                    style={{ textTransform: 'uppercase' }}
                   />
                 </div>
                 <div className="flex flex-col">
@@ -398,11 +458,23 @@ const VendedoresAdd = () => {
                     name="logradouro"
                     value={formsData.logradouro}
                     onChange={handleInputChange}
-                    className="w-[25rem] h-11 px-3 py-2 rounded-md ring-inset focus:ring-2 focus:ring-indigo-600 disabled:bg-gray-300"
+                    className="w-[35.5rem] h-11 px-3 py-2 rounded-md ring-inset focus:ring-2 focus:ring-indigo-600 bg-gray-300"
+                    style={{ textTransform: 'uppercase' }}
+                    readOnly
                   />
                 </div>
+
                 <div className="flex flex-col">
-                    <DropDown labelDrop="UF" title= 'Selecione a UF' ValorBtn={cepUf} listItens={["US", "MX", "BA"]} onSelect={(item) => handleMenuItemClick(item,'UF')} />
+                  <label className="block ml-1 text-sm font-medium leading-6 text-black">UF</label>
+                  <input
+                    type="text"
+                    name="uf"
+                    value={formsData.uf}
+                    onChange={handleInputChange}
+                    className="w-[4rem] h-11 px-3 py-2 rounded-md ring-inset focus:ring-2 focus:ring-indigo-600 bg-gray-300"
+                    style={{ textTransform: 'uppercase' }}
+                    readOnly
+                  />
                 </div>
               </div>
 
@@ -415,13 +487,23 @@ const VendedoresAdd = () => {
                     name="numero"
                     value={formsData.numero}
                     onChange={handleInputChange}
-                    className="w-[32rem] h-11 px-3 py-2 rounded-md ring-inset focus:ring-2 focus:ring-indigo-600 disabled:bg-gray-300"
+                    className="w-[32.5rem] h-11 px-3 py-2 rounded-md ring-inset focus:ring-2 focus:ring-indigo-600 bg-gray-300"
+                    style={{ textTransform: 'uppercase' }}
+                    readOnly
                   />
                 </div>
 
                 <div className="flex flex-col">
                   <label className="block ml-1 text-sm font-medium leading-6 text-black">Municipio</label>
-                  <InputWBtn widthValue={30} options={monucipioModal} modalTitle="Escolha o Municipio" onSelect={(item) => handleMenuItemClick(item,'Municipio')}/>
+                  <input
+                    type="text"
+                    name="municipio"
+                    value={municipio}
+                    onChange={handleInputChange}
+                    className=" w-[32.5rem] h-11 px-3 py-2 rounded-md ring-inset focus:ring-2 focus:ring-indigo-600 bg-gray-300"
+                    style={{ textTransform: 'uppercase' }}
+                    readOnly
+                  />
                 </div>
               </div>
 
@@ -433,7 +515,9 @@ const VendedoresAdd = () => {
                     name="bairro"
                     value={formsData.bairro}
                     onChange={handleInputChange}
-                    className="w-[32.5rem] h-11 px-3 py-2 rounded-md ring-inset focus:ring-2 focus:ring-indigo-600 disabled:bg-gray-300"
+                    className="w-[32.5rem] h-11 px-3 py-2 rounded-md ring-inset focus:ring-2 focus:ring-indigo-600 bg-gray-300"
+                    style={{ textTransform: 'uppercase' }}
+                    readOnly
                   />
                 </div>
                 <div className="flex flex-col">
@@ -443,7 +527,9 @@ const VendedoresAdd = () => {
                     name="complemento"
                     value={formsData.complemento}
                     onChange={handleInputChange}
-                    className="w-[32.5rem] h-11 px-3 py-2 rounded-md ring-inset focus:ring-2 focus:ring-indigo-600 disabled:bg-gray-300"
+                    className="w-[32.5rem] h-11 px-3 py-2 rounded-md ring-inset focus:ring-2 focus:ring-indigo-600 bg-gray-300"
+                    style={{ textTransform: 'uppercase' }}
+                    readOnly
                   />
                 </div>
               </div>
@@ -464,6 +550,7 @@ const VendedoresAdd = () => {
                     value={formsData.desconto}
                     onChange={handleInputChange}
                     className="w-[15rem] h-11 px-3 py-2 rounded-md ring-inset focus:ring-2 focus:ring-indigo-600 disabled:bg-gray-300"
+                    style={{ textTransform: 'uppercase' }}
                   />
                 </div>
                 
@@ -475,6 +562,7 @@ const VendedoresAdd = () => {
                     value={formsData.comissao}
                     onChange={handleInputChange}
                     className="w-[14rem] h-11 px-3 py-2 rounded-md ring-inset focus:ring-2 focus:ring-indigo-600 disabled:bg-gray-300"
+                    style={{ textTransform: 'uppercase' }}
                   />
                 </div>
 
@@ -497,6 +585,7 @@ const VendedoresAdd = () => {
                         value={formsData.observacao}
                         onChange={handleInputChange}
                         className="w-[67rem] h-[45px] resize-none px-3 py-2 rounded-md ring-inset focus:ring-2 focus:ring-indigo-600"
+                        style={{ textTransform: 'uppercase' }}
                     />
               </div>
               </div>

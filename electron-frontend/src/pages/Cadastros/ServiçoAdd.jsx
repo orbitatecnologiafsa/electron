@@ -140,6 +140,7 @@ const ServiçoAdd = () => {
                     onChange={handleInputChange}
                     className=" w-[13rem] h-11 px-3 py-2 rounded-md  ring-inset focus:ring-2 focus:ring-indigo-600"
                     required
+                    style={{ textTransform: 'uppercase' }}
                   />
                 </div>
                 <div className="flex items-center">
@@ -149,6 +150,7 @@ const ServiçoAdd = () => {
                     checked={formData.ativo}
                     onChange={() => setFormData({ ...formData, ativo: !formData.ativo })}
                     className="mr-2 rounded"
+                    
                   />
                   <label className="text-base">Ativo</label>
                 </div>
@@ -165,6 +167,7 @@ const ServiçoAdd = () => {
                     onChange={handleInputChange}
                     className=" w-[66rem] h-11 px-3 py-2 rounded-md  ring-inset focus:ring-2 focus:ring-indigo-600"
                     required
+                    style={{ textTransform: 'uppercase' }}
                   />
                 </div>
               </div>
@@ -177,7 +180,7 @@ const ServiçoAdd = () => {
                   <DropDown labelDrop="Atividade" title={"Selecione a atividade"} ValorBtn={atividadeSelected} listItens={dropAtv} onSelect={(item) => handleMenuItemClick(item,'Atividade')}/>
                 </div>
                 <div className="flex flex-col">
-                    <DropDown labelDrop="Grupo" title={"Selecione um grupo"} ValorBtn={grupoSelected} listItens={dropGrupo} onSelect={(item) => handleMenuItemClick(item,'Grupo')}/>
+                  <DropDown labelDrop="Grupo" title={"Selecione um grupo"} ValorBtn={grupoSelected} listItens={dropGrupo} onSelect={(item) => handleMenuItemClick(item,'Grupo')}/>
                 </div>
               </div>
 
@@ -190,6 +193,7 @@ const ServiçoAdd = () => {
                           value={formData.descricao}
                           onChange={handleInputChange}
                           className="w-[66rem] h-[45px] resize-none px-3 py-2 rounded-md ring-inset focus:ring-2 focus:ring-indigo-600"
+                          style={{ textTransform: 'uppercase' }}
                       />
                 </div>
               </div>
@@ -209,6 +213,7 @@ const ServiçoAdd = () => {
                     value={formData.custo}
                     onChange={handleInputChange}
                     className="w-[21.2rem] h-11 px-3 py-2 rounded-md ring-inset focus:ring-2 focus:ring-indigo-600 disabled:bg-gray-300"
+                    style={{ textTransform: 'uppercase' }}
                   />
                 </div>
                 <div className="flex flex-col">
@@ -219,6 +224,7 @@ const ServiçoAdd = () => {
                     value={formData.precoVenda}
                     onChange={handleInputChange}
                     className="w-[21.3rem] h-11 px-3 py-2 rounded-md ring-inset focus:ring-2 focus:ring-indigo-600 disabled:bg-gray-300"
+                    style={{ textTransform: 'uppercase' }}
                   />
                 </div>
                 <div className="flex flex-col">
@@ -229,6 +235,7 @@ const ServiçoAdd = () => {
                     value={formData.precoRevenda}
                     onChange={handleInputChange}
                     className="w-[21.3rem] h-11 px-3 py-2 rounded-md ring-inset focus:ring-2 focus:ring-indigo-600 disabled:bg-gray-300"
+                    style={{ textTransform: 'uppercase' }}
                   />
                 </div>
               </div>
@@ -248,6 +255,7 @@ const ServiçoAdd = () => {
                     value={formData.tribMunicipal}
                     onChange={handleInputChange}
                     className="w-[66rem] px-3 py-2 rounded-md ring-inset focus:ring-2 focus:ring-indigo-600"
+                    style={{ textTransform: 'uppercase' }}
                   />
                 </div>
               </div>
@@ -262,6 +270,7 @@ const ServiçoAdd = () => {
                     value={formData.tribFederal}
                     onChange={handleInputChange}
                     className="w-[66rem] px-3 py-2 rounded-md ring-inset focus:ring-2 focus:ring-indigo-600"
+                    style={{ textTransform: 'uppercase' }}
                   />
                 </div>
               </div>
@@ -275,6 +284,7 @@ const ServiçoAdd = () => {
                           value={formData.descricao}
                           onChange={handleInputChange}
                           className="w-[66rem] h-[45px] resize-none px-3 py-2 rounded-md ring-inset focus:ring-2 focus:ring-indigo-600"
+                          style={{ textTransform: 'uppercase' }}
                       />
                 </div>
               </div>

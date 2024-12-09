@@ -113,6 +113,7 @@ function FornecesoresAdd() {
         telefone: responseCnpj.data.phones[0]?.area + responseCnpj.data.phones[0]?.number || '',
         bairro: responseCnpj.data.address.district,
         logradouro: responseCnpj.data.address.street,
+        uf: responseCnpj.data.address.state,
       }));
     } catch (error) {
       console.error('Erro ao buscar dados do CNPJ:', error);
@@ -160,6 +161,7 @@ function FornecesoresAdd() {
                     className=" w-[20rem] h-11 px-3 py-2 rounded-md  ring-inset focus:ring-2 focus:ring-indigo-600"
                     required
                     onBlur={handleCnpjBlur}
+                    style={{ textTransform: 'uppercase' }}
                   />
                 </div>
                 <div className="flex items-center">
@@ -169,6 +171,7 @@ function FornecesoresAdd() {
                       checked={formsData.ativo}
                       onChange={() => formsData.ativo ? setFormsData({ ...formsData, ativo: false }) : setFormsData({ ...formsData, ativo: true })}
                       className="mr-2 rounded"
+                      style={{ textTransform: 'uppercase' }}
                     />
                     <label className="text-base">Ativo</label>
                 </div>
@@ -186,6 +189,7 @@ function FornecesoresAdd() {
                     onChange={handleInputChange}
                     className=" w-[32.5rem] h-11 px-3 py-2 rounded-md  ring-inset focus:ring-2 focus:ring-indigo-600"
                     required
+                    style={{ textTransform: 'uppercase' }}
                   />
                 </div>
                 <div className="flex flex-col">
@@ -197,6 +201,7 @@ function FornecesoresAdd() {
                     onChange={handleInputChange}
                     className=" w-[32.5rem] h-11 px-3 py-2 rounded-md ring-inset focus:ring-2 focus:ring-indigo-600"
                     required
+                    style={{ textTransform: 'uppercase' }}
                   />
                 </div>
               </div>
@@ -216,6 +221,7 @@ function FornecesoresAdd() {
                     value={formsData.contato}
                     onChange={handleInputChange}
                     className="w-[20rem] h-11 px-3 py-2 rounded-md ring-inset focus:ring-2 focus:ring-indigo-600 disabled:bg-gray-300"
+                    style={{ textTransform: 'uppercase' }}
                   />
                 </div>
               <div className="flex flex-col">
@@ -226,6 +232,7 @@ function FornecesoresAdd() {
                     value={formsData.celular}
                     onChange={handleInputChange}
                     className="w-[22rem] h-11 px-3 py-2 rounded-md ring-inset focus:ring-2 focus:ring-indigo-600 disabled:bg-gray-300"
+                    style={{ textTransform: 'uppercase' }}
                   />
                 </div>
                 <div className="flex flex-col">
@@ -236,6 +243,7 @@ function FornecesoresAdd() {
                     value={formsData.telefone}
                     onChange={handleInputChange}
                     className="w-[22rem] h-11 px-3 py-2 rounded-md ring-inset focus:ring-2 focus:ring-indigo-600 disabled:bg-gray-300"
+                    style={{ textTransform: 'uppercase' }}
                   />
                 </div>
               </div>
@@ -249,6 +257,7 @@ function FornecesoresAdd() {
                     value={formsData.email}
                     onChange={handleInputChange}
                     className="w-[66rem] h-11 px-3 py-2 rounded-md ring-inset focus:ring-2 focus:ring-indigo-600 disabled:bg-gray-300"
+                    style={{ textTransform: 'uppercase' }}
                   />
                 </div>
               </div>
@@ -264,6 +273,7 @@ function FornecesoresAdd() {
                     onChange={handleInputChange}
                     maxLength={documentoValue === 'CPF' ? 14 : 18}
                     className="w-[32.5rem] h-11 px-3 py-2 rounded-md ring-inset focus:ring-2 focus:ring-indigo-600 disabled:bg-gray-300"
+                    style={{ textTransform: 'uppercase' }}
                   />
                 </div>
                 <div className="flex flex-col">
@@ -274,6 +284,7 @@ function FornecesoresAdd() {
                     value={formsData.inscricao_estadual_municipal}
                     onChange={handleInputChange}
                     className="w-[32.5rem] h-11 px-3 py-2 rounded-md ring-inset focus:ring-2 focus:ring-indigo-600 disabled:bg-gray-300"
+                    style={{ textTransform: 'uppercase' }}
                   />
                 </div>
               </div>
@@ -294,6 +305,7 @@ function FornecesoresAdd() {
                     value={formsData.cep}
                     onChange={handleInputChange}
                     className="w-[21.3rem] h-11 px-3 py-2 rounded-md ring-inset focus:ring-2 focus:ring-indigo-600 disabled:bg-gray-300"
+                    style={{ textTransform: 'uppercase' }}
                   />
                 </div>
                 <div className="flex flex-col">
@@ -304,6 +316,7 @@ function FornecesoresAdd() {
                     value={formsData.logradouro}
                     onChange={handleInputChange}
                     className="w-[21.3rem] h-11 px-3 py-2 rounded-md ring-inset focus:ring-2 focus:ring-indigo-600 disabled:bg-gray-300"
+                    style={{ textTransform: 'uppercase' }}
                   />
                 </div>
                 <div className="flex flex-col">
@@ -314,6 +327,7 @@ function FornecesoresAdd() {
                     value={formsData.numero}
                     onChange={handleInputChange}
                     className="w-[21.3rem] h-11 px-3 py-2 rounded-md ring-inset focus:ring-2 focus:ring-indigo-600 disabled:bg-gray-300"
+                    style={{ textTransform: 'uppercase' }}
                   />
                 </div>
               </div>
@@ -328,6 +342,7 @@ function FornecesoresAdd() {
                     value={formsData.bairro}
                     onChange={handleInputChange}
                     className="w-[40.5rem] h-11 px-3 py-2 rounded-md ring-inset focus:ring-2 focus:ring-indigo-600 disabled:bg-gray-300"
+                    style={{ textTransform: 'uppercase' }}
                   />
                 </div>
 
@@ -339,6 +354,7 @@ function FornecesoresAdd() {
                     value={formsData.município}
                     onChange={handleInputChange}
                     className="w-[20.5rem] h-11 px-3 py-2 rounded-md ring-inset focus:ring-2 focus:ring-indigo-600 disabled:bg-gray-300"
+                    style={{ textTransform: 'uppercase' }}
                   />
                 </div>
                 <div className="flex flex-col">
@@ -349,6 +365,7 @@ function FornecesoresAdd() {
                     value={formsData.uf}
                     onChange={handleInputChange}
                     className="w-[3rem] h-11 px-3 py-2 rounded-md ring-inset focus:ring-2 focus:ring-indigo-600 disabled:bg-gray-300"
+                    style={{ textTransform: 'uppercase' }}
                   />
                 </div>
               </div>
@@ -362,6 +379,7 @@ function FornecesoresAdd() {
                     value={formsData.complemento}
                     onChange={handleInputChange}
                     className="w-[32.5rem] h-11 px-3 py-2 rounded-md ring-inset focus:ring-2 focus:ring-indigo-600 disabled:bg-gray-300"
+                    style={{ textTransform: 'uppercase' }}
                   />
                 </div>
                 <div className="flex flex-col">
@@ -372,6 +390,7 @@ function FornecesoresAdd() {
                         value={formsData.observacao}
                         onChange={handleInputChange}
                         className="w-[33rem] h-[45px] resize-none px-3 py-2 rounded-md ring-inset focus:ring-2 focus:ring-indigo-600"
+                        style={{ textTransform: 'uppercase' }}
                     />
               </div>
               </div>
