@@ -8,9 +8,6 @@ import DropDown from '../../components/DropDown';
 import InputWBtn from '../../components/InputWBtn';
 
 function TransportadorasAdd() {
-
-  const [docDigitado, setDocDigitado] = useState('');
-
   const [documentoValue, setDocumentoValue] = useState('');
   const [tipoP,setTipoP] = useState('');
   const [cepCnpj, setCepCnpj] = useState('');
@@ -302,7 +299,7 @@ function TransportadorasAdd() {
                 </div>
                 <div className="flex flex-col">
                   <label className="block ml-1 text-sm font-medium leading-6 text-black">Empresa</label>
-                  <InputWBtn widthValue={29} options={empresa} modalTitle="Escolha a Empresa" onSelect={handleMunItemClick} tipo={"Empresa"}/>
+                  <InputWBtn widthValue={29} heightValue={2.75} options={empresa} modalTitle="Escolha a Empresa" onSelect={handleMunItemClick} tipo={"Empresa"}/>
                 </div>
               </div>
 
@@ -440,7 +437,7 @@ function TransportadorasAdd() {
 
                 <div className="flex flex-col">
                   <label className="block ml-1 text-sm font-medium leading-6 text-black">Municipio</label>
-                  <InputWBtn widthValue={21} options={monucipioModal} modalTitle="Escolha o Municipio" onSelect={handleMunItemClick} tipo={"Municiopio"}/>
+                  <InputWBtn widthValue={21} heightValue={2.75} options={monucipioModal} modalTitle="Escolha o Municipio" onSelect={handleMunItemClick} tipo={"Municiopio"}/>
                 </div>
 
                 <div className="flex flex-col">

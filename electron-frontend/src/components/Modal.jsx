@@ -31,7 +31,7 @@ function ModalWithOptions({ options, onSelect, modalTitle }) {
       <Button 
         variant="outline-secondary" 
         id="button-addon2" 
-        className="h-[3rem] w-[3rem] w-40 px-4 py-2 rounded-md bg-indigo-600 text-white hover:bg-indigo-700"
+        className="h-[2.75rem] w-[3rem] px-4 py-2 rounded-md bg-indigo-600 text-white hover:bg-indigo-700"
         onClick={() => setIsOpen(true)}
       >
         <FontAwesomeIcon icon={faMagnifyingGlass} style={{color: "#ffffff",}} />

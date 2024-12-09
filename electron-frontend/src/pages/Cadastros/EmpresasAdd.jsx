@@ -1,24 +1,24 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Sidebar from '../../partials/Sidebar';
 import Header from '../../partials/Header';
 import axios from 'axios';
-import DropDown from '../../components/DropDown';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faCircleInfo } from '@fortawesome/free-solid-svg-icons';
+import InputWBtn from '../../components/InputWBtn';
 
 function EmpresasAdd() {
 
   const [docDigitado, setDocDigitado] = useState('');
-
+  const tipoUnidade = [{opção:'1', tipo:'MATRIZ'},{opção:'2', tipo:'FILIAL'}];
+  const regimeTributario = [
+    {tipo:'MICROEMPREENDEDOR INDIVIDUAL'},
+    {tipo:'SIMPLES NACIONAL'},
+    {tipo:'LUCRO PRESUMIDO'},
+    {tipo:'LUCRO REAL'}
+  ];
   const [documentoValue, setDocumentoValue] = useState('');
-  const [isDocumentoSelected, setIsDocumentoSelected] = useState(false);
-  const [tipoCliente, setTipoCliente] = useState('-');
   const [cep, setCep] = useState('');
-  const [cnpj, setCnpj] = useState('');
-  const [dropEstado, setDropEstado] = useState('');
-
   const [error, setError] = useState(null);
+
 
   const handleCepChange = (e) => {
     const value = e.target.value.replace(/\D/g, '');
@@ -31,7 +31,6 @@ function EmpresasAdd() {
     }
   };
 
-
   const [sidebarOpen, setSidebarOpen] = useState(false);
   {/* Post ADD Tabela */}
   const handleSubmit = async (e) => {
@@ -41,12 +40,13 @@ function EmpresasAdd() {
         setFormData({
             tipo: '',
             razaoSocial: '',
+            cnae: '',
             nomeFantasia: '',
             cpfCnpj: '',
             cep: '',
             nomeExibicao: '',
             municipio: '',
-            estado: '',
+            uf: '',
             bairro: '',
             logradouro: '',
             numero: '',
@@ -58,6 +58,7 @@ function EmpresasAdd() {
             rgInscricaoEstadual: '',
             inscricaoEstadualMunicipal: '',
             observacoes: '',
+            tipoUnidade: '',
             ativo: true,
         });
     } catch (error) {
@@ -67,11 +68,12 @@ function EmpresasAdd() {
 
   const [formData, setFormData] = useState({
     razaoSocial: '',
+    cnae: '',
     nomeFantasia: '',
     cpfCnpj: '',
     cep: '',
     municipio: '',
-    estado: '',
+    uf: '',
     bairro: '',
     logradouro: '',
     numero: '',
@@ -85,9 +87,27 @@ function EmpresasAdd() {
     inscricaoEstadualMunicipal: '',
     observacoes: '',
     tipoPessoa: '',
+    tipoUnidade: '',
+    regimeTributario: '',
     ativo: true,
     revenda: false,
   });
+
+  const handleMunItemClick = (tipo,item) => {
+    if(tipo === 'Tipo da Unidade'){
+        formData.tipoUnidade = (item);
+    }
+    if(tipo === 'Regime Tributário'){
+      if(item == "MICROEMPREENDEDOR INDIVIDUAL")
+        formData.regimeTributario = ("MEI");
+      if(item == "SIMPLES NACIONAL")
+        formData.regimeTributario = ("SIMPLES_NACIONAL");
+      if(item == "LUCRO PRESUMIDO")
+        formData.regimeTributario = ("LUCRO_PRESUMIDO");
+      if(item == "LUCRO REAL")
+        formData.regimeTributario = ("LUCRO_REAL");
+    }
+  };
 
   {/* Pegando dados da API ao digitar o CEP */}
   const getDadosEnderecoCEP = async (cepDigitado) => {
@@ -101,7 +121,7 @@ function EmpresasAdd() {
             logradouro: responseCEP.data.logradouro,
             bairro: responseCEP.data.bairro,
             municipio: responseCEP.data.localidade,
-            estado: responseCEP.data.uf
+            uf: responseCEP.data.uf
         }));
         setError(null);
     } catch (error) {
@@ -111,7 +131,7 @@ function EmpresasAdd() {
             logradouro: '',
             bairro: '',
             municipio: '',
-            estado: ''
+            uf: ''
         }));
     }
   };
@@ -306,33 +326,46 @@ function EmpresasAdd() {
                     value={docDigitado}
                     onChange={handleInputChange}
                     maxLength={18}
-                    className="w-[15rem] h-11 px-3 py-2 rounded-md ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-indigo-600"
+                    className="w-[13rem] h-11 px-3 py-2 rounded-md ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-indigo-600"
                   />
                 </div>
                 <div className="flex flex-col">
                   <label className="block ml-1 text-sm font-medium leading-6 text-black">Razão Social</label>
                   <input
                     type="text"
-                    name="nomeRazao"
-                    value={formData.nomeRazao}
+                    name="razaoSocial"
+                    value={formData.razaoSocial}
                     onChange={handleInputChange}
-                    className=" w-[50rem] h-11 px-3 py-2 rounded-md ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-indigo-600"
+                    style={{ textTransform: 'uppercase' }}
+                    className=" w-[37.5rem] h-11 px-3 py-2 rounded-md ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-indigo-600"
+                    required
+                  />
+                </div>
+                <div className="flex flex-col">
+                  <label className="block ml-1 text-sm font-medium leading-6 text-black">CNAE</label>
+                  <input
+                    type="text"
+                    name="cnae"
+                    value={formData.cnae}
+                    onChange={handleInputChange}
+                    className=" w-[13rem] h-11 px-3 py-2 rounded-md ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-indigo-600"
                     required
                   />
                 </div>
               </div>
 
               <div className="flex flex-col">
-                  <label className="block ml-1 text-sm font-medium leading-6 text-black">Nome Fantasia</label>
-                  <input
-                    type="text"
-                    name="nomeFantasia"
-                    value={formData.nomeFantasia}
-                    onChange={handleInputChange}
-                    disabled={documentoValue === 'CPF'}
-                    className="w-[1063px] h-11 px-3 py-2 rounded-md ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-indigo-600 disabled:bg-gray-300"
-                  />
-                </div>
+                <label className="block ml-1 text-sm font-medium leading-6 text-black">Nome Fantasia</label>
+                <input
+                  type="text"
+                  name="nomeFantasia"
+                  value={formData.nomeFantasia}
+                  onChange={handleInputChange}
+                  disabled={documentoValue === 'CPF'}
+                  style={{ textTransform: 'uppercase' }}
+                  className="w-[1065px] h-11 px-3 py-2 rounded-md ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-indigo-600 disabled:bg-gray-300"
+                />
+              </div>
 
                 <div className="flex flex-col md:flex-row gap-4">
                 <div className="flex flex-col">
@@ -342,7 +375,7 @@ function EmpresasAdd() {
                     name="rgInscricaoEstadual"
                     value={formData.rgInscricaoEstadual}
                     onChange={handleInputChange}
-                    className="w-[33rem] h-11 px-3 py-2 rounded-md ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-indigo-600"
+                    className="w-[11rem] h-11 px-3 py-2 rounded-md ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-indigo-600"
                   />
                 </div>
                 <div className="flex flex-col">
@@ -352,8 +385,16 @@ function EmpresasAdd() {
                     name="inscricaoEstadualMunicipal"
                     value={formData.inscricaoEstadualMunicipal}
                     onChange={handleInputChange}
-                    className="w-[32rem] h-11 px-3 py-2 rounded-md ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-indigo-600"
+                    className="w-[14rem] h-11 px-3 py-2 rounded-md ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-indigo-600"
                   />
+                </div>
+                <div className="flex flex-col">
+                  <label className="block ml-1 text-sm font-medium leading-6 text-black">Tipo de Unidade</label>
+                  <InputWBtn widthValue={21} heightValue={2.75} options={tipoUnidade} modalTitle="Escolha o tipo" onSelect={handleMunItemClick} tipo={"Tipo da Unidade"}/>
+                </div>
+                <div className="flex flex-col">
+                  <label className="block ml-1 text-sm font-medium leading-6 text-black">Regime Tributário</label>
+                  <InputWBtn widthValue={21} heightValue={2.75} options={regimeTributario} modalTitle="Escolha o Regime Tributário" valueSelect={0} onSelect={handleMunItemClick} tipo={"Regime Tributário"}/>
                 </div>
               </div>
 
@@ -372,6 +413,7 @@ function EmpresasAdd() {
                           name="email"
                           value={formData.email}
                           onChange={handleInputChange}
+                          style={{ textTransform: 'uppercase' }}
                           className="w-[22rem] h-11 px-3 py-2 rounded-md ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-indigo-600"
                         />
                       </div>
@@ -382,40 +424,42 @@ function EmpresasAdd() {
                           name="contato"
                           value={formData.contato}
                           onChange={handleInputChange}
+                          style={{ textTransform: 'uppercase' }}
                           className="w-[150px] h-11 px-3 py-2 rounded-md ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-indigo-600"
                         />
                       </div>
                     </div>
                     <div className="flex flex-col md:flex-row gap-4 max-w-[30rem]">
                       <div>
-                          <label className="block ml-1 text-sm font-medium leading-6 text-black">Telefone</label>
-                          <input
-                            type="text"
-                            name="telefone"
-                            value={formData.telefone}
-                            onChange={handleInputChange}
-                            className="w-[16rem] h-11 px-3 py-2 rounded-md ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-indigo-600"
-                          />
-                        </div>
-                        <div>
-                          <label className="block ml-1 text-sm font-medium leading-6 text-black">Celular</label>
-                          <input
-                            type="text"
-                            name="celular"
-                            value={formData.celular}
-                            onChange={handleInputChange}
-                            className="w-[245px] h-11 px-3 py-2 rounded-md ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-indigo-600"
-                          />
-                        </div>
+                        <label className="block ml-1 text-sm font-medium leading-6 text-black">Telefone</label>
+                        <input
+                          type="text"
+                          name="telefone"
+                          value={formData.telefone}
+                          onChange={handleInputChange}
+                          className="w-[16rem] h-11 px-3 py-2 rounded-md ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-indigo-600"
+                        />
+                      </div>
+                      <div>
+                        <label className="block ml-1 text-sm font-medium leading-6 text-black">Celular</label>
+                        <input
+                          type="text"
+                          name="celular"
+                          value={formData.celular}
+                          onChange={handleInputChange}
+                          className="w-[245px] h-11 px-3 py-2 rounded-md ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-indigo-600"
+                        />
                       </div>
                     </div>
-                    <div className="flex flex-col max-w-fit relative left-[72px]">
+                  </div>
+                  <div className="flex flex-col max-w-fit relative left-[72px]">
                     <label className="block ml-1 text-sm font-medium leading-6 text-black">Observação</label>
                       <textarea
                         type="text"
                         name="observacoes"
                         value={formData.observacoes}
                         onChange={handleInputChange}
+                        style={{ textTransform: 'uppercase' }}
                         className="w-[32rem] h-[136px] resize-none px-3 py-2 rounded-md ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-indigo-600"
                       />
                     </div>
@@ -443,6 +487,7 @@ function EmpresasAdd() {
                     name="logradouro"
                     value={formData.logradouro}
                     onChange={handleInputChange}
+                    style={{ textTransform: 'uppercase' }}
                     readOnly
                     className="w-[32.5rem] h-11 px-3 py-2 rounded-md ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-indigo-600"
                   />
@@ -457,6 +502,7 @@ function EmpresasAdd() {
                   name="numero"
                   value={formData.numero}
                   onChange={handleInputChange}
+                  style={{ textTransform: 'uppercase' }}
                   className="w-[7rem] h-11 px-3 py-2 rounded-md ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-indigo-600"
                 />
               </div>
@@ -468,8 +514,9 @@ function EmpresasAdd() {
                     name="bairro"
                     value={formData.bairro}
                     onChange={handleInputChange}
+                    style={{ textTransform: 'uppercase' }}
                     readOnly
-                    className="w-[26rem] h-11 px-3 py-2 rounded-md ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-indigo-600"
+                    className="w-[28rem] h-11 px-3 py-2 rounded-md ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-indigo-600"
                   />
                 </div>
                 <div className="flex flex-col">
@@ -479,13 +526,23 @@ function EmpresasAdd() {
                     name="municipio"
                     value={formData.municipio}
                     onChange={handleInputChange}
+                    style={{ textTransform: 'uppercase' }}
                     readOnly
-                    className="w-[11rem] h-11 px-3 py-2 rounded-md ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-indigo-600"
+                    className="w-[20rem] h-11 px-3 py-2 rounded-md ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-indigo-600"
                   />
                 </div>
 
                 <div className="flex flex-col">
-                  <DropDown name='estado' value={formData.estado} labelDrop="Estado" title= 'Selecione a UF' ValorBtn={dropEstado} listItens={["US", "MX", "BA"]} onSelect={(item) => handleMenuItemClick(item,'Estado')} />
+                  <label className="block ml-1 text-sm font-medium leading-6 text-black">Estado</label>
+                  <input
+                    type="text"
+                    name="uf"
+                    value={formData.uf}
+                    onChange={handleInputChange}
+                    style={{ textTransform: 'uppercase' }}
+                    readOnly
+                    className="w-[4rem] h-11 px-3 py-2 rounded-md ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-indigo-600"
+                  />
                 </div>
               </div>
 
@@ -497,7 +554,8 @@ function EmpresasAdd() {
                     name="complemento"
                     value={formData.complemento}
                     onChange={handleInputChange}
-                    className="w-[1063px] h-11 px-3 py-2 rounded-md ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-indigo-600"
+                    style={{ textTransform: 'uppercase' }}
+                    className="w-[1065px] h-11 px-3 py-2 rounded-md ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-indigo-600"
                   />
                 </div>
               </div>

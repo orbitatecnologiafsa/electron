@@ -2,16 +2,26 @@ import React, { useEffect, useState } from "react";
 import Modal from "./Modal";
 import InputGroup from 'react-bootstrap/InputGroup';
 
-const InputWBtn = ({ widthValue, options, modalTitle, onSelect, tipo }) => {
+const InputWBtn = ({ widthValue, heightValue, options, modalTitle, onSelect, tipo, valueSelect }) => {
   const [inputValue, setInputValue] = useState("");
 
   const handleSelect = (option) => {
     // Aqui, selecionamos o segundo valor de `option` (no caso, vamos supor que seja o segundo valor da linha).
-    const secondValue = Object.values(option)[1]; // Pega o segundo valor da linha.
+    const firstValue = Object.values(option)[0];
+    const secondValue = Object.values(option)[1];
+    const thirdValue = Object.values(option)[2];
+    let valueSelected;
+    if (valueSelect == 0)
+      valueSelected = firstValue;
+
+    if (valueSelect == 1)
+      valueSelected = secondValue;
+
+    if (valueSelect == 2)
+      valueSelected = thirdValue;
     
-    console.log('secondValue: ', secondValue);
     
-    setInputValue(secondValue);
+    setInputValue(valueSelected);
 
     if (typeof onSelect === 'function') {
       if (tipo) {
@@ -38,7 +48,7 @@ const InputWBtn = ({ widthValue, options, modalTitle, onSelect, tipo }) => {
           value={inputValue}
           onChange={(e) => setInputValue(e.target.value)}
           className="w-[20rem] h-12 px-3 py-2 rounded-md ring-inset focus:ring-2 focus:ring-indigo-600 disabled:bg-gray-300"
-          style={{ width: `${widthValue}rem` }} 
+          style={{ width: `${widthValue}rem`, height: `${heightValue}rem` }}
         />
         <Modal
           options={options} 

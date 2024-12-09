@@ -9,6 +9,7 @@ import DropDown from '../../components/DropDown';
 
 
 function Empresas() {
+  const [Muni, setMuni] = useState([]);
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [campoValue, setCampoValue] = useState('Todos');
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
@@ -37,6 +38,46 @@ function Empresas() {
     dataCriacao: '',
     observacoes: ''
   });
+
+  const handleMunItemClick = (tipo,item) => {
+    if(tipo === 'Municipio'){
+        formData.municipio = (item);
+        console.log("Municipio:",formData.municipio);
+    }
+  };
+
+  useEffect(() => {
+    // Função para pegar os dados da API
+    const fetchDataMunicipios = async () => {
+      try {
+        // Fazendo a requisição para pegar os dados de municípios
+        const response = await axios.get('http://localhost:8080/municipios');
+        // Fazendo a requisição para pegar os dados de estados
+        const responseEstados = await axios.get('http://localhost:8080/estados');
+        
+        // Criando um objeto de estados para acessar rapidamente os nomes dos estados pelo ID
+        const estadosMap = responseEstados.data.reduce((acc, estado) => {
+          acc[estado.id] = estado.uf; // Usando 'estados_id' como chave
+          return acc;
+        }, {});
+  
+        // Transformando os dados de municípios e associando com o nome do estado através de 'municipios_fk_estados'
+        const gruposTransformados = response.data.map(item => ({
+          codigo: item.id,
+          Municipio: item.nome,
+          estado: estadosMap[item.estadoId] // Usando o 'municipios_fk_estados' para encontrar o nome do estado
+        }));
+  
+        // Definindo os dados transformados no estado
+        setMuni(gruposTransformados);
+  
+      } catch (error) {
+        console.error('Erro ao buscar os dados', error);
+      }
+    };
+  
+    fetchDataMunicipios();
+  }, []);
 
   const handleCepChange = (e) => {
     const value = e.target.value.replace(/\D/g, '');
@@ -634,21 +675,7 @@ function Empresas() {
                   </div>
                   <div className="mt-4">
                     <label className="block text-sm font-medium text-gray-900">Município</label>
-                    <input
-                      type="text"
-                      name="municipio"
-                      value={currentData.municipio?.nome}
-                      /*onChange={(e) => setCurrentData({
-                        ...currentData,
-                        municipio: {
-                          ...currentData.municipio,
-                          nome: e.target.value
-                        }
-                      })}
-                        */
-                      readOnly
-                      className="mt-2 block w-[26rem] rounded-md border-gray-300 shadow-sm"
-                    />
+                    <InputWBtn widthValue={20} heightValue={2.75} options={Muni} modalTitle="Escolha o município" onSelect={handleMunItemClick} tipo={"Municipio"}/>
                   </div>
                   <div className="mt-4">
                     <label className="block text-sm font-medium text-gray-900">Estado</label>
