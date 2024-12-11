@@ -6,6 +6,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faUser, faSort, faCircleInfo, faMagnifyingGlass, faPenToSquare } from '@fortawesome/free-solid-svg-icons';
 import axios from 'axios';
 import DropDown from '../../components/DropDown';
+import InputWBtn from '../../components/InputWBtn';
 
 function Empresas() {
   const [Muni, setMuni] = useState([]);
@@ -30,6 +31,7 @@ function Empresas() {
     telefone: '',
     celular: '',
     cep: '',
+    municipioId: '',
     logradouro: '',
     numero: '',
     bairro: '',
@@ -40,8 +42,7 @@ function Empresas() {
 
   const handleMunItemClick = (tipo,item) => {
     if(tipo === 'Municipio'){
-        formData.municipio = (item);
-        console.log("Municipio:",formData.municipio);
+        currentData.municipio = (item);
     }
   };
 
@@ -63,13 +64,18 @@ function Empresas() {
         // Transformando os dados de municípios e associando com o nome do estado através de 'municipios_fk_estados'
         const gruposTransformados = response.data.map(item => ({
           codigo: item.id,
-          Municipio: item.nome,
+          municipio: item.nome,
           estado: estadosMap[item.estadoId] // Usando o 'municipios_fk_estados' para encontrar o nome do estado
         }));
   
         // Definindo os dados transformados no estado
-        setMuni(gruposTransformados);
-  
+        setMuni(gruposTransformados);      
+        /*
+        municipio = response.data.map(item => ({
+          municipio: item.nome,
+        }))
+        */
+
       } catch (error) {
         console.error('Erro ao buscar os dados', error);
       }
@@ -150,7 +156,6 @@ function Empresas() {
     try {
       {/* URL API */}
       const response = await axios.get("http://localhost:8080/empresas-proprietarias");
-      console.log(response.data);
       setPosts(response.data);
     } catch (error) {
       console.error("Erro ao buscar dados: ", error);
@@ -177,9 +182,7 @@ function Empresas() {
   useEffect(() => {
     if (campoValue === 'Todos') {
       setFilteredPosts(posts);
-      console.log("Aqui os posts: ", posts);
     } else if (searchInfo) {
-      console.log("searchInfo:", searchInfo);
       const propertyName = campoValueMapping[campoValue];
   
       console.log("propertyName:", propertyName);
@@ -198,7 +201,6 @@ function Empresas() {
       });
   
       setFilteredPosts(filteredData);
-      console.log(filteredData);
     } else {
       setFilteredPosts([]);
     }
@@ -379,8 +381,8 @@ function Empresas() {
                               <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700 text-center">{data.nomeFantasia}</td>
                               <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700 text-center">{data.cpfCnpj}</td>
                               <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700 text-center">{data.tipoUnidade}</td>
-                              <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700 text-center">{data.municipio?.nome}</td>
-                              <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700 text-center">{data.municipio?.estado?.nome}</td>
+                              <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700 text-center">{data.municipio}</td>
+                              <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700 text-center">{data.estado}</td>
                               <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700 text-center">{data.telefone}</td>
                               <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700 text-center">{data.ativo ? 'Sim' : 'Não'}</td>
                               <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700 text-center">{data.dataCriacao}</td>
@@ -674,8 +676,8 @@ function Empresas() {
                     />
                   </div>
                   <div className="mt-4">
-                    <label className="block text-sm font-medium text-gray-900">Município</label>
-                    <InputWBtn widthValue={20} heightValue={2.75} options={Muni} modalTitle="Escolha o município" onSelect={handleMunItemClick} tipo={"Municipio"}/>
+                    <label className="block text-sm font-medium mb-2 text-gray-900">Município</label>
+                    <InputWBtn widthValue={20} heightValue={2.75} options={Muni} modalTitle="Escolha o município" onSelect={handleMunItemClick} valueSelect={1} tipo={"Municipio"}/>
                   </div>
                   <div className="mt-4">
                     <label className="block text-sm font-medium text-gray-900">Estado</label>
