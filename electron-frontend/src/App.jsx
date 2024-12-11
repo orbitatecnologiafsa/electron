@@ -50,6 +50,7 @@ import Financeiro from './pages/Permissoes/Financeiro';
 import Relatorios from './pages/Permissoes/Relatorios';
 import Saidas from './pages/Permissoes/Saidas';
 import Estoque2 from './pages/Permissoes/Estoque2';
+import Login from './pages/LoginPage';
 
 function App() {
 
@@ -102,6 +103,7 @@ function App() {
         <Route exact path="/permissoes/Financeiro" element={<Financeiro/>} />
         <Route exact path="/permissoes/Relatorios" element={<Relatorios/>} />
         <Route exact path="/permissoes/Saidas" element={<Saidas/>} />
+        <Route exact path="/login" element={<Login/>} />
       </Routes>
     </>
   );
