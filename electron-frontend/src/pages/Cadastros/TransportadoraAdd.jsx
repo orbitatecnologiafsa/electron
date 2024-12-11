@@ -12,8 +12,11 @@ function TransportadorasAdd() {
   const [tipoP,setTipoP] = useState('');
   const [cepCnpj, setCepCnpj] = useState('');
   const [valueCnpj, setValueCnpj] = useState('');
-  const monucipioModal = [{codigo:'1', nome:'São Paulo'},{codigo:'2', nome:'Rio de Janeiro'},{codigo:'3', nome:'Belo Horizonte'}];
+
+  const [cep, setCep] = useState('');
   const [empresa,setEmpresa] = useState([]);
+  const [municipioModal,setMunicipioModal] = useState([]); 
+  const [estadoModal, setEstadoModal] = useState([]);
 
   const [formsData, setFormsData] = useState({
     index: "",
@@ -28,8 +31,8 @@ function TransportadorasAdd() {
     logradouro: '',
     numero: '',
     uf: '',
-    municipioId: '',
     bairro: '',
+    municipioId:'',
     complemento: '',
     celular: '',
     telefone: '',
@@ -75,11 +78,11 @@ function TransportadorasAdd() {
             nomeFantasia: '',
             cpfCnpj: '',
             cep: '',
-            municipioId: '',
             uf: '',
             bairro: '',
             logradouro: '',
             numero: '',
+            municipioId:'',
             complemento: '',
             dataDeNascimento: '',
             email: '',
@@ -121,6 +124,39 @@ function TransportadorasAdd() {
   };
   const navigate = useNavigate();
 
+  const handleCepChange = (e) => {
+    const value = e.target.value.replace(/\D/g, '');
+    const formattedValue = value.replace(/(\d{5})(\d{3})/, '$1-$2');
+  
+    setCep(formattedValue);
+    
+    if (formattedValue.length === 9) {
+      getDadosEnderecoCEP(value);
+    }
+  };
+
+  const getDadosEnderecoCEP = async (cepDigitado) => {
+    try {
+        const responseCEP = await axios.get(`https://viacep.com.br/ws/${cepDigitado}/json/`);
+        if (responseCEP.data.erro) {
+            throw new Error('CEP não encontrado.');
+        }
+        setFormsData((prevData) => ({
+            ...prevData,
+            logradouro: responseCEP.data.logradouro,
+            bairro: responseCEP.data.bairro,
+        }));
+        setError(null);
+    } catch (error) {
+        setError('Erro ao buscar CEP: ' + error.message);
+        setFormsData((prevData) => ({
+            ...prevData,
+            logradouro: '',
+            bairro: '',
+        }));
+    }
+  };
+
   const handleMunItemClick = (tipo,item) => {
     if(tipo === 'Municiopio'){
         formsData.municipioId = (item);
@@ -129,6 +165,10 @@ function TransportadorasAdd() {
     if(tipo ==='Empresa'){
       formsData.empresaId = (item);
       console.log("Empresa:",formsData.empresaId);
+    }
+    if(tipo === 'UF'){
+      formsData.uf = (item);
+      console.log("Estado:",formsData.uf);
     }
   };
 
@@ -142,7 +182,6 @@ function TransportadorasAdd() {
   const handleInputChange = (e) => {
     const { name, value } = e.target;
 
-    // Se o campo for "celular"
     if (name === "celular" || name === "telefone") {
       // Remove todos os caracteres não numéricos
       let formattedValue = value.replace(/\D/g, "");
@@ -168,8 +207,7 @@ function TransportadorasAdd() {
   const getCNPJ = async (value) => {
     try {
       const responseCnpj = await axios.get('https://open.cnpja.com/office/' + value);
-      console.log(responseCnpj.data);
-      // Atualiza os dados no estado
+
       setFormsData((prevData) => ({
         ...prevData,
         nomeRazaoSocial: responseCnpj.data.company.name,
@@ -181,10 +219,8 @@ function TransportadorasAdd() {
         telefone: responseCnpj.data.phones[0]?.area + responseCnpj.data.phones[0]?.number || '',
         bairro: responseCnpj.data.address.district,
         logradouro: responseCnpj.data.address.street,
-        uf: responseCnpj.data.address.state,
       }));
 
-      const responseUF = await axios.get(''+value)
     } catch (error) {
       console.error('Erro ao buscar dados do CNPJ:', error);
     }
@@ -202,7 +238,25 @@ function TransportadorasAdd() {
         }));
   
         setEmpresa(gruposTransformados);
-  
+
+        const responseM = await axios.get('http://localhost:8080/municipios');
+
+        gruposTransformados = responseM.data.map(item => ({
+          codigo: item.id,
+          nome: item.nome
+        }));
+
+        setMunicipioModal(gruposTransformados);
+
+        const responseE = await axios.get('http://localhost:8080/estados');
+
+        gruposTransformados = responseE.data.map(item => ({
+          codigo: item.id,
+          nome: item.nome,
+          sigla: item.uf
+        }));
+
+        setEstadoModal(gruposTransformados);
       } catch (error) {
         console.error('Erro ao buscar os dados', error);
       }
@@ -307,7 +361,7 @@ function TransportadorasAdd() {
                 </div>
                 <div className="flex flex-col">
                   <label className="block ml-1 text-sm font-medium leading-6 text-black">Empresa</label>
-                  <InputWBtn widthValue={29} heightValue={2.75} options={empresa} modalTitle="Escolha a Empresa" onSelect={handleMunItemClick} tipo={"Empresa"}/>
+                  <InputWBtn widthValue={29} heightValue={2.75} options={empresa} modalTitle="Escolha a Empresa" onSelect={handleMunItemClick} tipo={"Empresa"} valueSelect={1}/>
                 </div>
               </div>
 
@@ -408,8 +462,8 @@ function TransportadorasAdd() {
                   <input
                     type="text"
                     name="cep"
-                    value={formsData.cep}
-                    onChange={handleInputChange}
+                    value={cep}
+                    onChange={handleCepChange}
                     className="w-[21.3rem] h-11 px-3 py-2 rounded-md ring-inset focus:ring-2 focus:ring-indigo-600 disabled:bg-gray-300"
                     style={{ textTransform: 'uppercase' }}
                   />
@@ -421,8 +475,9 @@ function TransportadorasAdd() {
                     name="logradouro"
                     value={formsData.logradouro}
                     onChange={handleInputChange}
-                    className="w-[21.3rem] h-11 px-3 py-2 rounded-md ring-inset focus:ring-2 focus:ring-indigo-600 disabled:bg-gray-300"
+                    className="w-[21.3rem] h-11 px-3 py-2 rounded-md ring-inset focus:ring-2 focus:ring-indigo-600 bg-gray-300"
                     style={{ textTransform: 'uppercase' }}
+                    readOnly
                   />
                 </div>
 
@@ -448,26 +503,20 @@ function TransportadorasAdd() {
                     name="bairro"
                     value={formsData.bairro}
                     onChange={handleInputChange}
-                    className="w-[35rem] h-11 px-3 py-2 rounded-md ring-inset focus:ring-2 focus:ring-indigo-600 disabled:bg-gray-300"
+                    className="w-[29rem] h-11 px-3 py-2 rounded-md ring-inset focus:ring-2 focus:ring-indigo-600 bg-gray-300"
                     style={{ textTransform: 'uppercase' }}
+                    readOnly
                   />
                 </div>
 
                 <div className="flex flex-col">
                   <label className="block ml-1 text-sm font-medium leading-6 text-black">Municipio</label>
-                  <InputWBtn widthValue={21} heightValue={2.75} options={monucipioModal} modalTitle="Escolha o Municipio" onSelect={handleMunItemClick} tipo={"Municiopio"}/>
+                  <InputWBtn widthValue={24} heightValue={2.75} options={municipioModal} modalTitle="Escolha o Municipio" onSelect={handleMunItemClick} tipo={"Municiopio"} valueSelect={1}/>
                 </div>
 
                 <div className="flex flex-col">
                   <label className="block ml-1 text-sm font-medium leading-6 text-black">UF</label>
-                  <input
-                    type="text"
-                    name="uf"
-                    value={formsData.uf}
-                    onChange={handleInputChange}
-                    className="w-[4rem] h-11 px-3 py-2 rounded-md ring-inset focus:ring-2 focus:ring-indigo-600 disabled:bg-gray-300"
-                    style={{ textTransform: 'uppercase' }}
-                  />
+                  <InputWBtn widthValue={4} heightValue={2.75} options={estadoModal} modalTitle="Escolha o Estado" onSelect={handleMunItemClick} tipo={"UF"} valueSelect={2}/>
                 </div>
 
               </div>

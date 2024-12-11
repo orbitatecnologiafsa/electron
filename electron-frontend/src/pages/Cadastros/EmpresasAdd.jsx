@@ -18,6 +18,8 @@ function EmpresasAdd() {
   const [documentoValue, setDocumentoValue] = useState('');
   const [cep, setCep] = useState('');
   const [error, setError] = useState(null);
+  const [estadoModal, setEstadoModal] = useState([]);
+  const [municipioModal,setMunicipioModal] = useState([]); 
 
 
   const handleCepChange = (e) => {
@@ -162,6 +164,55 @@ function EmpresasAdd() {
     }
   };
 
+  useEffect(() => {
+    // Função para pegar os dados da API
+    const fetchData = async () => {
+      try {
+
+        const responseM = await axios.get('http://localhost:8080/municipios');
+
+        let gruposTransformados = responseM.data.map(item => ({
+          codigo: item.id,
+          nome: item.nome
+        }));
+
+        setMunicipioModal(gruposTransformados);
+
+        const responseE = await axios.get('http://localhost:8080/estados');
+
+        gruposTransformados = responseE.data.map(item => ({
+          codigo: item.id,
+          nome: item.nome,
+          sigla: item.uf
+        }));
+
+        setEstadoModal(gruposTransformados);
+  
+      } catch (error) {
+        console.error('Erro ao buscar os dados', error);
+      }
+    };
+    fetchData();
+
+    
+  }, []);
+
+  const handleInputBtn = (tipo,item) => {
+
+    if(tipo === 'Municipio'){
+        formData.municipioId = (item);
+        console.log("Municipio:",formsData.municipioId);
+    }else if(tipo === 'Empresa'){
+        formData.empresaId = (item);
+        console.log("Empresa:",formsData.empresaId);
+    }else if(tipo === 'UF'){
+        formData.uf = (item);
+        console.log("Estado:",formsData.uf);
+    }
+    console.log("item:"+item);
+    console.log(formsData);
+  };
+
   const formatarCPF = (cpf) => {
     return cpf
       .replace(/\D/g, '')
@@ -203,19 +254,15 @@ function EmpresasAdd() {
         complemento: value,
       }));
       return;
-    }
-  
-    if (name === "numero") {
+    }else if (name === "numero") {
       // Atualiza o número
       setFormData((prevData) => ({
         ...prevData,
         numero: value,
       }));
       return;
-    }
-  
-    if (name === "cpfCnpj") {
-      // Aqui tratamos os campos de CPF e CNPJ
+    } else if (name === "cpfCnpj") {
+      
       const numericValue = value.replace(/\D/g, '');
       let formattedValue = '';
       let maxLength = 11;
@@ -225,7 +272,7 @@ function EmpresasAdd() {
         setDocumentoValue('CPF');
         setFormData((prevData) => ({
           ...prevData,
-          tipoPessoa: 'PESSOA_FISICA', // Pessoa Física
+          tipoPessoa: 'PESSOA_FISICA',
         }));
         maxLength = 11;
       } else if (numericValue.length <= 14) {
@@ -233,28 +280,39 @@ function EmpresasAdd() {
         setDocumentoValue('CNPJ');
         setFormData((prevData) => ({
           ...prevData,
-          tipoPessoa: 'PESSOA_JURIDICA', // Pessoa Jurídica
+          tipoPessoa: 'PESSOA_JURIDICA',
         }));
         maxLength = 14;
-        getDadosCNPJ(numericValue); // Chama a API para obter dados do CNPJ
+        getDadosCNPJ(numericValue);
       }
-  
+      
       const finalValue = numericValue.slice(0, maxLength);
       setDocDigitado(formattedValue);
   
-      // Atualiza o valor do CPF/CNPJ no formData
       setFormData((prevData) => ({
         ...prevData,
         cpfCnpj: finalValue,
       }));
       return;
+    }else if (name === "celular" || name === "telefone") {
+      let formattedValue = value.replace(/\D/g, "");
+
+      if (formattedValue.length > 11) {
+        formattedValue = formattedValue.slice(0, 11); // Limita a 11 caracteres
+      }
+
+      if (formattedValue.length <= 10) {
+        formattedValue = formattedValue.replace(/^(\d{2})(\d{0,4})(\d{0,4})$/, "($1) $2-$3");
+      } else {
+        formattedValue = formattedValue.replace(/^(\d{2})(\d{0,5})(\d{0,4})$/, "($1) $2-$3");
+      }
+      setFormData((prevData) => ({ ...prevData, [name]: formattedValue }));
+    }else{
+      setFormData((prevData) => ({
+        ...prevData,
+        [name]: value,
+      }));
     }
-    
-    // Aqui é o fallback para qualquer outro campo não tratado
-    setFormData((prevData) => ({
-      ...prevData,
-      [name]: value,
-    }));
   };
   
   
@@ -390,11 +448,11 @@ function EmpresasAdd() {
                 </div>
                 <div className="flex flex-col">
                   <label className="block ml-1 text-sm font-medium leading-6 text-black">Tipo de Unidade</label>
-                  <InputWBtn widthValue={21} heightValue={2.75} options={tipoUnidade} modalTitle="Escolha o tipo" onSelect={handleMunItemClick} tipo={"Tipo da Unidade"}/>
+                  <InputWBtn widthValue={16} heightValue={2.75} options={tipoUnidade} modalTitle="Escolha o tipo"  valueSelect={1} onSelect={handleMunItemClick} tipo={"Tipo da Unidade"}/>
                 </div>
                 <div className="flex flex-col">
                   <label className="block ml-1 text-sm font-medium leading-6 text-black">Regime Tributário</label>
-                  <InputWBtn widthValue={21} heightValue={2.75} options={regimeTributario} modalTitle="Escolha o Regime Tributário" valueSelect={0} onSelect={handleMunItemClick} tipo={"Regime Tributário"}/>
+                  <InputWBtn widthValue={14.8} heightValue={2.75} options={regimeTributario} modalTitle="Escolha o Regime Tributário" valueSelect={0} onSelect={handleMunItemClick} tipo={"Regime Tributário"}/>
                 </div>
               </div>
 
@@ -489,7 +547,7 @@ function EmpresasAdd() {
                     onChange={handleInputChange}
                     style={{ textTransform: 'uppercase' }}
                     readOnly
-                    className="w-[32.5rem] h-11 px-3 py-2 rounded-md ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-indigo-600"
+                    className="w-[32.5rem] h-11 px-3 py-2 rounded-md ring-inset focus:ring-2 focus:ring-indigo-600 bg-gray-300"
                   />
                 </div>
               </div>
@@ -498,12 +556,12 @@ function EmpresasAdd() {
               <div className="flex flex-col">
                 <label className="block ml-1 text-sm font-medium leading-6 text-black">Número</label>
                 <input
-                  type="text"
+                  type="number"
                   name="numero"
                   value={formData.numero}
                   onChange={handleInputChange}
                   style={{ textTransform: 'uppercase' }}
-                  className="w-[7rem] h-11 px-3 py-2 rounded-md ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-indigo-600"
+                  className="w-[7rem] h-11 h-11 px-3 py-2 rounded-md ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-indigo-600"
                 />
               </div>
 
@@ -516,33 +574,17 @@ function EmpresasAdd() {
                     onChange={handleInputChange}
                     style={{ textTransform: 'uppercase' }}
                     readOnly
-                    className="w-[28rem] h-11 px-3 py-2 rounded-md ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-indigo-600"
+                    className="w-[28rem] h-11 px-3 py-2 rounded-md ring-inset focus:ring-2 focus:ring-indigo-600 bg-gray-300"
                   />
                 </div>
                 <div className="flex flex-col">
-                  <label className="block ml-1 text-sm font-medium leading-6 text-black">Município</label>
-                  <input
-                    type="text"
-                    name="municipio"
-                    value={formData.municipio}
-                    onChange={handleInputChange}
-                    style={{ textTransform: 'uppercase' }}
-                    readOnly
-                    className="w-[20rem] h-11 px-3 py-2 rounded-md ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-indigo-600"
-                  />
+                  <label className="block ml-1 text-sm font-medium leading-6 text-black">Municipio</label>
+                  <InputWBtn widthValue={23.5} heightValue={2.75} options={municipioModal} modalTitle="Escolha o Municipio" onSelect={handleInputBtn} tipo={"Municipio"} valueSelect={1}/>
                 </div>
 
                 <div className="flex flex-col">
-                  <label className="block ml-1 text-sm font-medium leading-6 text-black">Estado</label>
-                  <input
-                    type="text"
-                    name="uf"
-                    value={formData.uf}
-                    onChange={handleInputChange}
-                    style={{ textTransform: 'uppercase' }}
-                    readOnly
-                    className="w-[4rem] h-11 px-3 py-2 rounded-md ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-indigo-600"
-                  />
+                  <label className="block ml-1 text-sm font-medium leading-6 text-black">UF</label>
+                  <InputWBtn widthValue={4.5} heightValue={2.75} options={estadoModal} modalTitle="Escolha o Estado" onSelect={handleInputBtn} tipo={"UF"} valueSelect={2}/>
                 </div>
               </div>
 
@@ -554,6 +596,7 @@ function EmpresasAdd() {
                     name="complemento"
                     value={formData.complemento}
                     onChange={handleInputChange}
+                    readOnly
                     style={{ textTransform: 'uppercase' }}
                     className="w-[1065px] h-11 px-3 py-2 rounded-md ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-indigo-600"
                   />

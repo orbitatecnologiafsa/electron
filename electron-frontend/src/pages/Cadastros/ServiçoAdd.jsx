@@ -1,23 +1,16 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect} from 'react';
 import { useNavigate } from 'react-router-dom';
 import Sidebar from '../../partials/Sidebar';
 import Header from '../../partials/Header';
 import axios from 'axios';
 import DropDown from '../../components/DropDown';
-import { Menu, MenuButton, MenuItems, MenuItem } from '@headlessui/react';
-
+import InputWBtn from '../../components/InputWBtn';
 
 const ServiçoAdd = () => {
 
-  const [docDigitado, setDocDigitado] = useState('');
-
-  const [documentoValue, setDocumentoValue] = useState('');
-  const [cep, setCep] = useState('');
   const [UnSelected, setUnSelected] = useState("");
-  const [grupoSelected, setGrupoSelected] = useState('');
   const [atividadeSelected, setAtvSelected] = useState('');
-
-  const [error, setError] = useState(null);
+  const [grupoModal, setGrupoModal]= useState([]);
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
   const [formData, setFormData] = useState({
@@ -42,14 +35,33 @@ const ServiçoAdd = () => {
     'Grupo C',
   ];
   
-  const dropUn = [
-    "US", "MX", "BA",
-  ]
+  const dropUn = ["AM","AMPOLA","AR","BALDE","BANDEJ","BARRA","BISNAG","BLOCO","CART","CD","CENTO","CJ","CM","CM2","CX","DISP","DZ","FARDO","FRASCO","GAL","GALÃO","GF","GR","HR","JOGO","K","KG","KIT","LATAO","LT","M2","M3","MC","MI","MILHEI","ML","MT","ND","PACOTE","PARES","PC","RESMA","ROLO","SACO","SACOLA","ST","TAMBOR","TON","TUBO","UN"];
 
   const dropAtv = [
     "programação", "Processamento de dados", "Analise e desenvolvimento de sistemas",
   ]
   
+  useEffect(() => {
+    // Função para pegar os dados da API
+    const fetchData = async () => {
+      try {
+        const response = await axios.get('http://localhost:8080/grupos-prod-serv');
+
+        let gruposTransformados = response.data.map(item => ({
+          codigo: item.id,
+          nome: item.nome
+        }));
+  
+        setGrupoModal(gruposTransformados);
+  
+      } catch (error) {
+        console.error('Erro ao buscar os dados', error);
+      }
+    };
+  
+    fetchData();
+  }, []);
+
   {/* Post ADD Tabela */}
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -83,12 +95,16 @@ const ServiçoAdd = () => {
   };
 
   {/*Itens do Menu */}
-  const handleMenuItemClick = (item, index) => {
+  const handleMenuItemClick = (index, item) => {
+    console.log("item:",item);
+    console.log("index:",index);
+
     if (index == "UN"){
       setUnSelected(item);
+      console.log("UnSelected:"+UnSelected);
       formData.un = (item);
     }else if( index == "Grupo"){
-      setGrupoSelected(item);
+      console.log(item);
       formData.grupo = (item);
     }else if( index == "Atividade"){
       setAtvSelected(item);
@@ -105,7 +121,7 @@ const ServiçoAdd = () => {
   const handleInputChange = (e) => {
     const { name, value } = e.target;
 
-    setFormsData((prevData) => ({ ...prevData, [name]: value }));
+    setFormData((prevData) => ({ ...prevData, [name]: value }));
   };
 
   
@@ -174,13 +190,14 @@ const ServiçoAdd = () => {
 
               <div className="flex flex-col md:flex-row gap-4 justify-between">
                 <div className="flex flex-col">
-                  <DropDown labelDrop="UN - Unid. Saída" title={"Selecione a UN"} ValorBtn={UnSelected} listItens={dropUn} onSelect={(item) => handleMenuItemClick(item,'UN')}/>
+                  <DropDown labelDrop="UN - Unid. Saída" title={"Selecione a unidade"} ValorBtn={UnSelected} listItens={dropUn} onSelect={(item) => handleMenuItemClick('UN',item)}/>
                 </div>
                 <div className="flex flex-col">
-                  <DropDown labelDrop="Atividade" title={"Selecione a atividade"} ValorBtn={atividadeSelected} listItens={dropAtv} onSelect={(item) => handleMenuItemClick(item,'Atividade')}/>
+                  <DropDown labelDrop="Atividade" title={"Selecione a atividade"} ValorBtn={atividadeSelected} listItens={dropAtv} onSelect={(item) => handleMenuItemClick('Atividade',item)}/>
                 </div>
                 <div className="flex flex-col">
-                  <DropDown labelDrop="Grupo" title={"Selecione um grupo"} ValorBtn={grupoSelected} listItens={dropGrupo} onSelect={(item) => handleMenuItemClick(item,'Grupo')}/>
+                  <label className="block ml-1 text-sm font-medium leading-6 text-black">Grupo</label>
+                  <InputWBtn widthValue={16} heightValue={2.75} options={grupoModal} modalTitle="Escolha o grupo" onSelect={handleMenuItemClick} tipo={"Grupo"} valueSelect={1}/>
                 </div>
               </div>
 
@@ -208,7 +225,7 @@ const ServiçoAdd = () => {
                 <div className="flex flex-col">
                   <label className="block ml-1 text-sm font-medium leading-6 text-black">Custo</label>
                   <input
-                    type="text"
+                    type="number"
                     name="custo"
                     value={formData.custo}
                     onChange={handleInputChange}
@@ -219,7 +236,7 @@ const ServiçoAdd = () => {
                 <div className="flex flex-col">
                   <label className="block ml-1 text-sm font-medium leading-6 text-black">Preço de venda</label>
                   <input
-                    type="text"
+                    type="number"
                     name="precoVenda"
                     value={formData.precoVenda}
                     onChange={handleInputChange}
@@ -230,7 +247,7 @@ const ServiçoAdd = () => {
                 <div className="flex flex-col">
                   <label className="block ml-1 text-sm font-medium leading-6 text-black">Preço de revenda</label>
                   <input
-                    type="text"
+                    type="number"
                     name="precoRevenda"
                     value={formData.precoRevenda}
                     onChange={handleInputChange}
@@ -272,20 +289,6 @@ const ServiçoAdd = () => {
                     className="w-[66rem] px-3 py-2 rounded-md ring-inset focus:ring-2 focus:ring-indigo-600"
                     style={{ textTransform: 'uppercase' }}
                   />
-                </div>
-              </div>
-
-              <div className="flex flex-col md:flex-row gap-4">
-                <div className="flex flex-col">
-                  <label className="block ml-1 text-sm font-medium leading-6 text-black">Descrição</label>
-                  <textarea
-                          type="text"
-                          name="descricao"
-                          value={formData.descricao}
-                          onChange={handleInputChange}
-                          className="w-[66rem] h-[45px] resize-none px-3 py-2 rounded-md ring-inset focus:ring-2 focus:ring-indigo-600"
-                          style={{ textTransform: 'uppercase' }}
-                      />
                 </div>
               </div>
 

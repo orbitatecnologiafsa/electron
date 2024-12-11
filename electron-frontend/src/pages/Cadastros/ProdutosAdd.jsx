@@ -42,14 +42,14 @@ function ProdutosAdd() {
   const [UnTributacao, setUnTributacao] = useState("");
   const [TControle, setTControle] = useState("");
 
-  const [grupoModal, setGrupoModal]= useState([{codigo:'1',name_fantasia:'Grupo A'},{codigo:'2',name_fantasia:'Grupo B'}]);
-  const [cestModal, setCestModal]= useState([{codigo:'1',tributo_cest_codigo:'12345678'},{codigo:'2',tributo_cest_codigo:'12349999'}]);
+  const [grupoModal, setGrupoModal]= useState([]);
   const [ncmModal, setNcmModal]= useState([{codigo:'1',tributo_cest_codigo:'12345678'},{codigo:'2',tributo_cest_codigo:'12349999'}]);
   const [tribEstadualModal, setTribEstadualModal]= useState([{codigo:'13',nome:'Nome da Tributação Estadual Exemplo'}]);
   const [tribFederalModal, setTribFederalModal]= useState([{codigo:'1',nome:'Exemplo1'}]);
 
   const [anpModal, setAnpModal]= useState([{codigo:'10101',name_fantasia:'Grupo A'},{codigo:'20202',name_fantasia:'Grupo B'}]);
   const [fatorConversao, setFatorConversao]= useState([{codigo:'5',fator_cenversao_codigo:'A'}]);
+  
   const handleMenuItemClick = (item, index) => {
 
     if (index == "UN"){
@@ -295,17 +295,17 @@ function ProdutosAdd() {
               <div className="flex flex-col md:flex-row gap-4">
                 <div className="flex flex-col">
                   <label className="block ml-1 text-sm font-medium leading-6 text-black">Grupo</label>
-                  <InputWBtn widthValue={16} options={grupoModal} modalTitle="Escolha o grupo" onSelect={onSelectedOptionModal} tipo={"Grupo"}/>
+                  <InputWBtn widthValue={16} heightValue={2.75} options={grupoModal} modalTitle="Escolha o grupo" onSelect={onSelectedOptionModal} tipo={"Grupo"} valueSelect={1}/>
                 </div>
 
                 <div className="flex flex-col">
                   <label className="block ml-1 text-sm font-medium leading-6 text-black">Codigo Anp</label>
-                  <InputWBtn widthValue={16} options={anpModal} modalTitle="Escolha o codigo anp" onSelect={onSelectedOptionModal} tipo={"Anp"}/>
+                  <InputWBtn widthValue={16} heightValue={2.75} options={anpModal} modalTitle="Escolha o codigo anp" onSelect={onSelectedOptionModal} valueSelect={1} tipo={"Anp"}/>
                 </div>
 
                 <div className="flex flex-col">
                   <label className="block ml-1 text-sm font-medium leading-6 text-black">Fator de conversão</label>
-                  <InputWBtn widthValue={22} options={fatorConversao} modalTitle="Escolha o fator de conversão" onSelect={onSelectedOptionModal} tipo={"FConversao"}/>
+                  <InputWBtn widthValue={22} heightValue={2.75} options={fatorConversao} modalTitle="Escolha o fator de conversão" onSelect={onSelectedOptionModal} valueSelect={1} tipo={"FConversao"}/>
                 </div>
               </div>
 
@@ -352,7 +352,7 @@ function ProdutosAdd() {
                 <div className="flex flex-col">
                   <label className="block ml-1 text-sm font-medium leading-6 text-black">Quantidade</label>
                   <input
-                    type="text"
+                    type="number"
                     name="quantidade"
                     value={formData.quantidade}
                     onChange={handleInputChange}
@@ -371,7 +371,7 @@ function ProdutosAdd() {
               <div className="flex flex-col">
                   <label className="block ml-1 text-sm font-medium leading-6 text-black">Quantidade bloqueada</label>
                   <input
-                    type="text"
+                    type="number"
                     name="bloqueado"
                     value={formData.bloqueado}
                     onChange={handleInputChange}
@@ -382,7 +382,7 @@ function ProdutosAdd() {
                 <div className="flex flex-col">
                   <label className="block ml-1 text-sm font-medium leading-6 text-black">Quantidade disponível</label>
                   <input
-                    type="text"
+                    type="number"
                     name="disponivel"
                     value={formData.disponivel}
                     onChange={handleInputChange}
@@ -402,7 +402,7 @@ function ProdutosAdd() {
                 <div className="flex flex-col">
                   <label className="block ml-1 text-sm font-medium leading-6 text-black">Custo</label>
                   <input
-                    type="text"
+                    type="number"
                     name="precoCusto"
                     value={formData.precoCusto}
                     onChange={handleInputChange}
@@ -413,7 +413,7 @@ function ProdutosAdd() {
                 <div className="flex flex-col">
                   <label className="block ml-1 text-sm font-medium leading-6 text-black">Custo médio</label>
                   <input
-                    type="text"
+                    type="number"
                     name="precoCustoMedio"
                     value={formData.precoCustoMedio}
                     onChange={handleInputChange}
@@ -428,7 +428,7 @@ function ProdutosAdd() {
               <div className="flex flex-col">
                   <label className="block ml-1 text-sm font-medium leading-6 text-black">Preço de venda</label>
                   <input
-                    type="text"
+                    type="number"
                     name="precoVenda"
                     value={formData.precoVenda}
                     onChange={handleInputChange}
@@ -439,7 +439,7 @@ function ProdutosAdd() {
                 <div className="flex flex-col">
                   <label className="block ml-1 text-sm font-medium leading-6 text-black">Preço de revenda</label>
                   <input
-                    type="text"
+                    type="number"
                     name="precoRevenda"
                     value={formData.precoRevenda}
                     onChange={handleInputChange}
@@ -458,11 +458,11 @@ function ProdutosAdd() {
               <div className="flex flex-col md:flex-row gap-4">
                 <div className="flex flex-col">
                   <label className="block ml-1 text-sm font-medium leading-6 text-black"> Importo NCM</label>
-                  <InputWBtn widthValue={40.5} options={ncmModal} modalTitle="Escolha o NCM" onSelect={onSelectedOptionModal} tipo={"ncm"}/>
+                  <InputWBtn widthValue={40.5} heightValue={2.75} options={ncmModal} modalTitle="Escolha o NCM" onSelect={onSelectedOptionModal} valueSelect={1} tipo={"ncm"}/>
                 </div>
                 <div className="flex flex-col">
                   <label className="block ml-1 text-sm font-medium leading-6 text-black">CEST</label>
-                  <InputWBtn widthValue={18} options={grupoModal} modalTitle="Escolha o Cest" onSelect={onSelectedOptionModal} tipo={"Cest"}/>
+                  <InputWBtn widthValue={18} heightValue={2.75} options={grupoModal} modalTitle="Escolha o Cest" onSelect={onSelectedOptionModal} valueSelect={1} tipo={"Cest"}/>
                 </div>
               </div>
               
@@ -470,7 +470,7 @@ function ProdutosAdd() {
               <div className="flex flex-col md:flex-row gap-4">
               <div className="flex flex-col">
                   <label className="block ml-1 text-sm font-medium leading-6 text-black">Trib. Estadual</label>
-                  <InputWBtn widthValue={63} options={tribEstadualModal} modalTitle="Escolha o Trib. Estadual" onSelect={onSelectedOptionModal} tipo={"Trib. Estadual"}/>
+                  <InputWBtn widthValue={63} heightValue={2.75} options={tribEstadualModal} modalTitle="Escolha o Trib. Estadual" onSelect={onSelectedOptionModal} valueSelect={1} tipo={"Trib. Estadual"}/>
                 </div>
               </div>
 
@@ -478,7 +478,7 @@ function ProdutosAdd() {
               <div className="flex flex-col md:flex-row gap-4">
                 <div className="flex flex-col">
                   <label className="block ml-1 text-sm font-medium leading-6 text-black">Trib. Federal</label>
-                   <InputWBtn widthValue={63} options={tribFederalModal} modalTitle="Escolha o Trib. Federal" onSelect={onSelectedOptionModal} tipo={"Trib. Federal"}/>
+                   <InputWBtn widthValue={63} heightValue={2.75} options={tribFederalModal} modalTitle="Escolha o Trib. Federal" onSelect={onSelectedOptionModal}  valueSelect={1} tipo={"Trib. Federal"}/>
                 </div>
               </div>
               <div className="flex justify-end gap-4">

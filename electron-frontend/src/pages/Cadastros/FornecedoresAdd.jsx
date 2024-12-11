@@ -4,15 +4,15 @@ import Sidebar from '../../partials/Sidebar';
 import Header from '../../partials/Header';
 import axios from 'axios';
 import DropDown from '../../components/DropDown';
+import InputWBtn from '../../components/InputWBtn';
 
 function FornecesoresAdd() {
 
-  const [docDigitado, setDocDigitado] = useState('');
-
   const [documentoValue, setDocumentoValue] = useState('');
-  const [isDocumentoSelected, setIsDocumentoSelected] = useState(false);
-  const [tipoCliente, setTipoCliente] = useState('-');
-  const [uf, setUf] = useState('');
+  const [municipioModal,setMunicipioModal] = useState([]); 
+  const [estadoModal, setEstadoModal] = useState([]);
+
+  const [cep, setCep] = useState('');
   const [cepCnpj, setCepCnpj] = useState('');
   const [valueCnpj, setValueCnpj] = useState('');
 
@@ -29,7 +29,7 @@ function FornecesoresAdd() {
     logradouro: '',
     numero: '',
     uf: '',
-    município: '',
+    municipioId: '',
     bairro: '',
     complemento: '',
     celular: '',
@@ -46,13 +46,90 @@ function FornecesoresAdd() {
     }else if(item === 'Juridica'){
         setCepCnpj('CNPJ');
         formsData.cpf_cnpj = (item);
-    }else if(item === 'UF'){
-        formsData.uf = (item);
-        setUf(item);
     }
   };
 
-  const [error, setError] = useState(null);
+  const handleCepChange = (e) => {
+    const value = e.target.value.replace(/\D/g, '');
+    const formattedValue = value.replace(/(\d{5})(\d{3})/, '$1-$2');
+  
+    setCep(formattedValue);
+    
+    if (formattedValue.length === 9) {
+      getDadosEnderecoCEP(value);
+    }
+  };
+
+  const getDadosEnderecoCEP = async (cepDigitado) => {
+    try {
+        const responseCEP = await axios.get(`https://viacep.com.br/ws/${cepDigitado}/json/`);
+        if (responseCEP.data.erro) {
+            throw new Error('CEP não encontrado.');
+        }
+        setFormsData((prevData) => ({
+            ...prevData,
+            logradouro: responseCEP.data.logradouro,
+            bairro: responseCEP.data.bairro,
+        }));
+        setError(null);
+    } catch (error) {
+        setError('Erro ao buscar CEP: ' + error.message);
+        setFormsData((prevData) => ({
+            ...prevData,
+            logradouro: '',
+            bairro: '',
+        }));
+    }
+  };
+
+  const handleInputBtn = (tipo,item) => {
+
+    if(tipo === 'Municipio'){
+        formsData.municipioId = (item);
+        console.log("Municipio:",formsData.municipioId);
+    }else if(tipo === 'Empresa'){
+        formsData.empresaId = (item);
+        console.log("Empresa:",formsData.empresaId);
+    }else if(tipo === 'UF'){
+        formsData.uf = (item);
+        console.log("Estado:",formsData.uf);
+    }
+    console.log("item:"+item);
+    console.log(formsData);
+  };
+
+  useEffect(() => {
+    // Função para pegar os dados da API
+    const fetchData = async () => {
+      try {
+
+        const responseM = await axios.get('http://localhost:8080/municipios');
+
+        let gruposTransformados = responseM.data.map(item => ({
+          codigo: item.id,
+          nome: item.nome
+        }));
+
+        setMunicipioModal(gruposTransformados);
+
+        const responseE = await axios.get('http://localhost:8080/estados');
+
+        gruposTransformados = responseE.data.map(item => ({
+          codigo: item.id,
+          nome: item.nome,
+          sigla: item.uf
+        }));
+
+        setEstadoModal(gruposTransformados);
+  
+      } catch (error) {
+        console.error('Erro ao buscar os dados', error);
+      }
+    };
+    fetchData();
+
+    
+  }, []);
 
   const [sidebarOpen, setSidebarOpen] = useState(false);
   {/* Post ADD Tabela */}
@@ -72,7 +149,7 @@ function FornecesoresAdd() {
             logradouro: '',
             numero: '',
             uf: '',
-            município: '',
+            municipioId: '',
             bairro: '',
             complemento: '',
             celular: '',
@@ -93,15 +170,30 @@ function FornecesoresAdd() {
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
-    setFormsData((prevData) => ({ ...prevData, [name]: value }));
+    if (name === "celular" || name === "telefone") {
+      let formattedValue = value.replace(/\D/g, "");
+
+      if (formattedValue.length > 11) {
+        formattedValue = formattedValue.slice(0, 11); // Limita a 11 caracteres
+      }
+
+      if (formattedValue.length <= 10) {
+        formattedValue = formattedValue.replace(/^(\d{2})(\d{0,4})(\d{0,4})$/, "($1) $2-$3");
+      } else {
+        formattedValue = formattedValue.replace(/^(\d{2})(\d{0,5})(\d{0,4})$/, "($1) $2-$3");
+      }
+
+      setFormsData((prevData) => ({ ...prevData, [name]: formattedValue }));
+    } else {
+      setFormsData((prevData) => ({ ...prevData, [name]: value }));
+    }
     setValueCnpj(value);
   };
 
   const getCNPJ = async (value) => {
     try {
       const responseCnpj = await axios.get('https://open.cnpja.com/office/' + value);
-      
-      // Atualiza os dados no estado
+
       setFormsData((prevData) => ({
         ...prevData,
         nome_razao: responseCnpj.data.company.name,
@@ -152,7 +244,7 @@ function FornecesoresAdd() {
                    <DropDown title={"Tipo de Fornecedor"} ValorBtn={cepCnpj} listItens={["Fisica", "Juridica"]} onSelect={(item) => handleMenuItemClick(item)}/>
                 </div>
                 <div className="flex flex-col">
-                <label className="block ml-1 text-sm font-medium leading-6 text-black">{ cepCnpj ? cepCnpj : 'CPF'}</label>
+                  <label className="block ml-1 text-sm font-medium leading-6 text-black">{ cepCnpj ? cepCnpj : 'CPF'}</label>
                   <input
                     type="text"
                     name="cpf/cnpj"
@@ -176,8 +268,6 @@ function FornecesoresAdd() {
                     <label className="text-base">Ativo</label>
                 </div>
               </div>
-
-              {/*Nome e fantasia */}
 
               <div className="flex flex-col md:flex-row gap-4">
                 <div className="flex flex-col">
@@ -211,7 +301,6 @@ function FornecesoresAdd() {
                 <hr style={{ border: '1px solid #5E16ED' }} />
               </h2>
 
-              {/* Aréa do Contato*/}
               <div className="flex flex-col md:flex-row gap-4">
               <div className="flex flex-col">
                   <label className="block ml-1 text-sm font-medium leading-6 text-black">Contato</label>
@@ -242,7 +331,7 @@ function FornecesoresAdd() {
                     name="telefone"
                     value={formsData.telefone}
                     onChange={handleInputChange}
-                    className="w-[22rem] h-11 px-3 py-2 rounded-md ring-inset focus:ring-2 focus:ring-indigo-600 disabled:bg-gray-300"
+                    className="w-[21.5rem] h-11 px-3 py-2 rounded-md ring-inset focus:ring-2 focus:ring-indigo-600 disabled:bg-gray-300"
                     style={{ textTransform: 'uppercase' }}
                   />
                 </div>
@@ -256,13 +345,12 @@ function FornecesoresAdd() {
                     name="email"
                     value={formsData.email}
                     onChange={handleInputChange}
-                    className="w-[66rem] h-11 px-3 py-2 rounded-md ring-inset focus:ring-2 focus:ring-indigo-600 disabled:bg-gray-300"
+                    className="w-[66.5rem] h-11 px-3 py-2 rounded-md ring-inset focus:ring-2 focus:ring-indigo-600 disabled:bg-gray-300"
                     style={{ textTransform: 'uppercase' }}
                   />
                 </div>
               </div>
 
-              {/* Aréa da Registro*/}
               <div className="flex flex-col md:flex-row gap-4">
                 <div className="flex flex-col">
                   <label className="block ml-1 text-sm font-medium leading-6 text-black">IE - Inscrição Estadual</label>
@@ -302,8 +390,8 @@ function FornecesoresAdd() {
                   <input
                     type="text"
                     name="cep"
-                    value={formsData.cep}
-                    onChange={handleInputChange}
+                    value={cep}
+                    onChange={handleCepChange}
                     className="w-[21.3rem] h-11 px-3 py-2 rounded-md ring-inset focus:ring-2 focus:ring-indigo-600 disabled:bg-gray-300"
                     style={{ textTransform: 'uppercase' }}
                   />
@@ -314,15 +402,16 @@ function FornecesoresAdd() {
                     type="text"
                     name="logradouro"
                     value={formsData.logradouro}
+                    readOnly
                     onChange={handleInputChange}
-                    className="w-[21.3rem] h-11 px-3 py-2 rounded-md ring-inset focus:ring-2 focus:ring-indigo-600 disabled:bg-gray-300"
+                    className="w-[21rem] h-11 px-3 py-2 rounded-md ring-inset focus:ring-2 focus:ring-indigo-600 bg-gray-300"
                     style={{ textTransform: 'uppercase' }}
                   />
                 </div>
                 <div className="flex flex-col">
                   <label className="block ml-1 text-sm font-medium leading-6 text-black">Numero</label>
                   <input
-                    type="text"
+                    type="number"
                     name="numero"
                     value={formsData.numero}
                     onChange={handleInputChange}
@@ -340,33 +429,21 @@ function FornecesoresAdd() {
                     type="text"
                     name="bairro"
                     value={formsData.bairro}
+                    readOnly
                     onChange={handleInputChange}
-                    className="w-[40.5rem] h-11 px-3 py-2 rounded-md ring-inset focus:ring-2 focus:ring-indigo-600 disabled:bg-gray-300"
+                    className="w-[29.5rem] h-11 px-3 py-2 rounded-md ring-inset focus:ring-2 focus:ring-indigo-600 bg-gray-300"
                     style={{ textTransform: 'uppercase' }}
                   />
                 </div>
 
                 <div className="flex flex-col">
                   <label className="block ml-1 text-sm font-medium leading-6 text-black">Municipio</label>
-                  <input
-                    type="text"
-                    name="município"
-                    value={formsData.município}
-                    onChange={handleInputChange}
-                    className="w-[20.5rem] h-11 px-3 py-2 rounded-md ring-inset focus:ring-2 focus:ring-indigo-600 disabled:bg-gray-300"
-                    style={{ textTransform: 'uppercase' }}
-                  />
+                  <InputWBtn widthValue={23.5} heightValue={2.75} options={municipioModal} modalTitle="Escolha o Municipio" onSelect={handleInputBtn} tipo={"Municipio"} valueSelect={1}/>
                 </div>
+
                 <div className="flex flex-col">
                   <label className="block ml-1 text-sm font-medium leading-6 text-black">UF</label>
-                  <input
-                    type="text"
-                    name="uf"
-                    value={formsData.uf}
-                    onChange={handleInputChange}
-                    className="w-[3rem] h-11 px-3 py-2 rounded-md ring-inset focus:ring-2 focus:ring-indigo-600 disabled:bg-gray-300"
-                    style={{ textTransform: 'uppercase' }}
-                  />
+                  <InputWBtn widthValue={4.5} heightValue={2.75} options={estadoModal} modalTitle="Escolha o Estado" onSelect={handleInputBtn} tipo={"UF"} valueSelect={2}/>
                 </div>
               </div>
 
@@ -378,7 +455,7 @@ function FornecesoresAdd() {
                     name="complemento"
                     value={formsData.complemento}
                     onChange={handleInputChange}
-                    className="w-[32.5rem] h-11 px-3 py-2 rounded-md ring-inset focus:ring-2 focus:ring-indigo-600 disabled:bg-gray-300"
+                    className="w-[32rem] h-11 px-3 py-2 rounded-md ring-inset focus:ring-2 focus:ring-indigo-600 disabled:bg-gray-300"
                     style={{ textTransform: 'uppercase' }}
                   />
                 </div>

@@ -8,20 +8,22 @@ import DropDown from '../../components/DropDown';
 import InputWBtn from '../../components/InputWBtn';
 
 const VendedoresAdd = () => {
-    
-  const [docDigitado, setDocDigitado] = useState('');
 
   const [documentoValue, setDocumentoValue] = useState('');
   const [cepCnpj, setCepCnpj] = useState('');
   const [tipoDrop, setTipoDrop] = useState('');
   const [baseCal, setBaseCal] = useState('');
-  const [cepUf, setUf] = useState('');
-  const [tipoPessoa, setTipoPessoa] = useState('');
-  const [empresa,setEmpresa] = useState([]);
-  const monucipioModal = [{codigo:'1', nome:'São Paulo'},{codigo:'2', nome:'Rio de Janeiro'},{codigo:'3', nome:'Belo Horizonte'}];
-  const [valueCnpj, setValueCnpj] = useState('');
-  const [municipio,setMunicipio] = useState('');
 
+  const [tipoPessoa, setTipoPessoa] = useState('');
+  
+  const [cep, setCep] = useState('');
+
+  const [empresa,setEmpresa] = useState([]);
+  const [municipioModal,setMunicipioModal] = useState([]); 
+  const [estadoModal, setEstadoModal] = useState([]);
+
+  const [valueCnpj, setValueCnpj] = useState('');
+  
   const dropTipoComissao = [
     'Total da venda',
     'Parcela Recebida',
@@ -40,7 +42,6 @@ const VendedoresAdd = () => {
     cpfCnpj: '',
     cep: '',
     nomeExibicao: '',
-    municipioId: '',
     uf: '',
     desconto:'',
     comissao:'',
@@ -52,6 +53,7 @@ const VendedoresAdd = () => {
     email: '',
     telefone: '',
     entidade: '',
+    municipioId: '',
     dataDeNascimento: '',
     celular: '',
     contato: '',
@@ -61,8 +63,43 @@ const VendedoresAdd = () => {
     empresaId: '',
   });
   
+  const handleCepChange = (e) => {
+    const value = e.target.value.replace(/\D/g, '');
+    const formattedValue = value.replace(/(\d{5})(\d{3})/, '$1-$2');
+  
+    setCep(formattedValue);
+    
+    if (formattedValue.length === 9) {
+      getDadosEnderecoCEP(value);
+    }
+  };
+
+  const getDadosEnderecoCEP = async (cepDigitado) => {
+    try {
+        const responseCEP = await axios.get(`https://viacep.com.br/ws/${cepDigitado}/json/`);
+        if (responseCEP.data.erro) {
+            throw new Error('CEP não encontrado.');
+        }
+        setFormsData((prevData) => ({
+            ...prevData,
+            logradouro: responseCEP.data.logradouro,
+            bairro: responseCEP.data.bairro,
+        }));
+        setError(null);
+    } catch (error) {
+        setError('Erro ao buscar CEP: ' + error.message);
+        setFormsData((prevData) => ({
+            ...prevData,
+            logradouro: '',
+            bairro: '',
+        }));
+    }
+  };
+
   const handleMenuItemClick = (item,tipo) => {
 
+    console.log(tipo);
+    console.log(item);
     if(tipo === 'Pessoa'){
       setCepCnpj('CPF');
         if(item === 'Fisica'){
@@ -92,13 +129,17 @@ const VendedoresAdd = () => {
             setBaseCal('Total');
             formsData.baseCalculo = "TOTAL";
         }
-    }else if(tipo === 'Municipio'){
-        formsData.municipioId = (item.codigo);
+    }else if(item === 'Municipio'){
+        formsData.municipioId = (tipo);
         console.log("Municipio:",formsData.municipioId);
-    }else if(tipo === 'Empresa'){
-        formsData.empresaId = (item.codigo);
+    }else if(item === 'Empresa'){
+        formsData.empresaId = (tipo);
         console.log("Empresa:",formsData.empresaId);
+    }else if(item === 'UF'){
+        formsData.uf = (tipo);
+        console.log("Estado:",formsData.uf);
     }
+    console.log("item:"+item);
     console.log(formsData);
   };
 
@@ -114,6 +155,25 @@ const VendedoresAdd = () => {
         }));
   
         setEmpresa(gruposTransformados);
+
+        const responseM = await axios.get('http://localhost:8080/municipios');
+
+        gruposTransformados = responseM.data.map(item => ({
+          codigo: item.id,
+          nome: item.nome
+        }));
+
+        setMunicipioModal(gruposTransformados);
+
+        const responseE = await axios.get('http://localhost:8080/estados');
+
+        gruposTransformados = responseE.data.map(item => ({
+          codigo: item.id,
+          nome: item.nome,
+          sigla: item.uf
+        }));
+
+        setEstadoModal(gruposTransformados);
   
       } catch (error) {
         console.error('Erro ao buscar os dados', error);
@@ -128,22 +188,7 @@ const VendedoresAdd = () => {
     try {
       // Fazer as requisições de forma assíncrona
       const responseCnpj = await axios.get('https://open.cnpja.com/office/' + value);
-      const municipio = await axios.get('http://localhost:8080/municipios');
-      const MuniAPI = await axios.get('https://servicodados.ibge.gov.br/api/v1/localidades/distritos');
-      
-      let Apiselecionado
-      let municipioSelecionado = null;
-  
-      // Buscar o estado correspondente ao CNPJ
-      for (let i = 0; i < MuniAPI.data.length; i++) {
-        if (MuniAPI.data[i].municipio.id === responseCnpj.data.address.municipality) {
-          Apiselecionado = MuniAPI.data[i];
-          console.log(MuniAPI.data[i]);
-          break;
-        }
-      }
 
-      // Atualizar o estado do formulário
       setFormsData((prevData) => ({
         ...prevData,
         nome_razao: responseCnpj.data.company.name,
@@ -154,13 +199,9 @@ const VendedoresAdd = () => {
         email: responseCnpj.data.emails[0]?.address || '',
         telefone: responseCnpj.data.phones[0]?.area + responseCnpj.data.phones[0]?.number || '',
         bairro: responseCnpj.data.address.district,
-        logradouro: responseCnpj.data.address.street,
-        uf: responseCnpj.data.address.state,
-        municipioId: Apiselecionado.nome
+        logradouro: responseCnpj.data.address.street
       }));
-      console.log("Municipio:", Apiselecionado.nome);
-
-      setMunicipio(Apiselecionado.nome);
+      
     } catch (error) {
       console.error('Erro ao buscar dados do CNPJ:', error);
     }
@@ -197,7 +238,6 @@ const VendedoresAdd = () => {
           cpfCnpj: '',
           cep: '',
           nomeExibicao: '',
-          municipioId: '',
           uf: '',
           desconto:'',
           comissao:'',
@@ -205,6 +245,7 @@ const VendedoresAdd = () => {
           bairro: '',
           logradouro: '',
           numero: '',
+          municipioId:'',
           complemento: '',
           email: '',
           telefone: '',
@@ -232,13 +273,11 @@ const VendedoresAdd = () => {
   const handleInputChange = (e) => {
     const { name, value } = e.target;
 
-    // Se o campo for "celular"
     if (name === "celular" || name === "telefone") {
-      // Remove todos os caracteres não numéricos
       let formattedValue = value.replace(/\D/g, "");
 
       if (formattedValue.length > 11) {
-        formattedValue = formattedValue.slice(0, 11); // Limita a 11 caracteres
+        formattedValue = formattedValue.slice(0, 11);
       }
 
       if (formattedValue.length <= 10) {
@@ -344,7 +383,7 @@ const VendedoresAdd = () => {
 
                 <div className="flex flex-col">
                   <label className="block ml-1 text-sm font-medium leading-6 text-black">Empresa</label>
-                  <InputWBtn widthValue={29.5} options={empresa} modalTitle="Escolha a empresa" onSelect={(item) => handleMenuItemClick(item,'Empresa')}/>
+                  <InputWBtn widthValue={29.5} heightValue={2.75} options={empresa} modalTitle="Escolha a empresa" onSelect={handleMenuItemClick} tipo={"Empresa"} valueSelect={1}/>
                 </div>
                 
               </div>
@@ -445,9 +484,9 @@ const VendedoresAdd = () => {
                   <input
                     type="text"
                     name="cep"
-                    value={formsData.cep}
-                    onChange={handleInputChange}
-                    className="w-[24rem] h-11 px-3 py-2 rounded-md ring-inset focus:ring-2 focus:ring-indigo-600 disabled:bg-gray-300"
+                    value={cep}
+                    onChange={handleCepChange}
+                    className="w-[32rem] h-11 px-3 py-2 rounded-md ring-inset focus:ring-2 focus:ring-indigo-600 disabled:bg-gray-300"
                     style={{ textTransform: 'uppercase' }}
                   />
                 </div>
@@ -458,20 +497,7 @@ const VendedoresAdd = () => {
                     name="logradouro"
                     value={formsData.logradouro}
                     onChange={handleInputChange}
-                    className="w-[35.5rem] h-11 px-3 py-2 rounded-md ring-inset focus:ring-2 focus:ring-indigo-600 bg-gray-300"
-                    style={{ textTransform: 'uppercase' }}
-                    readOnly
-                  />
-                </div>
-
-                <div className="flex flex-col">
-                  <label className="block ml-1 text-sm font-medium leading-6 text-black">UF</label>
-                  <input
-                    type="text"
-                    name="uf"
-                    value={formsData.uf}
-                    onChange={handleInputChange}
-                    className="w-[4rem] h-11 px-3 py-2 rounded-md ring-inset focus:ring-2 focus:ring-indigo-600 bg-gray-300"
+                    className="w-[32.5rem] h-11 px-3 py-2 rounded-md ring-inset focus:ring-2 focus:ring-indigo-600 bg-gray-300"
                     style={{ textTransform: 'uppercase' }}
                     readOnly
                   />
@@ -487,23 +513,19 @@ const VendedoresAdd = () => {
                     name="numero"
                     value={formsData.numero}
                     onChange={handleInputChange}
-                    className="w-[32.5rem] h-11 px-3 py-2 rounded-md ring-inset focus:ring-2 focus:ring-indigo-600 bg-gray-300"
+                    className="w-[32.5rem] h-11 px-3 py-2 rounded-md ring-inset focus:ring-2 focus:ring-indigo-600 disabled:bg-gray-300"
                     style={{ textTransform: 'uppercase' }}
-                    readOnly
                   />
                 </div>
 
                 <div className="flex flex-col">
                   <label className="block ml-1 text-sm font-medium leading-6 text-black">Municipio</label>
-                  <input
-                    type="text"
-                    name="municipio"
-                    value={municipio}
-                    onChange={handleInputChange}
-                    className=" w-[32.5rem] h-11 px-3 py-2 rounded-md ring-inset focus:ring-2 focus:ring-indigo-600 bg-gray-300"
-                    style={{ textTransform: 'uppercase' }}
-                    readOnly
-                  />
+                  <InputWBtn widthValue={20} heightValue={2.75} options={municipioModal} modalTitle="Escolha o Municipio" onSelect={handleMenuItemClick} tipo={"Municipio"} valueSelect={1}/>
+                </div>
+
+                <div className="flex flex-col">
+                  <label className="block ml-1 text-sm font-medium leading-6 text-black">UF</label>
+                  <InputWBtn widthValue={4.5} heightValue={2.75} options={estadoModal} modalTitle="Escolha o Estado" onSelect={handleMenuItemClick} tipo={"UF"} valueSelect={2}/>
                 </div>
               </div>
 
@@ -515,7 +537,7 @@ const VendedoresAdd = () => {
                     name="bairro"
                     value={formsData.bairro}
                     onChange={handleInputChange}
-                    className="w-[32.5rem] h-11 px-3 py-2 rounded-md ring-inset focus:ring-2 focus:ring-indigo-600 bg-gray-300"
+                    className="w-[32rem] h-11 px-3 py-2 rounded-md ring-inset focus:ring-2 focus:ring-indigo-600 bg-gray-300"
                     style={{ textTransform: 'uppercase' }}
                     readOnly
                   />
@@ -527,9 +549,8 @@ const VendedoresAdd = () => {
                     name="complemento"
                     value={formsData.complemento}
                     onChange={handleInputChange}
-                    className="w-[32.5rem] h-11 px-3 py-2 rounded-md ring-inset focus:ring-2 focus:ring-indigo-600 bg-gray-300"
+                    className="w-[32.5rem] h-11 px-3 py-2 rounded-md ring-inset focus:ring-2 focus:ring-indigo-600 disabled:bg-gray-300"
                     style={{ textTransform: 'uppercase' }}
-                    readOnly
                   />
                 </div>
               </div>
@@ -540,12 +561,12 @@ const VendedoresAdd = () => {
                 <hr style={{ border: '1px solid #5E16ED' }} />
               </h2>
 
-              {/* Aréa do veículo*/}
+              {/* Aréa do vALORES*/}
               <div className="flex flex-col md:flex-row gap-4 justify-between ">
                 <div className="flex flex-col">
                   <label className="block ml-1 text-sm font-medium leading-6 text-black">Desconto(%)</label>
                   <input
-                    type="text"
+                    type="number"
                     name="desconto"
                     value={formsData.desconto}
                     onChange={handleInputChange}
@@ -557,7 +578,7 @@ const VendedoresAdd = () => {
                 <div className="flex flex-col">
                   <label className="block ml-1 text-sm font-medium leading-6 text-black">Comissão(%)</label>
                   <input
-                    type="text"
+                    type="number"
                     name="comissao"
                     value={formsData.comissao}
                     onChange={handleInputChange}
