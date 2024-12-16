@@ -116,14 +116,9 @@ function Transportadoras() {
     { label: 'Razão Social', key: 'nomeRazaoSocial' },
     { label: 'Fantasia', key: 'nomeFantasia' },
     { label: 'Documento', key: 'cpfCnpj' },
-    { label: 'Matriz / Filial', key: 'tipoUnidade' },
     { label: 'Contato', key: 'contato' },
     { label: 'Município', key: 'municipio' },
     { label: 'Estado', key: 'estado' },
-    { label: 'Telefone', key: 'telefone' },
-    { label: 'Celular', key: 'celular' },
-    { label: 'CEP', key: 'cep' },
-    { label: 'Email', key: 'email' },
     { label: 'Placa', key: 'placaVeiculo' },
   ];
 
@@ -134,14 +129,9 @@ function Transportadoras() {
     'Razão Social': 'nomeRazaoSocial',
     'Fantasia': 'nomeFantasia',
     'Documento': 'cpfCnpj',
-    'Matriz / Filial': 'tipoUnidade',
     'Contato': 'contato',
     'Município': 'municipio',
     'Estado': 'estado',
-    'Telefone': 'telefone',
-    'Celular': 'celular',
-    'CEP': 'cep',
-    'Email': 'email',
     'Placa': 'placaVeiculo'
   };
 
@@ -228,14 +218,9 @@ function Transportadoras() {
                               <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700 text-center">{data.nomeRazaoSocial}</td>
                               <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700 text-center">{data.nomeFantasia}</td>
                               <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700 text-center">{data.cpfCnpj}</td>
-                              <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700 text-center">{data.empresa?.tipoUnidade}</td>
                               <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700 text-center">{data.contato}</td>
-                              <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700 text-center">{data.municipio?.nome}</td>
-                              <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700 text-center">{data.municipio?.estado?.nome}</td>
-                              <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700 text-center">{data.telefone}</td>
-                              <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700 text-center">{data.celular}</td>
-                              <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700 text-center">{data.cep}</td>
-                              <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700 text-center">{data.email}</td>
+                              <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700 text-center">{data.municipioId}</td>
+                              <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700 text-center">{data.empresaId}</td>
                               <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700 text-center">{data.placaVeiculo}</td>
                               <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700 text-center">
                                 <FontAwesomeIcon icon={faPenToSquare} className="cursor-pointer" />

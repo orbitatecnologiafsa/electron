@@ -143,19 +143,12 @@ function Produtos() {
     { label: 'ID', key: 'id' },
     { label: 'Barras', key: 'barras' },
     { label: 'Nome', key: 'nome' },
+    { label: 'Descrição', key: 'descricao' },
     { label: 'Quantidade', key: 'quantidadeEmbalagem' },
-    { label: 'Qtd. bloqueada', key: 'bloqueado' },
     { label: 'Qtd. disponível', key: 'disponivel' },
-    { label: 'Preço custo', key: 'precoCusto' },
-    { label: 'Custo médio', key: 'precoCustoMedio' },
     { label: 'Preço venda', key: 'precoVenda' },
     { label: 'Preço revenda', key: 'precoRevenda' },
-    { label: 'Descrição', key: 'descricao' },
     { label: 'Grupo', key: 'grupoProdServ' },
-    { label: 'NCM', key: 'codigoCestNcm' },
-    { label: 'CEST', key: 'cest' },
-    { label: 'Trib. Estadual', key: 'tributacaoEstadual' },
-    { label: 'Trib. Federal', key: 'tributacaoFederal' },
     { label: 'Referência', key: 'referencia' },
     { label: 'Unidade', key: 'unidadeEmbalagem' },
     { label: 'Localização', key: 'localizacao' },
@@ -168,21 +161,14 @@ function Produtos() {
     'Barras': 'barras',
     'Nome': 'nome',
     'Grupo': 'grupoProdServ',
-    'NCM': 'codigoCestNcm',
     'Município': 'municipio',
-    'CEST': 'cest',
-    'Tributação Estadual': 'tributacaoEstadual',
-    'Tributação Federal': 'tributacaoFederal',
     'Referência': 'referencia',
     'Localização': 'localizacao',
     'Unidade': 'unidadeEmbalagem',
     'Preço Rev.': 'precoRevenda',
     'Preço Venda': 'precoVenda',
-    'Custo médio': 'precoCustoMedio',
-    'Preço Custo': 'precoCusto',
     'Quantidade': 'quantidadeEmbalagem',
     'Qtd. disponível': 'disponivel',
-    'Qtd. bloqueada': 'bloqueado',
   };
 
   {/* Redireciona para Cadastro de Produtos */}
@@ -265,22 +251,15 @@ function Produtos() {
                               <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700 text-center">{data.id}</td>
                               <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700 text-center">{data.barras}</td>
                               <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700 text-center">{data.nome}</td>
-                              <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700 text-center">{data.grupoProdServ?.nome}</td>
-                              <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700 text-center">{data.codigoCestNcm?.tributoNcm?.codigo}</td>
-                              <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700 text-center">{data.municipio}</td>
-                              <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700 text-center">{data.codigoCestNcm?.codigo}</td>
-                              <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700 text-center">{data.tributacaoEstadual?.nome}</td>
-                              <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700 text-center">{data.tributacaoFederal?.nome}</td>
-                              <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700 text-center">{data.referencia}</td>
-                              <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700 text-center">{data.localizacao}</td>
-                              <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700 text-center">{data.unidadeEmbalagem}</td>
-                              <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700 text-center">{data.precoRevenda}</td>
-                              <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700 text-center">{data.precoVenda}</td>
-                              <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700 text-center">{data.precoCustoMedio}</td>
-                              <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700 text-center">{data.precoCusto}</td>
+                              <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700 text-center">{data.descricao}</td>
                               <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700 text-center">{data.quantidadeEmbalagem}</td>
                               <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700 text-center">{data.disponivel}</td>
-                              <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700 text-center">{data.bloqueado}</td>
+                              <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700 text-center">{data.precoVenda}</td>
+                              <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700 text-center">{data.precoRevenda}</td>
+                              <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700 text-center">{data.grupoProdServId}</td>
+                              <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700 text-center">{data.referencia}</td>
+                              <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700 text-center">{data.unidadeEmbalagem}</td>
+                              <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700 text-center">{data.localizacao}</td>
                               <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700 text-center">
                                 <FontAwesomeIcon icon={faPenToSquare} className="cursor-pointer" />
                               </td>

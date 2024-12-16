@@ -6,12 +6,14 @@ import axios from 'axios';
 import DropDown from '../../components/DropDown';
 import InputWBtn from '../../components/InputWBtn';
 import Datepicker from '../../components/Datepicker';
+import InputImgBtn from '../../components/InputImgBtn';
 
 function ProdutosAdd() {
 
   const [documentoValue, setDocumentoValue] = useState('');
   const [formData, setFormData] = useState({
     codigo: '',
+    ativo: true,
     nome: '',
     quantidade: '',
     classificacao: '',
@@ -49,6 +51,7 @@ function ProdutosAdd() {
 
   const [anpModal, setAnpModal]= useState([{codigo:'10101',name_fantasia:'Grupo A'},{codigo:'20202',name_fantasia:'Grupo B'}]);
   const [fatorConversao, setFatorConversao]= useState([{codigo:'5',fator_cenversao_codigo:'A'}]);
+  const [codigo,setCodigo] = useState(0);
   
   const handleMenuItemClick = (item, index) => {
 
@@ -118,6 +121,7 @@ function ProdutosAdd() {
         const response = await axios.post("http://localhost:8080/produtos", formData);
         setFormData({
           codigo: '',
+          ativo: true,
           nome: '',
           quantidade: '',
           classificacao: '',
@@ -163,7 +167,10 @@ function ProdutosAdd() {
           codigo: item.id,
           nome: item.nome
         }));
-  
+
+        const responsep = await axios.get('http://localhost:8080/produtos');
+        setCodigo(responsep.data.length);
+
         setGrupoModal(gruposTransformados);
   
       } catch (error) {
@@ -235,6 +242,33 @@ function ProdutosAdd() {
             <form onSubmit={handleSubmit} className="space-y-5 mx-[2rem] max-w-full  h-[85rem]">
               <h3 className="text-lg font-semibold justify-center text-center mb-4 mt-4 ml-1">Cadastro de Produto</h3>
 
+              {/* Dados do produto */}
+              <h2 style={{ color: '#5E16ED', fontSize: '170%', fontWeight: 'bold' }}>
+                Dados
+                <hr style={{ border: '1px solid #5E16ED' }} />
+              </h2>
+
+              <div className="flex flex-col md:flex-row gap-4 justify-between">
+                <div className='flex flex-col'>
+                  <InputImgBtn/>
+                </div>
+                <div className="flex flex-col">
+                  <label className="block ml-1 text-sm font-medium leading-6 text-black">Código</label>
+                  <input
+                    type="text"
+                    name="codigo"
+                    value={codigo}
+                    className=" w-[13rem] h-11 px-3 py-2 rounded-md  ring-inset focus:ring-2 focus:ring-indigo-600"
+                    required
+                    readOnly
+                    style={{ textTransform: 'uppercase' }}
+                  />
+                </div>
+
+                <div className="flex flex-col">
+                  <DropDown labelDrop={"Classificação"} title={"Selecione a classificação"} ValorBtn={Classified} listItens={ClassificacaoList} onSelect={(item) => handleMenuItemClick(item,"Classficacao")}/>
+                </div>
+
                 <div className="flex items-center">
                   <input
                     type="checkbox"
@@ -245,14 +279,10 @@ function ProdutosAdd() {
                   />
                   <label className="text-base">Ativo</label>
                 </div>
-
-              {/* Dados do produto */}
-              <h2 style={{ color: '#5E16ED', fontSize: '170%', fontWeight: 'bold' }}>
-                Dados
-                <hr style={{ border: '1px solid #5E16ED' }} />
-              </h2>
+              </div>
 
               <div className="flex flex-col md:flex-row gap-4 justify-between">
+                
                 <div className="flex flex-col">
                   <label className="block ml-1 text-sm font-medium leading-6 text-black">Código de barras</label>
                   <input
@@ -266,13 +296,6 @@ function ProdutosAdd() {
                   />
                 </div>
 
-                <div className="flex flex-col">
-                  <DropDown labelDrop={"Classificação"} title={"Selecione a classificação"} ValorBtn={Classified} listItens={ClassificacaoList} onSelect={(item) => handleMenuItemClick(item,"Classficacao")}/>
-                </div>
-
-              </div>
-
-              <div className="flex flex-col md:flex-row gap-4 justify-between">
                 <div className="flex flex-col">
                   <label className="block ml-1 text-sm font-medium leading-6 text-black">Nome</label>
                   <input
@@ -295,20 +318,14 @@ function ProdutosAdd() {
               <div className="flex flex-col md:flex-row gap-4">
                 <div className="flex flex-col">
                   <label className="block ml-1 text-sm font-medium leading-6 text-black">Grupo</label>
-                  <InputWBtn widthValue={16} heightValue={2.75} options={grupoModal} modalTitle="Escolha o grupo" onSelect={onSelectedOptionModal} tipo={"Grupo"} valueSelect={1}/>
-                </div>
-
-                <div className="flex flex-col">
-                  <label className="block ml-1 text-sm font-medium leading-6 text-black">Codigo Anp</label>
-                  <InputWBtn widthValue={16} heightValue={2.75} options={anpModal} modalTitle="Escolha o codigo anp" onSelect={onSelectedOptionModal} valueSelect={1} tipo={"Anp"}/>
+                  <InputWBtn widthValue={29.5} heightValue={2.75} options={grupoModal} modalTitle="Escolha o grupo" onSelect={onSelectedOptionModal} tipo={"Grupo"} valueSelect={1}/>
                 </div>
 
                 <div className="flex flex-col">
                   <label className="block ml-1 text-sm font-medium leading-6 text-black">Fator de conversão</label>
-                  <InputWBtn widthValue={22} heightValue={2.75} options={fatorConversao} modalTitle="Escolha o fator de conversão" onSelect={onSelectedOptionModal} valueSelect={1} tipo={"FConversao"}/>
+                  <InputWBtn widthValue={29} heightValue={2.75} options={fatorConversao} modalTitle="Escolha o fator de conversão" onSelect={onSelectedOptionModal} valueSelect={1} tipo={"FConversao"}/>
                 </div>
               </div>
-
               <div className="flex flex-col md:flex-row gap-4">
                 <div className="flex flex-col">
                   <label className="block ml-1 text-sm font-medium leading-6 text-black">Descrição</label>
@@ -457,8 +474,12 @@ function ProdutosAdd() {
               {/* Contato do Cliente */}
               <div className="flex flex-col md:flex-row gap-4">
                 <div className="flex flex-col">
-                  <label className="block ml-1 text-sm font-medium leading-6 text-black"> Importo NCM</label>
-                  <InputWBtn widthValue={40.5} heightValue={2.75} options={ncmModal} modalTitle="Escolha o NCM" onSelect={onSelectedOptionModal} valueSelect={1} tipo={"ncm"}/>
+                  <label className="block ml-1 text-sm font-medium leading-6 text-black">NCM</label>
+                  <InputWBtn widthValue={18} heightValue={2.75} options={ncmModal} modalTitle="Escolha o NCM" onSelect={onSelectedOptionModal} valueSelect={1} tipo={"ncm"}/>
+                </div>
+                <div className="flex flex-col">
+                  <label className="block ml-1 text-sm font-medium leading-6 text-black">Codigo Anp</label>
+                  <InputWBtn widthValue={18} heightValue={2.75} options={anpModal} modalTitle="Escolha o codigo anp" onSelect={onSelectedOptionModal} valueSelect={1} tipo={"Anp"}/>
                 </div>
                 <div className="flex flex-col">
                   <label className="block ml-1 text-sm font-medium leading-6 text-black">CEST</label>

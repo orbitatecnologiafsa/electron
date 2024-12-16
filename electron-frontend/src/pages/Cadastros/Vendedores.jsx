@@ -110,16 +110,9 @@ function Vendedores() {
   const tableColumns = [
     { label: '', key: 'action' },
     { label: 'ID', key: 'id' },
-    { label: 'Razão Social', key: 'nomeRazaoSocial' },
-    { label: 'Nome Fantasia', key: 'nomeFantasia' },
-    { label: 'CNPJ', key: 'cpfCnpj' },
-    { label: 'Matriz / Filial', key: 'matrizOuFilial' },
-    { label: 'Município', key: 'municipio' },
-    { label: 'UF', key: 'estado' },
-    { label: 'Telefone', key: 'telefone' },
-    {label: 'E-mail', key: 'email'},
-    {label: 'Celular', key: 'celular'},
-    { label: 'Data de Nascimento', key: 'dataDeNascimento' },
+    { label: 'Nome', key: 'nomeRazaoSocial' },
+    { label: 'Cpf', key: 'cpfCnpj' },
+    { label: 'Cargo', key: 'cargo' },
   ];
 
   {/*Filtro*/}
@@ -128,14 +121,8 @@ function Vendedores() {
     'ID': 'id',
     'Razão Social': 'nomeRazaoSocial',
     'Nome Fantasia': 'nomeFantasia',
-    'CNPJ': 'cpfCnpj',
-    'Matriz / Filial': 'matrizOuFilial',
-    'Município': 'municipioId',
-    'UF': 'estado',
-    'Telefone': 'telefone',
-    'E-mail': 'email',
-    'Celular': 'celular',
-    'Data de nascimento': 'dataDeNascimento'
+    'Cpf': 'cpfCnpj',
+    'Cargo': 'cargo',
   };
 
   const handleMenuItemClick = (value) => {
@@ -227,15 +214,8 @@ function Vendedores() {
                               </td>
                               <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700 text-center">{data.id}</td>
                               <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700 text-center">{data.nomeRazaoSocial}</td>
-                              <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700 text-center">{data.nomeFantasia}</td>
                               <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700 text-center">{data.cpfCnpj}</td>
-                              <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700 text-center">{data.empresa?.tipoUnidade}</td>
-                              <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700 text-center">{data.municipio?.nome}</td>
-                              <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700 text-center">{data.municipio?.estado?.nome}</td>
-                              <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700 text-center">{data.telefone}</td>
-                              <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700 text-center">{data.email}</td>
-                              <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700 text-center">{data.celular}</td>
-                              <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700 text-center">{data.dataDeNascimento}</td>
+                              <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700 text-center">{data.cargo}</td>
                               <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700 text-center">
                                 <FontAwesomeIcon icon={faPenToSquare} className="cursor-pointer" />
                               </td>

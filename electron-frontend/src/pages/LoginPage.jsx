@@ -27,7 +27,7 @@ function LoginPage() {
             className={`px-4 py-2 text-sm font-semibold ${activeTab === 'register' ? 'border-b-2 border-indigo-600' : 'text-gray-500'}`}
             onClick={() => setActiveTab('register')}
           >
-            Administrador
+            Revenda
           </button>
         </div>
 
